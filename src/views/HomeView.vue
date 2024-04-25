@@ -1,5 +1,7 @@
 <template>
-  <main class="relative bg-gradient-to-b from-gray-900 to-black h-screen">
+  <UserRegister v-if="userSession.showRegister" />
+
+  <main class="bg-gradient-to-b from-gray-900 to-black h-screen">
     <TheHeader />
     <div class="flex items-center justify-center flex-col gap-10 pb-32 h-full">
       <h2
@@ -7,7 +9,10 @@
       >
         Find any quote in <span> millions of movie lines</span>
       </h2>
-      <button class="bg-[#e31221] text-white px-4 py-2 text-sm rounded-lg sm:text-xl">
+      <button
+        class="bg-[#e31221] text-white px-4 py-2 text-sm rounded-lg sm:text-xl"
+        @click="userSession.toggleRegister"
+      >
         Get started
       </button>
     </div>
@@ -35,6 +40,26 @@ import cover1 from '@/assets/images/cover1.png'
 import cover2 from '@/assets/images/cover2.png'
 import cover3 from '@/assets/images/cover3.png'
 import { getCsrfCookie, logoutUser } from '@/service/authService.js'
+import { useUserSessionStore } from '@/stores/UserSessionStore'
+import UserRegister from '@/components/Sessions/UserRegister.vue'
+import { onMounted } from 'vue'
+import { useRoute } from 'vue-router'
+
+const userSession = useUserSessionStore()
+const route = useRoute()
+console.log(route)
+
+onMounted(() => {
+  const verifyUrl = route.query.verify_url
+  if (verifyUrl) {
+    verifyUser(verifyUrl)
+  }
+})
+
+function verifyUser(url) {
+  console.log('user verified.')
+}
+
 const onLogout = async () => {
   await getCsrfCookie()
   try {

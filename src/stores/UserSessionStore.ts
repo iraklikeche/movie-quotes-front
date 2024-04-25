@@ -7,6 +7,7 @@ export const useUserSessionStore = defineStore('UserSessionStore', () => {
   const showLogin = ref(false)
   const showForgotPassword = ref(false)
   const showResetPassword = ref(false)
+  const successModal = ref(false)
 
   function toggleModal(modal: Ref<boolean>) {
     modal.value = !modal.value
@@ -28,8 +29,12 @@ export const useUserSessionStore = defineStore('UserSessionStore', () => {
     showLogin,
     showForgotPassword,
     showResetPassword,
-    toggleRegister: () => toggleModal(showRegister),
-    toggleLogin: () => toggleModal(showLogin),
+    toggleRegister: () => {
+      toggleModal(showRegister), (showLogin.value = false)
+    },
+    toggleLogin: () => {
+      toggleModal(showLogin), (showRegister.value = false)
+    },
     toggleForgotPassword: () => {
       toggleModal(showForgotPassword)
       showLogin.value = false
@@ -37,6 +42,7 @@ export const useUserSessionStore = defineStore('UserSessionStore', () => {
     toggleResetPassword: () => toggleModal(showResetPassword),
     closeModal,
     backToLogIn,
-    toggleModal
+    toggleModal,
+    successModal
   }
 })

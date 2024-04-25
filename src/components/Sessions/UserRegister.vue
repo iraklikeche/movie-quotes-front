@@ -5,7 +5,7 @@
     paragraph="Start your journey!"
     secondaryParagraph="Already have an account?"
     sessionButton="Log in"
-    class="top-0 w-full"
+    class="top-0 w-full sm:w-auto"
   >
     <Form @submit="onSubmit" class="flex flex-col gap-3" v-slot="{ errors }">
       <CustomInput
@@ -46,13 +46,19 @@
         :serverError="errors.password_confirmation"
       />
 
-      <button class="bg-[#e31221] py-2 rounded-md mb-2">Get started</button>
+      <button class="bg-[#e31221] py-2 text-white rounded-md mb-2">Get started</button>
       <button
-        class="bg-transparent border border-white py-2 rounded-md flex items-center gap-2 justify-center"
+        class="bg-black sm:bg-transparent border border-white py-2 rounded-md flex items-center gap-2 justify-center text-white"
       >
         <GoogleIcon /> Sign up with Google
       </button>
     </Form>
+    <div class="flex items-center justify-center mt-4">
+      <p class="flex gap-2">
+        <span class="text-[#6c757d]"> Already have an account? </span>
+        <button class="text-[#0d6efd] underline" @click="userSession.toggleLogin">Log in</button>
+      </p>
+    </div>
   </TheModal>
 </template>
 
@@ -62,11 +68,18 @@ import GoogleIcon from '@/components/icons/GoogleIcon.vue'
 import { registerUser, getCsrfCookie } from '@/service/authService.js'
 import { Form } from 'vee-validate'
 import TheModal from '../TheModal.vue'
+import { useUserSessionStore } from '@/stores/UserSessionStore'
+
+const userSession = useUserSessionStore()
+
+const emit = defineEmits(['successModal'])
 
 const onSubmit = async (values) => {
   try {
     await getCsrfCookie()
     await registerUser(values)
+    userSession.showRegister = false
+    emit('successModal', 'Registration successful!')
   } catch (err) {
     console.log(err)
   }

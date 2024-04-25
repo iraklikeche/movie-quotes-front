@@ -1,13 +1,13 @@
 <template>
   <div class="flex flex-col relative">
-    <label class="text-custom-gray text-sm mb-1"
+    <label class="text-white text-sm mb-1"
       >{{ label }}<span class="text-red-500 ml-1">*</span></label
     >
     <Field
       :type="inputType"
       :name="name"
       :placeholder="placeholder"
-      class="bg-[#ced4da] text-white block w-full border-0 px-3 py-2"
+      class="bg-[#ced4da] block w-full border-0 px-3 py-2"
       :class="{ 'border-red-500': serverError }"
       :validateOnInput="true"
       :validateOnBlur="false"
