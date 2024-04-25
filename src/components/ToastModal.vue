@@ -29,8 +29,4 @@
 
 <script setup>
 import SentIcon from '@/components/icons/SentIcon.vue'
-
-const closeModal = () => {
-  userSession.showRegister = false // Set the property to false to close the modal
-}
 </script>
