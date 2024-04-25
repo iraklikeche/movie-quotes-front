@@ -32,10 +32,17 @@
           <input type="checkbox" />
           <label>Remember me</label>
         </div>
-        <button class="text-[#0d6efd] underline">Forgot password</button>
+        <button class="text-[#0d6efd] underline" @click="userSession.toggleForgotPassword">
+          Forgot password
+        </button>
       </div>
 
-      <button class="bg-black text-white py-4 rounded-xl mt-6 font-semibold">Log in</button>
+      <button class="bg-[#e31221] py-2 rounded-md my-4">Sign in</button>
+      <button
+        class="bg-transparent border border-white py-2 rounded-md flex items-center gap-2 justify-center"
+      >
+        <GoogleIcon /> Sign up with Google
+      </button>
     </Form>
   </TheModal>
 </template>
@@ -45,6 +52,10 @@ import { getCsrfCookie, loginUser } from '@/service/authService.js'
 import CustomInput from '../Form/CustomInput.vue'
 import { Form, Field } from 'vee-validate'
 import TheModal from '../TheModal.vue'
+import GoogleIcon from '@/components/icons/GoogleIcon.vue'
+import { useUserSessionStore } from '@/stores/UserSessionStore'
+
+const userSession = useUserSessionStore()
 
 const onSubmit = async (values, { setFieldError }) => {
   await getCsrfCookie()
@@ -56,15 +67,7 @@ const onSubmit = async (values, { setFieldError }) => {
     })
     localStorage.setItem('isLoggedIn', true)
   } catch (error) {
-    // if (error.response.data.errors) {
-    //   for (const fieldName in error.response.data.errors) {
-    //     setFieldError(fieldName, error.response.data.errors[fieldName])
-    //   }
-    console.log(error)
-    // } else {
-    //   console.log(1);
-    //   // setFieldError('email', error.response.data.message)
-    // }
+    //
   }
 }
 </script>

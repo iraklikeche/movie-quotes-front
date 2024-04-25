@@ -17,14 +17,15 @@
   </div>
 </template>
 
-<script setup>
+<script lang="ts" setup>
 import { ref } from 'vue'
 
-const props = defineProps({
-  customClass: String
-})
-const emit = defineEmits(['toggle'])
-
+const props = defineProps<{
+  customClass: string
+}>()
+const emit = defineEmits<{
+  (event: 'toggle'): void
+}>()
 const isPasswordVisible = ref(false)
 
 const togglePasswordVisibility = () => {

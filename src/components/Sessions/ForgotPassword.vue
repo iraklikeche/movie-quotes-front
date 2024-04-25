@@ -2,10 +2,9 @@
   <TheModal
     header="Forgot password?"
     paragraph="Enter the email and we'll send an email with instruction to reset your password"
-    sessionButton="Back to log in"
     class="top-0 w-full"
   >
-    <Form @submit="onSubmit" class="flex flex-col gap-5" v-slot="{ errors }">
+    <Form @submit="onSubmit" class="flex flex-col gap-2" v-slot="{ errors }">
       <CustomInput
         label="Email"
         name="email"
@@ -15,7 +14,13 @@
         :serverError="errors.email"
       />
 
-      <button class="bg-black text-white py-4 rounded-xl mt-6 font-semibold">Sign Up</button>
+      <button class="bg-[#e31221] py-2 rounded-md mb-2">Send instructions</button>
+      <button
+        @click="userSession.backToLogIn"
+        class="bg-transparent text-[#6c757d] py-2 rounded-md mb-2 flex items-center justify-center gap-2"
+      >
+        <GoBackArrow /> Back to log in
+      </button>
     </Form>
   </TheModal>
 </template>
@@ -25,4 +30,8 @@ import CustomInput from '../Form/CustomInput.vue'
 import { forgotPassword, getCsrfCookie } from '@/service/authService.js'
 import { Form } from 'vee-validate'
 import TheModal from '../TheModal.vue'
+import GoBackArrow from '@/components/icons/GoBackArrow.vue'
+import { useUserSessionStore } from '@/stores/UserSessionStore'
+
+const userSession = useUserSessionStore()
 </script>

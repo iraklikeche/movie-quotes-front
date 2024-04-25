@@ -7,7 +7,7 @@
     sessionButton="Log in"
     class="top-0 w-full"
   >
-    <Form @submit="onSubmit" class="flex flex-col gap-5" v-slot="{ errors }">
+    <Form @submit="onSubmit" class="flex flex-col gap-3" v-slot="{ errors }">
       <CustomInput
         label="Username"
         name="username"
@@ -46,13 +46,19 @@
         :serverError="errors.password_confirmation"
       />
 
-      <button class="bg-black text-white py-4 rounded-xl mt-6 font-semibold">Sign Up</button>
+      <button class="bg-[#e31221] py-2 rounded-md mb-2">Get started</button>
+      <button
+        class="bg-transparent border border-white py-2 rounded-md flex items-center gap-2 justify-center"
+      >
+        <GoogleIcon /> Sign up with Google
+      </button>
     </Form>
   </TheModal>
 </template>
 
 <script setup lang="ts">
 import CustomInput from '../Form/CustomInput.vue'
+import GoogleIcon from '@/components/icons/GoogleIcon.vue'
 import { registerUser, getCsrfCookie } from '@/service/authService.js'
 import { Form } from 'vee-validate'
 import TheModal from '../TheModal.vue'
