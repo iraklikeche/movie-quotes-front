@@ -21,3 +21,8 @@ export async function loginUser(credentials) {
 export async function logoutUser() {
   return await apiClient.post('api/logout')
 }
+
+export async function verifyEmail(path) {
+  const response = await apiClient.get(path)
+  return response
+}

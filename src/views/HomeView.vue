@@ -39,26 +39,37 @@ import TheHeader from '@/components/TheHeader.vue'
 import cover1 from '@/assets/images/cover1.png'
 import cover2 from '@/assets/images/cover2.png'
 import cover3 from '@/assets/images/cover3.png'
-import { getCsrfCookie, logoutUser } from '@/service/authService.js'
+import { getCsrfCookie, logoutUser, verifyEmail } from '@/service/authService.js'
 import { useUserSessionStore } from '@/stores/UserSessionStore'
 import UserRegister from '@/components/Sessions/UserRegister.vue'
-import { onMounted } from 'vue'
+import { onMounted, ref } from 'vue'
 import { useRoute } from 'vue-router'
 
 const userSession = useUserSessionStore()
 const route = useRoute()
-console.log(route)
 
-onMounted(() => {
+const verificationMessage = ref('')
+
+onMounted(async () => {
   const verifyUrl = route.query.verify_url
   if (verifyUrl) {
-    verifyUser(verifyUrl)
+    try {
+      const response = await verifyEmail(verifyUrl)
+      if (response.status === 200) {
+        verificationMessage.value = 'Your email has been successfully verified.'
+        console.log(response)
+      } else {
+        verificationMessage.value = response.data.message
+      }
+    } catch (error) {
+      if (error.response) {
+        verificationMessage.value = error.response.data.message
+      } else {
+        verificationMessage.value = 'An error occurred during the verification process.'
+      }
+    }
   }
 })
-
-function verifyUser(url) {
-  console.log('user verified.')
-}
 
 const onLogout = async () => {
   await getCsrfCookie()
