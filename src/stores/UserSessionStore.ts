@@ -8,6 +8,12 @@ export const useUserSessionStore = defineStore('UserSessionStore', () => {
   const showForgotPassword = ref(false)
   const showResetPassword = ref(false)
   const successModal = ref(false)
+  const modalContent = ref({
+    icon: '',
+    mainMessage: '',
+    subMessage: '',
+    buttonText: ''
+  })
 
   function toggleModal(modal: Ref<boolean>) {
     modal.value = !modal.value
@@ -22,6 +28,14 @@ export const useUserSessionStore = defineStore('UserSessionStore', () => {
   function backToLogIn() {
     closeModal()
     showLogin.value = true
+  }
+
+  function setModalContent(content) {
+    modalContent.value.icon = content.icon
+    modalContent.value.mainMessage = content.mainMessage
+    modalContent.value.subMessage = content.subMessage
+    modalContent.value.buttonText = content.buttonText
+    successModal.value = true
   }
 
   return {
@@ -43,6 +57,8 @@ export const useUserSessionStore = defineStore('UserSessionStore', () => {
     closeModal,
     backToLogIn,
     toggleModal,
-    successModal
+    successModal,
+    modalContent,
+    setModalContent
   }
 })

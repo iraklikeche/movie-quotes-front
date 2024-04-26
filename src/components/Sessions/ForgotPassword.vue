@@ -14,7 +14,7 @@
         :serverError="errors.email"
       />
 
-      <button class="bg-[#e31221] py-2 rounded-md mb-2">Send instructions</button>
+      <button class="bg-[#e31221] py-2 rounded-md mb-2 text-white">Send instructions</button>
       <button
         @click="userSession.backToLogIn"
         class="bg-transparent text-[#6c757d] py-2 rounded-md mb-2 flex items-center justify-center gap-2"
@@ -40,7 +40,15 @@ const onSubmit = async (values, { setFieldError, resetForm }) => {
   await getCsrfCookie()
   try {
     await forgotPassword(values.email)
-    // resetForm()
+    resetForm()
+    userSession.showForgotPassword = false
+
+    userSession.setModalContent({
+      icon: 'SentIcon',
+      mainMessage: 'Check your email',
+      subMessage: 'We have sent a password recover instructions to your email.',
+      buttonText: 'Go to my email'
+    })
   } catch (error) {
     //
   }

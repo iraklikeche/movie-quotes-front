@@ -26,8 +26,9 @@
         :serverError="errors.password_confirmation"
       />
 
-      <button class="bg-[#e31221] py-2 rounded-md mb-2">Send instructions</button>
+      <button class="bg-[#e31221] py-2 rounded-md mb-2 text-white">Reset Password</button>
       <button
+        @click="userSession.backToLogIn"
         class="bg-transparent text-[#6c757d] py-2 rounded-md mb-2 flex items-center justify-center gap-2"
       >
         <GoBackArrow /> Back to log in
@@ -44,6 +45,9 @@ import GoBackArrow from '@/components/icons/GoBackArrow.vue'
 import { resetPassword, getCsrfCookie } from '@/service/authService.js'
 import { ref, onMounted } from 'vue'
 import { useRoute } from 'vue-router'
+import { useUserSessionStore } from '@/stores/UserSessionStore'
+
+const userSession = useUserSessionStore()
 
 const token = ref('')
 const email = ref('')
@@ -65,10 +69,7 @@ const onSubmit = async (values, { resetForm, setFieldError }) => {
       password_confirmation: values.password_confirmation
     })
     resetForm()
-    if (data.status === 200) {
-      const status = data.status
-      console.log(data)
-    }
+    userSession.backToLogIn()
   } catch (error) {
     console.log(error)
   }

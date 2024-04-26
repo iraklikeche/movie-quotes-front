@@ -1,11 +1,11 @@
 <template>
   <div>
-    <UserRegister v-if="userSession.showRegister" @successModal="handleSuccessModal" />
+    <UserRegister v-if="userSession.showRegister" />
     <UserLogin v-if="userSession.showLogin" />
     <ForgotPassword v-if="userSession.showForgotPassword" />
     <ResetPassword v-if="userSession.showResetPassword" />
   </div>
-  <ToastModal v-if="userSession.successModal" />
+  <ToastModal v-if="userSession.successModal" v-bind="userSession.modalContent" />
 
   <div class="flex justify-between items-center px-4 py-6 sm:px-12">
     <div>
@@ -41,10 +41,10 @@ import { onMounted } from 'vue'
 const userSession = useUserSessionStore()
 const route = useRoute()
 
-const handleSuccessModal = (message) => {
-  userSession.successModal = true
-  console.log(message)
-}
+// const handleSuccessModal = (message) => {
+//   // userSession.successModal = true
+//   console.log(message)
+// }
 
 onMounted(() => {
   const token = route.query.token
