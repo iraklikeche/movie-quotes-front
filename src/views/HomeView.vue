@@ -1,5 +1,7 @@
 <template>
-  <main class="relative bg-gradient-to-b from-gray-900 to-black h-screen">
+  <UserRegister v-if="userSession.showRegister" />
+
+  <main class="bg-gradient-to-b from-gray-900 to-black h-screen">
     <TheHeader />
     <div class="flex items-center justify-center flex-col gap-10 pb-32 h-full">
       <h2
@@ -7,7 +9,10 @@
       >
         Find any quote in <span> millions of movie lines</span>
       </h2>
-      <button class="bg-[#e31221] text-white px-4 py-2 text-sm rounded-lg sm:text-xl">
+      <button
+        class="bg-[#e31221] text-white px-4 py-2 text-sm rounded-lg sm:text-xl"
+        @click="userSession.toggleRegister"
+      >
         Get started
       </button>
     </div>
@@ -34,7 +39,38 @@ import TheHeader from '@/components/TheHeader.vue'
 import cover1 from '@/assets/images/cover1.png'
 import cover2 from '@/assets/images/cover2.png'
 import cover3 from '@/assets/images/cover3.png'
-import { getCsrfCookie, logoutUser } from '@/service/authService.js'
+import { getCsrfCookie, logoutUser, verifyEmail,forgotPassword } from '@/service/authService.js'
+import { useUserSessionStore } from '@/stores/UserSessionStore'
+import UserRegister from '@/components/Sessions/UserRegister.vue'
+import { onMounted, ref } from 'vue'
+import { useRoute } from 'vue-router'
+
+const userSession = useUserSessionStore()
+const route = useRoute()
+
+const verificationMessage = ref('')
+
+onMounted(async () => {
+  const verifyUrl = route.query.verify_url
+  if (verifyUrl) {
+    try {
+      const response = await verifyEmail(verifyUrl)
+      if (response.status === 200) {
+        verificationMessage.value = 'Your email has been successfully verified.'
+        console.log(response)
+      } else {
+        verificationMessage.value = response.data.message
+      }
+    } catch (error) {
+      if (error.response) {
+        verificationMessage.value = error.response.data.message
+      } else {
+        verificationMessage.value = 'An error occurred during the verification process.'
+      }
+    }
+  }
+})
+
 const onLogout = async () => {
   await getCsrfCookie()
   try {

@@ -21,3 +21,22 @@ export async function loginUser(credentials) {
 export async function logoutUser() {
   return await apiClient.post('api/logout')
 }
+
+export async function verifyEmail(path) {
+  const response = await apiClient.get(path)
+  return response
+}
+
+export async function forgotPassword(email) {
+  return await apiClient.post('api/forgot-password', { email })
+}
+
+export async function resetPassword(data) {
+  const response = await apiClient.post('/api/reset-password', data)
+  return response
+}
+
+export async function resendPasswordResetLink(email) {
+  const response = await apiClient.post('/api/reset-password/resend', { email })
+  return response
+}

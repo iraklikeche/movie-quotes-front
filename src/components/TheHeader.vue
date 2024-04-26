@@ -1,4 +1,12 @@
 <template>
+  <div>
+    <UserRegister v-if="userSession.showRegister" @successModal="handleSuccessModal" />
+    <UserLogin v-if="userSession.showLogin" />
+    <ForgotPassword v-if="userSession.showForgotPassword" />
+    <ResetPassword v-if="userSession.showResetPassword" />
+  </div>
+  <ToastModal v-if="userSession.successModal" />
+
   <div class="flex justify-between items-center px-4 py-6 sm:px-12">
     <div>
       <h2 class="text-[#ddCCAA] uppercase">movie quotes</h2>
@@ -18,10 +26,6 @@
       </button>
     </div>
   </div>
-  <UserRegister v-if="userSession.showRegister" />
-  <UserLogin v-if="userSession.showLogin" />
-  <ForgotPassword v-if="userSession.showForgotPassword" />
-  <ResetPassword v-if="userSession.showResetPassword" />
 </template>
 
 <script lang="ts" setup>
@@ -29,7 +33,23 @@ import UserRegister from '@/components/Sessions/UserRegister.vue'
 import UserLogin from '@/components/Sessions/UserLogin.vue'
 import ForgotPassword from '@/components/Sessions/ForgotPassword.vue'
 import ResetPassword from '@/components/Sessions/ResetPassword.vue'
+import ToastModal from '@/components/ToastModal.vue'
 import { useUserSessionStore } from '@/stores/UserSessionStore'
+import { useRoute } from 'vue-router'
+import { onMounted } from 'vue'
 
 const userSession = useUserSessionStore()
+const route = useRoute()
+
+const handleSuccessModal = (message) => {
+  userSession.successModal = true
+  console.log(message)
+}
+
+onMounted(() => {
+  const token = route.query.token
+  if (token) {
+    userSession.showResetPassword = true
+  }
+})
 </script>

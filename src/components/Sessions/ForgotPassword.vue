@@ -31,7 +31,18 @@ import { forgotPassword, getCsrfCookie } from '@/service/authService.js'
 import { Form } from 'vee-validate'
 import TheModal from '../TheModal.vue'
 import GoBackArrow from '@/components/icons/GoBackArrow.vue'
+
 import { useUserSessionStore } from '@/stores/UserSessionStore'
 
 const userSession = useUserSessionStore()
+
+const onSubmit = async (values, { setFieldError, resetForm }) => {
+  await getCsrfCookie()
+  try {
+    await forgotPassword(values.email)
+    // resetForm()
+  } catch (error) {
+    //
+  }
+}
 </script>

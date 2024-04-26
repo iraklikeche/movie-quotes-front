@@ -1,10 +1,21 @@
 <template>
-  <div class="flex items-center flex-col pt-16 min-h-screen bg-gray-900 fixed">
-    <div @click="userSession.closeModal">CLOSE</div>
-    <h2 class="text-white text-2xl font-semibold mb-3">{{ props.header }}</h2>
-    <p class="text-sm mb-4 text-[#6c757d] text-center w-[70%]">{{ props.paragraph }}</p>
-    <div class="text-white rounded-lg w-full max-w-sm p-6">
-      <slot />
+  <div
+    class="fixed inset-0 overflow-hidden h-full w-full backdrop-blur-sm flex overflow-y-auto z-50 sm:pt-32"
+    id="my-modal"
+  >
+    <div
+      class="relative mx-auto sm:px-24 bg-[#222030] flex flex-col w-full h-full sm:max-w-[37rem] sm:max-h-[45rem]"
+    >
+      <div @click="userSession.closeModal" class="text-center pt-12">CLOSE</div>
+      <div class="">
+        <div class="flex flex-col gap-2 items-center mt-4">
+          <h2 class="text-white text-2xl font-semibold">{{ props.header }}</h2>
+          <p class="text-sm mb-4 text-[#6c757d] text-center">{{ props.paragraph }}</p>
+        </div>
+        <div class="px-7">
+          <slot />
+        </div>
+      </div>
     </div>
   </div>
 </template>

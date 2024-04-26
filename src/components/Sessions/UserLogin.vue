@@ -30,7 +30,7 @@
       <div class="flex justify-between items-center gap-2">
         <div class="flex items-center gap-2">
           <input type="checkbox" />
-          <label>Remember me</label>
+          <label class="text-white">Remember me</label>
         </div>
         <button class="text-[#0d6efd] underline" @click="userSession.toggleForgotPassword">
           Forgot password
@@ -39,11 +39,20 @@
 
       <button class="bg-[#e31221] py-2 rounded-md my-4">Sign in</button>
       <button
-        class="bg-transparent border border-white py-2 rounded-md flex items-center gap-2 justify-center"
+        class="bg-transparent border border-white py-2 rounded-md flex items-center gap-2 justify-center text-white"
       >
         <GoogleIcon /> Sign up with Google
       </button>
     </Form>
+
+    <div class="flex items-center justify-center mt-4">
+      <p class="flex gap-2">
+        <span class="text-[#6c757d]"> Don't have an account? </span>
+        <button class="text-[#0d6efd] underline" @click="userSession.toggleRegister">
+          Sign up
+        </button>
+      </p>
+    </div>
   </TheModal>
 </template>
 
