@@ -35,11 +35,21 @@ import ForgotPassword from '@/components/Sessions/ForgotPassword.vue'
 import ResetPassword from '@/components/Sessions/ResetPassword.vue'
 import ToastModal from '@/components/ToastModal.vue'
 import { useUserSessionStore } from '@/stores/UserSessionStore'
+import { useRoute } from 'vue-router'
+import { onMounted } from 'vue'
 
 const userSession = useUserSessionStore()
+const route = useRoute()
 
 const handleSuccessModal = (message) => {
   userSession.successModal = true
   console.log(message)
 }
+
+onMounted(() => {
+  const token = route.query.token
+  if (token) {
+    userSession.showResetPassword = true
+  }
+})
 </script>

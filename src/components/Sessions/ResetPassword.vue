@@ -41,4 +41,36 @@ import CustomInput from '../Form/CustomInput.vue'
 import { Form } from 'vee-validate'
 import TheModal from '../TheModal.vue'
 import GoBackArrow from '@/components/icons/GoBackArrow.vue'
+import { resetPassword, getCsrfCookie } from '@/service/authService.js'
+import { ref, onMounted } from 'vue'
+import { useRoute } from 'vue-router'
+
+const token = ref('')
+const email = ref('')
+
+const route = useRoute()
+
+onMounted(() => {
+  token.value = route.query.token
+  email.value = route.query.email
+})
+
+const onSubmit = async (values, { resetForm, setFieldError }) => {
+  try {
+    await getCsrfCookie()
+    const data = await resetPassword({
+      token: token.value,
+      email: email.value,
+      password: values.password,
+      password_confirmation: values.password_confirmation
+    })
+    resetForm()
+    if (data.status === 200) {
+      const status = data.status
+      console.log(data)
+    }
+  } catch (error) {
+    console.log(error)
+  }
+}
 </script>
