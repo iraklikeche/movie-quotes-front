@@ -40,7 +40,7 @@ const onSubmit = async (values, { setFieldError, resetForm }) => {
   await getCsrfCookie()
   try {
     await forgotPassword(values.email)
-    resetForm()
+    // resetForm()
   } catch (error) {
     //
   }
