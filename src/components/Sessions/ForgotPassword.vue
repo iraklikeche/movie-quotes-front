@@ -43,12 +43,15 @@ const onSubmit = async (values, { setFieldError, resetForm }) => {
     resetForm()
     userSession.showForgotPassword = false
 
-    userSession.setModalContent({
-      icon: 'SentIcon',
-      mainMessage: 'Check your email',
-      subMessage: 'We have sent a password recover instructions to your email.',
-      buttonText: 'Go to my email'
-    })
+    userSession.setModalContent(
+      {
+        icon: 'SentIcon',
+        mainMessage: 'Check your email',
+        subMessage: 'We have sent a password recover instructions to your email.',
+        buttonText: 'Go to my email'
+      },
+      () => userSession.redirectToEmailProvider(values.email)
+    )
   } catch (error) {
     //
   }

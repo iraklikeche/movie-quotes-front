@@ -41,11 +41,6 @@ import { onMounted } from 'vue'
 const userSession = useUserSessionStore()
 const route = useRoute()
 
-// const handleSuccessModal = (message) => {
-//   // userSession.successModal = true
-//   console.log(message)
-// }
-
 onMounted(() => {
   const token = route.query.token
   if (token) {

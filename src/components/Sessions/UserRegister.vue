@@ -69,23 +69,23 @@ import { registerUser, getCsrfCookie } from '@/service/authService.js'
 import { Form } from 'vee-validate'
 import TheModal from '../TheModal.vue'
 import { useUserSessionStore } from '@/stores/UserSessionStore'
-import { onMounted } from 'vue'
 
 const userSession = useUserSessionStore()
-onMounted(() => console.log(userSession))
-console.log(userSession)
 
 const onSubmit = async (values) => {
   try {
     await getCsrfCookie()
     await registerUser(values)
     userSession.showRegister = false
-    userSession.setModalContent({
-      icon: 'SentIcon',
-      mainMessage: 'Thank you!',
-      subMessage: 'Please check your email to activate your account.',
-      buttonText: 'Go to my email'
-    })
+    userSession.setModalContent(
+      {
+        icon: 'SentIcon',
+        mainMessage: 'Thank you!',
+        subMessage: 'Please check your email to activate your account.',
+        buttonText: 'Go to my email'
+      },
+      () => userSession.redirectToEmailProvider(values.email)
+    )
   } catch (err) {
     console.log(err)
   }

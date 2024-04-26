@@ -18,6 +18,7 @@
             <button
               data-modal-hide="popup-modal"
               type="button"
+              @click="props.buttonAction"
               class="text-white w-full bg-red-600 hover:bg-red-800 focus:ring-4 focus:outline-none focus:ring-red-300 font-medium rounded-lg text-sm px-5 py-2.5"
             >
               {{ props.buttonText }}
@@ -30,14 +31,14 @@
 </template>
 
 <script setup lang="ts">
-import SentIcon from '@/components/icons/SentIcon.vue'
 import { resolveComponent, computed } from 'vue'
 
 const props = defineProps({
   icon: String,
   mainMessage: String,
   subMessage: String,
-  buttonText: String
+  buttonText: String,
+  buttonAction: Function
 })
 
 const dynamicIcon = computed(() => {

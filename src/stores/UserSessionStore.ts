@@ -12,7 +12,8 @@ export const useUserSessionStore = defineStore('UserSessionStore', () => {
     icon: '',
     mainMessage: '',
     subMessage: '',
-    buttonText: ''
+    buttonText: '',
+    buttonAction: null
   })
 
   function toggleModal(modal: Ref<boolean>) {
@@ -27,14 +28,40 @@ export const useUserSessionStore = defineStore('UserSessionStore', () => {
   }
   function backToLogIn() {
     closeModal()
+    successModal.value = false
     showLogin.value = true
   }
 
-  function setModalContent(content) {
+  function redirectToEmailProvider(email) {
+    const emailDomain = email.split('@')[1]
+    let url = ''
+    console.log(emailDomain)
+
+    switch (emailDomain) {
+      case 'gmail.com':
+        url = 'https://mail.google.com'
+        break
+      case 'yahoo.com':
+        url = 'https://mail.yahoo.com'
+        break
+      case 'outlook.com':
+      case 'hotmail.com':
+        url = 'https://outlook.live.com'
+        break
+      default:
+        url = 'https://mail.google.com'
+        break
+    }
+
+    window.location.href = url
+  }
+
+  function setModalContent(content, action = null) {
     modalContent.value.icon = content.icon
     modalContent.value.mainMessage = content.mainMessage
     modalContent.value.subMessage = content.subMessage
     modalContent.value.buttonText = content.buttonText
+    modalContent.value.buttonAction = action
     successModal.value = true
   }
 
@@ -59,6 +86,7 @@ export const useUserSessionStore = defineStore('UserSessionStore', () => {
     toggleModal,
     successModal,
     modalContent,
-    setModalContent
+    setModalContent,
+    redirectToEmailProvider
   }
 })

@@ -8,7 +8,7 @@ import router from './router'
 import { defineRule } from 'vee-validate'
 import * as AllRules from '@vee-validate/rules'
 import SentIcon from '@/components/icons/SentIcon.vue'
-// import SentIcon2 from '@/components/icons/SentIcon2.vue'
+import Success from '@/components/icons/SuccessIcon.vue'
 
 Object.keys(AllRules).forEach((rule) => {
   defineRule(rule, AllRules[rule])

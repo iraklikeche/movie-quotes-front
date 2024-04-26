@@ -69,7 +69,17 @@ const onSubmit = async (values, { resetForm, setFieldError }) => {
       password_confirmation: values.password_confirmation
     })
     resetForm()
-    userSession.backToLogIn()
+    userSession.showResetPassword = false
+
+    userSession.setModalContent(
+      {
+        icon: 'Success',
+        mainMessage: 'Success!',
+        subMessage: 'Your Password changed successfully',
+        buttonText: 'Log in'
+      },
+      () => userSession.backToLogIn()
+    )
   } catch (error) {
     console.log(error)
   }

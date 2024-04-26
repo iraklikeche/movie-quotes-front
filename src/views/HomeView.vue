@@ -1,6 +1,4 @@
 <template>
-  <UserRegister v-if="userSession.showRegister" />
-
   <main class="bg-gradient-to-b from-gray-900 to-black h-screen">
     <TheHeader />
     <div class="flex items-center justify-center flex-col gap-10 pb-32 h-full">
@@ -39,7 +37,7 @@ import TheHeader from '@/components/TheHeader.vue'
 import cover1 from '@/assets/images/cover1.png'
 import cover2 from '@/assets/images/cover2.png'
 import cover3 from '@/assets/images/cover3.png'
-import { getCsrfCookie, logoutUser, verifyEmail,forgotPassword } from '@/service/authService.js'
+import { getCsrfCookie, logoutUser, verifyEmail, forgotPassword } from '@/service/authService.js'
 import { useUserSessionStore } from '@/stores/UserSessionStore'
 import UserRegister from '@/components/Sessions/UserRegister.vue'
 import { onMounted, ref } from 'vue'
