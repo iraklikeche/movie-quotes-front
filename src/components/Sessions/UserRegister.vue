@@ -72,7 +72,14 @@ import { useUserSessionStore } from '@/stores/UserSessionStore'
 
 const userSession = useUserSessionStore()
 
-const onSubmit = async (values) => {
+interface FormValues {
+  username: string
+  email: string
+  password: string
+  password_confirmation: string
+}
+
+const onSubmit = async (values: FormValues, { setFieldError }) => {
   try {
     await getCsrfCookie()
     await registerUser(values)
@@ -87,7 +94,10 @@ const onSubmit = async (values) => {
       () => userSession.redirectToEmailProvider(values.email)
     )
   } catch (err) {
-    console.log(err)
+    console.log(err.response.data.errors)
+    for (const fieldName in err.response.data.errors) {
+      setFieldError(fieldName, err.response.data.errors[fieldName])
+    }
   }
 }
 </script>

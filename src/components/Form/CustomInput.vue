@@ -7,7 +7,7 @@
       :type="inputType"
       :name="name"
       :placeholder="placeholder"
-      class="bg-[#ced4da] block w-full border-0 px-3 py-2 rounded-md"
+      class="bg-[#ced4da] block w-full border-2 px-3 py-2 rounded-md"
       :class="{ 'border-red-500': serverError }"
       :validateOnInput="true"
       :validateOnBlur="false"

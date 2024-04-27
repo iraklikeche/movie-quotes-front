@@ -19,9 +19,9 @@
     >
       <div class="relative bg-[#222030] sm:rounded-lg shadow">
         <div class="sm:p-4 md:p-5 flex flex-col items-center gap-3 justify-center">
-          <div @click="userSession.closeModal" class="text-center">
+          <button @click="userSession.closeModal" class="text-center">
             <CloseBtn />
-          </div>
+          </button>
           <div class="w-full px-12">
             <div class="flex flex-col gap-2 items-center">
               <h2 class="text-white text-2xl font-semibold">{{ props.header }}</h2>

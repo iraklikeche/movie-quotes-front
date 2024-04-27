@@ -29,7 +29,13 @@
 
       <div class="flex justify-between items-center gap-2">
         <div class="flex items-center gap-2">
-          <input type="checkbox" />
+          <Field
+            name="remember"
+            type="checkbox"
+            v-model="remember"
+            value="true"
+            :serverError="errors.remember"
+          />
           <label class="text-white">Remember me</label>
         </div>
         <button class="text-[#0d6efd] underline" @click="userSession.toggleForgotPassword">
@@ -37,7 +43,7 @@
         </button>
       </div>
 
-      <button class="bg-[#e31221] py-2 rounded-md my-4">Sign in</button>
+      <button class="bg-[#e31221] py-2 rounded-md my-4 text-white">Sign in</button>
       <button
         class="bg-transparent border border-white py-2 rounded-md flex items-center gap-2 justify-center text-white"
       >
@@ -63,20 +69,31 @@ import { Form, Field } from 'vee-validate'
 import TheModal from '../TheModal.vue'
 import GoogleIcon from '@/components/icons/GoogleIcon.vue'
 import { useUserSessionStore } from '@/stores/UserSessionStore'
+import { ref } from 'vue'
 
 const userSession = useUserSessionStore()
 
-const onSubmit = async (values, { setFieldError }) => {
+const remember = ref(false)
+
+interface LoginValues {
+  email: string
+  password: string
+  remember?: boolean
+}
+
+const onSubmit = async (values: LoginValues, { setFieldError }) => {
   await getCsrfCookie()
+  values.remember = remember.value
   try {
-    const response = await loginUser({
+    await loginUser({
       email: values.email,
       password: values.password,
       remember: values.remember
     })
     localStorage.setItem('isLoggedIn', true)
   } catch (error) {
-    //
+    console.log(error.response)
+    setFieldError('email', error.response.data.message)
   }
 }
 </script>

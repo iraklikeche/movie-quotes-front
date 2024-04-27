@@ -1,6 +1,13 @@
 import { ref } from 'vue'
 import type { Ref } from 'vue'
 import { defineStore } from 'pinia'
+interface ModalContent {
+  icon: string
+  mainMessage: string
+  subMessage: string
+  buttonText: string
+  buttonAction?: null | (() => void)
+}
 
 export const useUserSessionStore = defineStore('UserSessionStore', () => {
   const showRegister = ref(false)
@@ -32,7 +39,7 @@ export const useUserSessionStore = defineStore('UserSessionStore', () => {
     showLogin.value = true
   }
 
-  function redirectToEmailProvider(email) {
+  function redirectToEmailProvider(email: string) {
     const emailDomain = email.split('@')[1]
     let url = ''
     console.log(emailDomain)
@@ -56,12 +63,12 @@ export const useUserSessionStore = defineStore('UserSessionStore', () => {
     window.location.href = url
   }
 
-  function setModalContent(content, action = null) {
+  function setModalContent(content: ModalContent, action: (() => void) | null = null) {
     modalContent.value.icon = content.icon
     modalContent.value.mainMessage = content.mainMessage
     modalContent.value.subMessage = content.subMessage
     modalContent.value.buttonText = content.buttonText
-    modalContent.value.buttonAction = action
+    modalContent.value.buttonAction = action ?? content.buttonAction
     successModal.value = true
   }
 

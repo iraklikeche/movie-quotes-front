@@ -36,7 +36,11 @@ import { useUserSessionStore } from '@/stores/UserSessionStore'
 
 const userSession = useUserSessionStore()
 
-const onSubmit = async (values, { setFieldError, resetForm }) => {
+interface LoginValues {
+  email: string
+}
+
+const onSubmit = async (values: LoginValues, { setFieldError, resetForm }) => {
   await getCsrfCookie()
   try {
     await forgotPassword(values.email)
@@ -52,8 +56,10 @@ const onSubmit = async (values, { setFieldError, resetForm }) => {
       },
       () => userSession.redirectToEmailProvider(values.email)
     )
-  } catch (error) {
-    //
+  } catch (error: unknown) {
+    for (const fieldName in error.response.data.errors) {
+      setFieldError(fieldName, error.response.data.errors[fieldName])
+    }
   }
 }
 </script>

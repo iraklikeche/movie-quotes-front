@@ -49,20 +49,25 @@ import { useUserSessionStore } from '@/stores/UserSessionStore'
 
 const userSession = useUserSessionStore()
 
-const token = ref('')
-const email = ref('')
+interface ResetPasswordFormValues {
+  password: string
+  password_confirmation: string
+}
+
+const token = ref<string>('')
+const email = ref<string>('')
 
 const route = useRoute()
 
 onMounted(() => {
-  token.value = route.query.token
-  email.value = route.query.email
+  token.value = (route.query.token as string) || ''
+  email.value = (route.query.email as string) || ''
 })
 
-const onSubmit = async (values, { resetForm, setFieldError }) => {
+const onSubmit = async (values: ResetPasswordFormValues, { resetForm, setFieldError }) => {
   try {
     await getCsrfCookie()
-    const data = await resetPassword({
+    await resetPassword({
       token: token.value,
       email: email.value,
       password: values.password,
@@ -81,7 +86,9 @@ const onSubmit = async (values, { resetForm, setFieldError }) => {
       () => userSession.backToLogIn()
     )
   } catch (error) {
-    console.log(error)
+    for (const fieldName in error.response.data.errors) {
+      setFieldError(fieldName, error.response.data.errors[fieldName])
+    }
   }
 }
 </script>
