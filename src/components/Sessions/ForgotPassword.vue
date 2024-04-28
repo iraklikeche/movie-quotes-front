@@ -1,25 +1,27 @@
 <template>
   <TheModal
-    header="Forgot password?"
-    paragraph="Enter the email and we'll send an email with instruction to reset your password"
+    :header="$t('sessions.forgot_password')"
+    :paragraph="$t('sessions.forgot_subheader')"
     class="top-0 w-full"
   >
     <Form @submit="onSubmit" class="flex flex-col gap-2" v-slot="{ errors }">
       <CustomInput
-        label="Email"
+        :label="$t('sessions.email')"
         name="email"
-        placeholder="example@gmail.com"
+        :placeholder="$t('sessions.email_placeholder')"
         type="email"
         rules="required|email"
         :serverError="errors.email"
       />
 
-      <button class="bg-[#e31221] py-2 rounded-md mb-2 text-white">Send instructions</button>
+      <button class="bg-[#e31221] py-2 rounded-md mb-2 text-white">
+        {{ $t('buttons.send_instructions') }}
+      </button>
       <button
         @click="userSession.backToLogIn"
         class="bg-transparent text-[#6c757d] py-2 rounded-md mb-2 flex items-center justify-center gap-2"
       >
-        <GoBackArrow /> Back to log in
+        <GoBackArrow /> {{ $t('sessions.back_to_login') }}
       </button>
     </Form>
   </TheModal>

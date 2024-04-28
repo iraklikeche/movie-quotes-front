@@ -1,0 +1,19 @@
+{
+  "header": "Create account",
+  "subheader": "Start your journey!",
+  "username": "Username",
+  "username_placeholder": "write your username",
+  "email": "email",
+  "email_placeholder": "write your email",
+  "password": "password",
+  "conf_password": "repeat password",
+  "password_placeholder": "write your password",
+  "conf_password_placeholder": "write your password",
+  "login_header": "Log in to your account",
+  "login_subheader": "Welcome back! please enter your details.",
+  "forgot_password": "Forgot password",
+  "remember": "remember me",
+  "not_register": "Don't have account",
+  "forgot_subheader": "Enter the email and we'll send an email with instruction to reset your password",
+  "back_to_login": "Back to log in"
+}

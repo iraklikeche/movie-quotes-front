@@ -1,14 +1,4 @@
 <template>
-  <!-- <div
-    class="fixed inset-0 overflow-hidden h-full w-full backdrop-blur-sm flex overflow-y-auto z-50 sm:pt-32"
-    id="my-modal"
-  >
-    <div
-      class="relative mx-auto sm:px-24 bg-[#222030] flex flex-col w-full h-full sm:max-w-[37rem] sm:max-h-[45rem]"
-    >
- 
-    </div>
-  </div> -->
   <div
     id="popup-modal"
     tabindex="-1"

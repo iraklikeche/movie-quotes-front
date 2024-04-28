@@ -13,13 +13,16 @@
     </div>
     <div>
       <div class="inline-flex mr-8 items-center">
-        <select
-          class="bg-transparent text-white text-sm rounded-lg h-10 pr-2 hover:border-gray-400 focus:outline-none appearance-none"
-          @change="userSession.changeLanguage($event)"
-        >
-          <option value="en" class="bg-red-500">Eng</option>
-          <option value="es" class="bg-red-500">Geo</option>
-        </select>
+        <div class="locale-changer">
+          <select
+            v-model="locale"
+            class="bg-transparent text-white text-sm rounded-lg h-10 pr-2 hover:border-gray-400 focus:outline-none appearance-none cursor-pointer"
+          >
+            <option v-for="locale in availableLocales" :key="`locale-${locale}`" :value="locale">
+              {{ locale }}
+            </option>
+          </select>
+        </div>
         <LanguageArrow />
       </div>
 
@@ -27,13 +30,13 @@
         @click="userSession.toggleLogin"
         class="border border-white bg-transparent text-sm px-5 py-2 rounded-lg text-white mr-4"
       >
-        Log in
+        {{ $t('buttons.login') }}
       </button>
       <button
         @click="userSession.toggleRegister"
         class="bg-[#e31221] text-white px-4 py-2 text-sm rounded-lg"
       >
-        Sign up
+        {{ $t('buttons.signup') }}
       </button>
     </div>
   </div>
@@ -48,8 +51,13 @@ import ToastModal from '@/components/ToastModal.vue'
 import { useUserSessionStore } from '@/stores/UserSessionStore'
 import { useRoute } from 'vue-router'
 import { onMounted } from 'vue'
-import LanguageArrow from './icons/LanguageArrow.vue'
+import { useI18n } from 'vue-i18n'
 
+import LanguageArrow from './icons/LanguageArrow.vue'
+import { watch } from 'vue'
+import { setLocale } from '@vee-validate/i18n'
+
+const { locale, availableLocales } = useI18n()
 const userSession = useUserSessionStore()
 const route = useRoute()
 
@@ -59,4 +67,13 @@ onMounted(() => {
     userSession.showResetPassword = true
   }
 })
+
+// Watch for changes in the i18n locale and update vee-validate's locale accordingly
+watch(
+  () => locale.value,
+  (newLocale) => {
+    setLocale(newLocale)
+  },
+  { immediate: true }
+)
 </script>
