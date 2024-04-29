@@ -16,6 +16,7 @@
         <div class="locale-changer">
           <select
             v-model="locale"
+            @change="updateLocale"
             class="bg-transparent text-white text-sm rounded-lg h-10 pr-2 hover:border-gray-400 focus:outline-none appearance-none cursor-pointer"
           >
             <option v-for="locale in availableLocales" :key="`locale-${locale}`" :value="locale">
@@ -49,26 +50,37 @@ import ForgotPassword from '@/components/Sessions/ForgotPassword.vue'
 import ResetPassword from '@/components/Sessions/ResetPassword.vue'
 import ToastModal from '@/components/ToastModal.vue'
 import { useUserSessionStore } from '@/stores/UserSessionStore'
-import { useRoute } from 'vue-router'
+import { useRoute, useRouter } from 'vue-router'
 import { onMounted } from 'vue'
 import { useI18n } from 'vue-i18n'
 
 import LanguageArrow from './icons/LanguageArrow.vue'
 import { watch } from 'vue'
 import { setLocale } from '@vee-validate/i18n'
+import Cookies from 'js-cookie'
 
 const { locale, availableLocales } = useI18n()
 const userSession = useUserSessionStore()
 const route = useRoute()
+const router = useRouter()
+
+const updateLocale = () => {
+  Cookies.set('locale', locale.value, { expires: 7 })
+  router.push({ path: router.currentRoute.value.fullPath })
+}
 
 onMounted(() => {
   const token = route.query.token
   if (token) {
     userSession.showResetPassword = true
   }
+
+  const cookieLocale = Cookies.get('locale')
+  if (cookieLocale && availableLocales.includes(cookieLocale)) {
+    locale.value = cookieLocale
+  }
 })
 
-// Watch for changes in the i18n locale and update vee-validate's locale accordingly
 watch(
   () => locale.value,
   (newLocale) => {
