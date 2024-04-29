@@ -33,7 +33,7 @@ import { useUserSessionStore } from '@/stores/UserSessionStore'
 import CloseBtn from '@/components/icons/CloseBtn.vue'
 
 const userSession = useUserSessionStore()
-interface Props {
+type Props = {
   header: string
   paragraph: string
   secondaryParagraph?: string

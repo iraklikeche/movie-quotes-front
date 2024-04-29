@@ -74,7 +74,7 @@ import { useUserSessionStore } from '@/stores/UserSessionStore'
 
 const userSession = useUserSessionStore()
 
-interface FormValues {
+type FormValues = {
   username: string
   email: string
   password: string
@@ -96,9 +96,10 @@ const onSubmit = async (values: FormValues, { setFieldError }) => {
       () => userSession.redirectToEmailProvider(values.email)
     )
   } catch (err) {
-    console.log(err.response.data.errors)
-    for (const fieldName in err.response.data.errors) {
-      setFieldError(fieldName, err.response.data.errors[fieldName])
+    if (err.response?.data?.errors) {
+      for (const fieldName in err.response.data.errors) {
+        setFieldError(fieldName, err.response.data.errors[fieldName])
+      }
     }
   }
 }

@@ -1,7 +1,8 @@
 import { ref } from 'vue'
 import type { Ref } from 'vue'
 import { defineStore } from 'pinia'
-interface ModalContent {
+
+type ModalContent = {
   icon: string
   mainMessage: string
   subMessage: string

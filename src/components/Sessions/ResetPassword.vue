@@ -49,7 +49,7 @@ import { useUserSessionStore } from '@/stores/UserSessionStore'
 
 const userSession = useUserSessionStore()
 
-interface ResetPasswordFormValues {
+type ResetPasswordFormValues = {
   password: string
   password_confirmation: string
 }
@@ -86,8 +86,10 @@ const onSubmit = async (values: ResetPasswordFormValues, { resetForm, setFieldEr
       () => userSession.backToLogIn()
     )
   } catch (error) {
-    for (const fieldName in error.response.data.errors) {
-      setFieldError(fieldName, error.response.data.errors[fieldName])
+    if (error.response?.data.errors) {
+      for (const fieldName in error.response.data.errors) {
+        setFieldError(fieldName, error.response.data.errors[fieldName])
+      }
     }
   }
 }

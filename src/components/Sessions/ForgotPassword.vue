@@ -38,10 +38,9 @@ import { useUserSessionStore } from '@/stores/UserSessionStore'
 
 const userSession = useUserSessionStore()
 
-interface LoginValues {
+type LoginValues = {
   email: string
 }
-
 const onSubmit = async (values: LoginValues, { setFieldError, resetForm }) => {
   await getCsrfCookie()
   try {

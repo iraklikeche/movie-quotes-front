@@ -74,8 +74,7 @@ import { ref } from 'vue'
 const userSession = useUserSessionStore()
 
 const remember = ref(false)
-
-interface LoginValues {
+type LoginValues = {
   email: string
   password: string
   remember?: boolean
@@ -92,8 +91,9 @@ const onSubmit = async (values: LoginValues, { setFieldError }) => {
     })
     localStorage.setItem('isLoggedIn', true)
   } catch (error) {
-    console.log(error.response)
-    setFieldError('email', error.response.data.message)
+    if (error.response?.data?.message) {
+      setFieldError('email', error.response.data.message)
+    }
   }
 }
 </script>
