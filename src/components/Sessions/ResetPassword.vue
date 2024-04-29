@@ -26,8 +26,9 @@
         :serverError="errors.password_confirmation"
       />
 
-      <button class="bg-[#e31221] py-2 rounded-md mb-2">Send instructions</button>
+      <button class="bg-[#e31221] py-2 rounded-md mb-2 text-white">Reset Password</button>
       <button
+        @click="userSession.backToLogIn"
         class="bg-transparent text-[#6c757d] py-2 rounded-md mb-2 flex items-center justify-center gap-2"
       >
         <GoBackArrow /> Back to log in
@@ -44,33 +45,52 @@ import GoBackArrow from '@/components/icons/GoBackArrow.vue'
 import { resetPassword, getCsrfCookie } from '@/service/authService.js'
 import { ref, onMounted } from 'vue'
 import { useRoute } from 'vue-router'
+import { useUserSessionStore } from '@/stores/UserSessionStore'
 
-const token = ref('')
-const email = ref('')
+const userSession = useUserSessionStore()
+
+type ResetPasswordFormValues = {
+  password: string
+  password_confirmation: string
+}
+
+const token = ref<string>('')
+const email = ref<string>('')
 
 const route = useRoute()
 
 onMounted(() => {
-  token.value = route.query.token
-  email.value = route.query.email
+  token.value = (route.query.token as string) || ''
+  email.value = (route.query.email as string) || ''
 })
 
-const onSubmit = async (values, { resetForm, setFieldError }) => {
+const onSubmit = async (values: ResetPasswordFormValues, { resetForm, setFieldError }) => {
   try {
     await getCsrfCookie()
-    const data = await resetPassword({
+    await resetPassword({
       token: token.value,
       email: email.value,
       password: values.password,
       password_confirmation: values.password_confirmation
     })
     resetForm()
-    if (data.status === 200) {
-      const status = data.status
-      console.log(data)
-    }
+    userSession.showResetPassword = false
+
+    userSession.setModalContent(
+      {
+        icon: 'Success',
+        mainMessage: 'Success!',
+        subMessage: 'Your Password changed successfully',
+        buttonText: 'Log in'
+      },
+      () => userSession.backToLogIn()
+    )
   } catch (error) {
-    console.log(error)
+    if (error.response?.data.errors) {
+      for (const fieldName in error.response.data.errors) {
+        setFieldError(fieldName, error.response.data.errors[fieldName])
+      }
+    }
   }
 }
 </script>

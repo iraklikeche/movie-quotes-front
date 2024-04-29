@@ -1,36 +1,53 @@
 <template>
-  <UserRegister v-if="userSession.showRegister" />
-
   <main class="bg-gradient-to-b from-gray-900 to-black h-screen">
     <TheHeader />
     <div class="flex items-center justify-center flex-col gap-10 pb-32 h-full">
       <h2
         class="text-center text-2xl sm:text-6xl font-bold text-[#ddCCAA] flex flex-col gap-2 sm:gap-6"
       >
-        Find any quote in <span> millions of movie lines</span>
+        {{ $t('texts.homeMainText') }}<span> {{ $t('texts.MainTextSpan') }}</span>
       </h2>
       <button
         class="bg-[#e31221] text-white px-4 py-2 text-sm rounded-lg sm:text-xl"
         @click="userSession.toggleRegister"
       >
-        Get started
+        {{ $t('buttons.get_started') }}
       </button>
     </div>
   </main>
   <section class="">
-    <div class="overflow-hidden relative w-full h-screen">
-      <div class="py-6 bg-black outline-none absolute pointer-events-none"></div>
-      <img :src="cover1" class="h-full w-full -z-10 absolute pointer-events-none" />
-      <p>123</p>
-    </div>
-    <div class="overflow-hidden relative w-full h-screen">
-      <img :src="cover2" class="h-full w-full -z-10 absolute pointer-events-none" />
-      <p>123</p>
-    </div>
-    <div class="overflow-hidden relative w-full h-screen">
-      <img :src="cover3" class="h-full w-full -z-10 absolute pointer-events-none" />
-      <p>123</p>
-    </div>
+    <MovieCover :coverImage="cover1" :movieTitleKey="'interstellar_title'"R>
+      {{ $t('movieQuotes.interstellar_quote') }}
+      <br class="hidden sm:block" />
+      <span> {{ $t('movieQuotes.interstellar_quote_part') }} </span>
+    </MovieCover>
+
+    <MovieCover :coverImage="cover3" :movieTitleKey="'royal_tenenbaums_title'">
+      <p>
+        <span> {{ $t('movieQuotes.royal_tenenbaums_quote_1') }} </span>
+        <br class="hidden sm:block" />
+
+        <span> {{ $t('movieQuotes.royal_tenenbaums_quote_2') }} </span>
+        <br class="hidden sm:block" />
+
+        <span> {{ $t('movieQuotes.royal_tenenbaums_quote_3') }} </span>
+        <br class="hidden sm:block" />
+
+        <span> {{ $t('movieQuotes.royal_tenenbaums_quote_4') }} </span>
+      </p>
+    </MovieCover>
+
+    <MovieCover :coverImage="cover2" :movieTitleKey="'lotr_title'" customClass="pt-96">
+      <p>
+        <span> {{ $t('movieQuotes.lotr_quote_1') }} </span>
+        <br class="hidden sm:block" />
+
+        <span> {{ $t('movieQuotes.lotr_quote_2') }} </span>
+        <br class="hidden sm:block" />
+
+        <span> {{ $t('movieQuotes.lotr_quote_3') }} </span>
+      </p>
+    </MovieCover>
   </section>
 </template>
 
@@ -39,11 +56,11 @@ import TheHeader from '@/components/TheHeader.vue'
 import cover1 from '@/assets/images/cover1.png'
 import cover2 from '@/assets/images/cover2.png'
 import cover3 from '@/assets/images/cover3.png'
-import { getCsrfCookie, logoutUser, verifyEmail,forgotPassword } from '@/service/authService.js'
+import { getCsrfCookie, logoutUser, verifyEmail } from '@/service/authService.js'
 import { useUserSessionStore } from '@/stores/UserSessionStore'
-import UserRegister from '@/components/Sessions/UserRegister.vue'
 import { onMounted, ref } from 'vue'
 import { useRoute } from 'vue-router'
+import MovieCover from '@/components/MovieCover.vue'
 
 const userSession = useUserSessionStore()
 const route = useRoute()

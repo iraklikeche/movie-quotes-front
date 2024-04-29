@@ -1,19 +1,22 @@
 import './style.css'
-
 import { createApp } from 'vue'
+import i18n from '@/i18n/index.js'
 import { createPinia } from 'pinia'
-
 import App from './App.vue'
 import router from './router'
-import { defineRule } from 'vee-validate'
-import * as AllRules from '@vee-validate/rules'
+import { setupValidation } from '@/configs/veeValidate.js'
+import SentIcon from '@/components/icons/SentIcon.vue'
+import SuccessIcon from '@/components/icons/SuccessIcon.vue'
 
-Object.keys(AllRules).forEach((rule) => {
-  defineRule(rule, AllRules[rule])
-})
 const app = createApp(App)
+
+app.component('SentIcon', SentIcon)
+app.component('SuccessIcon', SuccessIcon)
 
 app.use(createPinia())
 app.use(router)
+app.use(i18n)
+
+setupValidation(i18n)
 
 app.mount('#app')
