@@ -45,6 +45,8 @@
         {{ $t('buttons.login') }}
       </button>
       <button
+        type="button"
+        @click="registerWithGoogle"
         class="bg-transparent border border-white py-2 rounded-md flex items-center gap-2 justify-center text-white"
       >
         <GoogleIcon /> {{ $t('buttons.google') }}
@@ -63,16 +65,18 @@
 </template>
 
 <script setup lang="ts">
-import { getCsrfCookie, loginUser } from '@/service/authService.js'
+import { getCsrfCookie, loginUser, signUpWithGoogle } from '@/service/authService.js'
 import CustomInput from '../Form/CustomInput.vue'
 import { Form, Field } from 'vee-validate'
 import TheModal from '../TheModal.vue'
 import GoogleIcon from '@/components/icons/GoogleIcon.vue'
 import { useUserSessionStore } from '@/stores/UserSessionStore'
 import { ref } from 'vue'
+import { useRouter } from 'vue-router'
 
 const userSession = useUserSessionStore()
 
+const router = useRouter()
 const remember = ref(false)
 type LoginValues = {
   email: string
@@ -90,10 +94,17 @@ const onSubmit = async (values: LoginValues, { setFieldError }) => {
       remember: values.remember
     })
     localStorage.setItem('isLoggedIn', true)
+    router.push('/dashboard')
   } catch (error) {
     if (error.response?.data?.message) {
       setFieldError('email', error.response.data.message)
     }
   }
+}
+
+const registerWithGoogle = async () => {
+  const res = await signUpWithGoogle()
+  console.log(res)
+  window.location.href = res.data
 }
 </script>

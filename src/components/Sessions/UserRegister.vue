@@ -48,6 +48,8 @@
         {{ $t('buttons.get_started') }}
       </button>
       <button
+        type="button"
+        @click="registerWithGoogle"
         class="bg-black sm:bg-transparent border border-white py-2 rounded-md flex items-center gap-2 justify-center text-white"
       >
         <GoogleIcon /> {{ $t('buttons.google') }}
@@ -67,7 +69,7 @@
 <script setup lang="ts">
 import CustomInput from '../Form/CustomInput.vue'
 import GoogleIcon from '@/components/icons/GoogleIcon.vue'
-import { registerUser, getCsrfCookie } from '@/service/authService.js'
+import { registerUser, getCsrfCookie, signUpWithGoogle } from '@/service/authService.js'
 import { Form } from 'vee-validate'
 import TheModal from '../TheModal.vue'
 import { useUserSessionStore } from '@/stores/UserSessionStore'
@@ -102,5 +104,10 @@ const onSubmit = async (values: FormValues, { setFieldError }) => {
       }
     }
   }
+}
+
+const registerWithGoogle = async () => {
+  const res = await signUpWithGoogle()
+  window.location.href = res.data
 }
 </script>

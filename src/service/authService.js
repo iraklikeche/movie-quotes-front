@@ -40,3 +40,13 @@ export async function resendPasswordResetLink(email) {
   const response = await apiClient.post('/api/reset-password/resend', { email })
   return response
 }
+
+export async function signUpWithGoogle() {
+  const response = await apiClient.get('/api/auth/redirect')
+  return response
+}
+
+export async function callBack(code) {
+  const response = await apiClient.get('/api/auth/callback', { params: code })
+  return response
+}
