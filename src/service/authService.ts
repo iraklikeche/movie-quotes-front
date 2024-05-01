@@ -41,6 +41,11 @@ export async function resendPasswordResetLink(email) {
   return response
 }
 
+export async function resendVerificationLink(userId) {
+  const response = await apiClient.post('/api/email/resend', { id: userId })
+  return response
+}
+
 export async function signUpWithGoogle() {
   const response = await apiClient.get('/api/auth/redirect')
   return response

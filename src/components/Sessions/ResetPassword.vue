@@ -1,37 +1,43 @@
 <template>
   <TheModal
-    buttonText="Get started"
-    header="Create new password"
-    paragraph="Your new password must be different from previous used passwords"
+    :header="$t('sessions.reset_header')"
+    :paragraph="$t('sessions.reset_subheader')"
     class="top-0 w-full"
   >
-    <Form @submit="onSubmit" class="flex flex-col gap-5" v-slot="{ errors }">
+    <Form
+      @submit="
+        (values, setFieldError) => onSubmit(values as ResetPasswordFormValues, setFieldError)
+      "
+      class="flex flex-col gap-5"
+      v-slot="{ errors }"
+    >
       <CustomInput
-        type="password"
-        label="Password"
+        :label="$t('sessions.password')"
         name="password"
         rules="required|min:3"
-        placeholder="Must be 3 characters"
+        :placeholder="$t('sessions.password_placeholder')"
         isPasswordField
         :serverError="errors.password"
       />
 
       <CustomInput
         type="password"
-        label="Confirm Password"
+        :label="$t('sessions.conf_password')"
         name="password_confirmation"
-        placeholder="Must be 3 characters"
+        :placeholder="$t('sessions.conf_password_placeholder')"
         isPasswordField
         rules="confirmed:@password_confirmation"
         :serverError="errors.password_confirmation"
       />
 
-      <button class="bg-[#e31221] py-2 rounded-md mb-2 text-white">Reset Password</button>
+      <button class="bg-[#e31221] py-2 rounded-md mb-2 text-white">
+        {{ $t('sessions.reset_header') }}
+      </button>
       <button
         @click="userSession.backToLogIn"
         class="bg-transparent text-[#6c757d] py-2 rounded-md mb-2 flex items-center justify-center gap-2"
       >
-        <GoBackArrow /> Back to log in
+        <GoBackArrow /> {{ $t('sessions.back_to_login') }}
       </button>
     </Form>
   </TheModal>
@@ -42,10 +48,11 @@ import CustomInput from '../Form/CustomInput.vue'
 import { Form } from 'vee-validate'
 import TheModal from '../TheModal.vue'
 import GoBackArrow from '@/components/icons/GoBackArrow.vue'
-import { resetPassword, getCsrfCookie } from '@/service/authService.js'
+import { resetPassword, getCsrfCookie } from '@/service/authService'
 import { ref, onMounted } from 'vue'
 import { useRoute } from 'vue-router'
 import { useUserSessionStore } from '@/stores/UserSessionStore'
+import type { SubmissionHandler } from 'vee-validate'
 
 const userSession = useUserSessionStore()
 
@@ -64,7 +71,10 @@ onMounted(() => {
   email.value = (route.query.email as string) || ''
 })
 
-const onSubmit = async (values: ResetPasswordFormValues, { resetForm, setFieldError }) => {
+const onSubmit: SubmissionHandler<ResetPasswordFormValues> = async (
+  values: ResetPasswordFormValues,
+  { setFieldError }
+) => {
   try {
     await getCsrfCookie()
     await resetPassword({
@@ -73,7 +83,6 @@ const onSubmit = async (values: ResetPasswordFormValues, { resetForm, setFieldEr
       password: values.password,
       password_confirmation: values.password_confirmation
     })
-    resetForm()
     userSession.showResetPassword = false
 
     userSession.setModalContent(
@@ -85,10 +94,14 @@ const onSubmit = async (values: ResetPasswordFormValues, { resetForm, setFieldEr
       },
       () => userSession.backToLogIn()
     )
-  } catch (error) {
-    if (error.response?.data.errors) {
+  } catch (error: any) {
+    if (error.response.data.errors) {
+      console.log(error)
       for (const fieldName in error.response.data.errors) {
-        setFieldError(fieldName, error.response.data.errors[fieldName])
+        setFieldError(
+          fieldName as keyof ResetPasswordFormValues,
+          error.response.data.errors[fieldName]
+        )
       }
     }
   }

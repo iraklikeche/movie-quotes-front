@@ -45,7 +45,6 @@
           </button>
         </div>
         <div v-else class="flex gap-6 items-center">
-          <!-- <SearchIcon /> -->
           <NotificationIcon />
         </div>
       </div>
@@ -66,10 +65,11 @@ import { useI18n } from 'vue-i18n'
 import LanguageArrow from './icons/LanguageArrow.vue'
 import NotificationIcon from '@/components/icons/NotificationIcon.vue'
 import HamburgerMenu from '@/components/icons/HamburgerMenu.vue'
-import SearchIcon from '@/components/icons/SearchIcon.vue'
 import { watch } from 'vue'
 import { setLocale } from '@vee-validate/i18n'
 import Cookies from 'js-cookie'
+
+const { t: $t } = useI18n()
 
 const { locale, availableLocales } = useI18n()
 const userSession = useUserSessionStore()
@@ -78,7 +78,6 @@ const router = useRouter()
 
 const isLogged = ref(false)
 
-// Functions
 const updateLocale = () => {
   Cookies.set('locale', locale.value, { expires: 7 })
   router.push({ path: router.currentRoute.value.fullPath })
@@ -91,7 +90,6 @@ const initialLoginCheck = () => {
   }
 }
 
-// Life-cycles
 onBeforeMount(() => {
   initialLoginCheck()
 })

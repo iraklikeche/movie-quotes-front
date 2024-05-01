@@ -18,7 +18,7 @@
             <button
               data-modal-hide="popup-modal"
               type="button"
-              @click="props.buttonAction"
+              @click="props.buttonAction ? props.buttonAction() : null"
               class="text-white w-full bg-red-600 hover:bg-red-800 focus:ring-4 focus:outline-none focus:ring-red-300 font-medium rounded-lg text-sm px-5 py-2.5"
             >
               {{ props.buttonText }}
@@ -31,17 +31,22 @@
 </template>
 
 <script setup lang="ts">
-import { resolveComponent, computed } from 'vue'
+import { defineProps, resolveComponent, computed } from 'vue'
+import type { PropType } from 'vue'
 
 const props = defineProps({
   icon: String,
   mainMessage: String,
   subMessage: String,
   buttonText: String,
-  buttonAction: Function
+  buttonAction: {
+    type: Function as PropType<() => void | null>,
+    default: () => null
+  }
 })
 
 const dynamicIcon = computed(() => {
-  return resolveComponent(props.icon)
+  const iconName = props.icon || ''
+  return resolveComponent(iconName)
 })
 </script>

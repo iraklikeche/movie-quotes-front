@@ -6,7 +6,11 @@
     sessionButton="Log in"
     class="top-0 w-full sm:w-auto"
   >
-    <Form @submit="onSubmit" class="flex flex-col gap-3" v-slot="{ errors }">
+    <Form
+      @submit="(values, setFieldError) => onSubmit(values as FormValues, setFieldError)"
+      class="flex flex-col gap-3"
+      v-slot="{ errors }"
+    >
       <CustomInput
         :label="$t('sessions.username')"
         name="username"
@@ -69,10 +73,14 @@
 <script setup lang="ts">
 import CustomInput from '../Form/CustomInput.vue'
 import GoogleIcon from '@/components/icons/GoogleIcon.vue'
-import { registerUser, getCsrfCookie, signUpWithGoogle } from '@/service/authService.js'
+import { registerUser, getCsrfCookie, signUpWithGoogle } from '@/service/authService'
 import { Form } from 'vee-validate'
 import TheModal from '../TheModal.vue'
 import { useUserSessionStore } from '@/stores/UserSessionStore'
+import type { SubmissionHandler } from 'vee-validate'
+import { useI18n } from 'vue-i18n'
+
+const { t: $t } = useI18n()
 
 const userSession = useUserSessionStore()
 
@@ -82,8 +90,7 @@ type FormValues = {
   password: string
   password_confirmation: string
 }
-
-const onSubmit = async (values: FormValues, { setFieldError }) => {
+const onSubmit: SubmissionHandler<FormValues> = async (values: FormValues, { setFieldError }) => {
   try {
     await getCsrfCookie()
     await registerUser(values)
@@ -91,16 +98,16 @@ const onSubmit = async (values: FormValues, { setFieldError }) => {
     userSession.setModalContent(
       {
         icon: 'SentIcon',
-        mainMessage: 'Thank you!',
-        subMessage: 'Please check your email to activate your account.',
-        buttonText: 'Go to my email'
+        mainMessage: $t('texts.thanks'),
+        subMessage: $t('texts.subMessage'),
+        buttonText: $t('texts.buttonText')
       },
       () => userSession.redirectToEmailProvider(values.email)
     )
-  } catch (err) {
+  } catch (err: any) {
     if (err.response?.data?.errors) {
       for (const fieldName in err.response.data.errors) {
-        setFieldError(fieldName, err.response.data.errors[fieldName])
+        setFieldError(fieldName as keyof FormValues, err.response.data.errors[fieldName])
       }
     }
   }

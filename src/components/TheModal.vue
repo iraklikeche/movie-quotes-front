@@ -4,9 +4,7 @@
     tabindex="-1"
     class="overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 justify-center items-center w-full md:inset-0 h-screen sm:h-[calc(100%-1rem)] max-h-full flex backdrop-blur-sm"
   >
-    <div
-      class="relative sm:p-4 w-full max-w-xl h-full sm:h-auto sm:max-h-full bg-[#222030] sm:rounded-lg"
-    >
+    <div class="relative w-full max-w-xl h-full sm:h-auto sm:max-h-full bg-[#222030] sm:rounded-lg">
       <div class="relative bg-[#222030] sm:rounded-lg">
         <div class="sm:p-4 md:p-5 flex flex-col items-center gap-3 justify-center">
           <button @click="userSession.closeModal" class="text-center">

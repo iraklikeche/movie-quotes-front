@@ -7,7 +7,7 @@
       :type="inputType"
       :name="name"
       :placeholder="placeholder"
-      class="bg-[#ced4da] block w-full border-2 px-3 py-2 rounded-md"
+      class="bg-[#ced4da] block w-full px-3 py-2 border-2 rounded-md"
       :class="{ 'border-red-500': serverError }"
       :validateOnInput="true"
       :validateOnBlur="false"
@@ -43,7 +43,11 @@ const props = defineProps({
   rules: String,
   isPasswordField: Boolean,
   serverError: String,
-  error: String
+  error: String,
+  additionalClass: {
+    type: Object,
+    required: false
+  }
 })
 
 const isPasswordVisible = ref(false)

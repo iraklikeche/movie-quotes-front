@@ -6,7 +6,11 @@
     sessionButton="sign up"
     class="top-0 w-full"
   >
-    <Form @submit="onSubmit" class="flex flex-col max-w-[26rem]" v-slot="{ errors }">
+    <Form
+      @submit="(values, setFieldError) => onSubmit(values as LoginValues, setFieldError)"
+      class="flex flex-col max-w-[26rem]"
+      v-slot="{ errors }"
+    >
       <CustomInput
         :label="$t('sessions.email')"
         name="email"
@@ -65,7 +69,7 @@
 </template>
 
 <script setup lang="ts">
-import { getCsrfCookie, loginUser, signUpWithGoogle } from '@/service/authService.js'
+import { getCsrfCookie, loginUser, signUpWithGoogle } from '@/service/authService'
 import CustomInput from '../Form/CustomInput.vue'
 import { Form, Field } from 'vee-validate'
 import TheModal from '../TheModal.vue'
@@ -73,6 +77,7 @@ import GoogleIcon from '@/components/icons/GoogleIcon.vue'
 import { useUserSessionStore } from '@/stores/UserSessionStore'
 import { ref } from 'vue'
 import { useRouter } from 'vue-router'
+import type { SubmissionHandler } from 'vee-validate'
 
 const userSession = useUserSessionStore()
 
@@ -84,7 +89,7 @@ type LoginValues = {
   remember?: boolean
 }
 
-const onSubmit = async (values: LoginValues, { setFieldError }) => {
+const onSubmit: SubmissionHandler<LoginValues> = async (values: LoginValues, { setFieldError }) => {
   await getCsrfCookie()
   values.remember = remember.value
   try {
@@ -93,9 +98,9 @@ const onSubmit = async (values: LoginValues, { setFieldError }) => {
       password: values.password,
       remember: values.remember
     })
-    localStorage.setItem('isLoggedIn', true)
+    localStorage.setItem('isLoggedIn', 'true')
     router.push('/dashboard')
-  } catch (error) {
+  } catch (error: any) {
     if (error.response?.data?.message) {
       setFieldError('email', error.response.data.message)
     }

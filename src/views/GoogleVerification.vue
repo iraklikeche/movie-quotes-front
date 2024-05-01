@@ -3,7 +3,7 @@
 </template>
 <script setup lang="ts">
 import { useRoute, useRouter } from 'vue-router'
-import { callBack } from '@/service/authService.js'
+import { callBack } from '@/service/authService.ts'
 import { onMounted } from 'vue'
 const route = useRoute()
 const router = useRouter()
@@ -13,7 +13,7 @@ const getToken = async () => {
     await callBack({
       code: route.query.code
     })
-    localStorage.setItem('isLoggedIn', true)
+    localStorage.setItem('isLoggedIn', 'true')
 
     router.push('/dashboard')
   } catch (err) {
