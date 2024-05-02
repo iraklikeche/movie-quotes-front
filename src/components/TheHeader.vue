@@ -69,6 +69,7 @@ import HamburgerMenu from '@/components/icons/HamburgerMenu.vue'
 import { watch } from 'vue'
 import { setLocale } from '@vee-validate/i18n'
 import Cookies from 'js-cookie'
+import { checkTokenValidity, getCsrfCookie, resendPasswordResetLink } from '@/service/authService'
 
 const { t: $t } = useI18n()
 
@@ -95,10 +96,52 @@ onBeforeMount(() => {
   initialLoginCheck()
 })
 
-onMounted(() => {
-  const token = route.query.token
-  if (token) {
-    userSession.showResetPassword = true
+function isString(value: unknown): value is string {
+  return typeof value === 'string'
+}
+onMounted(async () => {
+  const rawToken = route.query.token
+  const rawEmail = route.query.email
+
+  const token = isString(rawToken) ? rawToken : undefined
+  const email = isString(rawEmail) ? rawEmail : undefined
+
+  if (token && email) {
+    try {
+      const response = await checkTokenValidity({ token, email })
+      if (response.data.status === 'valid') {
+        userSession.showResetPassword = true
+        console.log(response.data.status)
+      }
+    } catch (error) {
+      userSession.setModalContent(
+        {
+          icon: 'ErrorIcon',
+          mainMessage: $t('texts.link_expired'),
+          subMessage: $t('texts.expired_text'),
+          buttonText: $t('texts.expired_btn_text')
+        },
+        async () => {
+          await getCsrfCookie()
+          const resendResponse = await resendPasswordResetLink(email)
+          if (resendResponse.status === 200) {
+            userSession.setModalContent(
+              {
+                icon: 'SentIcon',
+                mainMessage: $t('texts.thanks'),
+                subMessage: $t('texts.subMessage'),
+                buttonText: $t('texts.buttonText')
+              },
+              () => userSession.redirectToEmailProvider(email)
+            )
+          } else {
+            //
+          }
+        }
+      )
+      userSession.successModal = true
+      console.error('Token validation failed:', error)
+    }
   }
 
   const cookieLocale = Cookies.get('locale')

@@ -90,6 +90,7 @@ type FormValues = {
   password: string
   password_confirmation: string
 }
+
 const onSubmit: SubmissionHandler<FormValues> = async (values: FormValues, { setFieldError }) => {
   try {
     await getCsrfCookie()

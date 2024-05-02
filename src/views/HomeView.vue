@@ -69,10 +69,10 @@ const route = useRoute()
 
 const verificationMessage = ref('')
 
-const extractIDFromURL = (url: string) => {
+const extractIDFromURL = (url: string): number | null => {
   const regex = /\/verify\/(\d+)/
   const match = url.match(regex)
-  return match ? match[1] : null
+  return match ? parseInt(match[1]) : null
 }
 
 onMounted(async () => {
@@ -100,7 +100,6 @@ onMounted(async () => {
         verificationMessage.value = response.data.message
       }
     } catch (error: any) {
-      const userId = extractIDFromURL(decodeURIComponent(verifyUrl))
       if (error.response.status === 403) {
         userSession.setModalContent(
           {
@@ -111,12 +110,29 @@ onMounted(async () => {
           },
           async () => {
             await getCsrfCookie()
-            const resendResponse = await resendVerificationLink(userId)
-            if (resendResponse.status === 200) {
-              verificationMessage.value = 'A new verification link has been sent to your email.'
+            const userId = extractIDFromURL(decodeURIComponent(verifyUrl))
+            if (userId !== null) {
+              try {
+                const resendResponse = await resendVerificationLink(userId)
+                if (resendResponse.status === 200) {
+                  verificationMessage.value = 'A new verification link has been sent to your email.'
+                } else {
+                  verificationMessage.value = 'Failed to resend verification link.'
+                }
+              } catch (error: any) {
+                verificationMessage.value =
+                  error.response?.data.message || 'Failed to process your request.'
+              }
             } else {
-              verificationMessage.value = 'Failed to resend verification link.'
+              verificationMessage.value = 'Invalid verification URL.'
             }
+
+            // const resendResponse = await resendVerificationLink(userId)
+            // if (resendResponse.status === 200) {
+            //   verificationMessage.value = 'A new verification link has been sent to your email.'
+            // } else {
+            //   verificationMessage.value = 'Failed to resend verification link.'
+            // }
           }
         )
         verificationMessage.value = error.response.data.message
