@@ -6,7 +6,8 @@
       <ForgotPassword v-if="userSession.showForgotPassword" />
       <ResetPassword v-if="userSession.showResetPassword" />
     </div>
-    <ToastModal v-if="userSession.successModal" v-bind="userSession.modalContent" />
+
+    <ToastModal v-if="userSession.successModal" v-bind="userSession.modalContent as any" />
 
     <div class="flex justify-between items-center px-4 py-6 sm:px-12">
       <div class="hidden sm:block">

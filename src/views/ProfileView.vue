@@ -12,8 +12,8 @@
         <p class="text-white text-xl">Upload new photo</p>
       </div>
       <div>
-        <Form @submit="onSubmit" class="flex flex-col gap-3 px-8 mt-16" v-slot="{ errors }">
-          <!-- <CustomInput
+        <Form class="flex flex-col gap-3 px-8 mt-16" v-slot="{ errors }">
+          <CustomInput
             :label="$t('sessions.username')"
             name="username"
             :placeholder="$t('sessions.username_placeholder')"
@@ -21,9 +21,9 @@
             type="text"
             :serverError="errors.username"
             :additionalClass="{ 'bg-transparent border-b': true }"
-          /> -->
+          />
 
-          <!-- <CustomInput
+          <CustomInput
             :label="$t('sessions.email')"
             name="email"
             :placeholder="$t('sessions.email_placeholder')"
@@ -39,26 +39,7 @@
             :placeholder="$t('sessions.password_placeholder')"
             isPasswordField
             :serverError="errors.password"
-          /> -->
-          <label class="text-white text-sm">{{ $t('sessions.username') }}</label>
-          <Field
-            type="inputType"
-            name="username"
-            placeholder="placeholder"
-            class="bg-transparent block w-full py-2 border-b"
-            :validateOnInput="true"
-            :validateOnBlur="false"
           />
-          <label class="text-white text-sm">{{ $t('sessions.email') }}</label>
-          <Field
-            type="inputType"
-            name="email"
-            placeholder="placeholder"
-            class="bg-transparent block w-full py-2 border-b"
-            :validateOnInput="true"
-            :validateOnBlur="false"
-          />
-          {{ errors.email }}
         </Form>
       </div>
     </div>
@@ -69,18 +50,5 @@
 import TheHeader from '@/components/TheHeader.vue'
 import GoBackBtn from '@/components/icons/GoBackBtn.vue'
 import profile from '@/assets/images/profile.png'
-import { Form, Field } from 'vee-validate'
-import { SubmissionHandler } from 'vee-validate/dist/types/types'
-
-type FormValues = {
-  username: string
-  email: string
-}
-
-const onSubmit: SubmissionHandler<FormValues> = async (
-  values: FormValues,
-  { setFieldError }: { setFieldError: (field: string, message: string) => void }
-) => {
-  console.log(values)
-}
+import { Form } from 'vee-validate'
 </script>
