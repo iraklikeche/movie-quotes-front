@@ -78,8 +78,16 @@ const extractIDFromURL = (url: string): number | null => {
 onMounted(async () => {
   const verifyUrl = route.query.verify_url
   if (typeof verifyUrl === 'string') {
+    const url = new URL(verifyUrl)
+    const email = url.searchParams.get('email')
+
+    if (email === null) {
+      verificationMessage.value = 'No email provided in the verification URL.'
+      return
+    }
     try {
       const response = await verifyEmail(verifyUrl)
+
       if (response.status === 200) {
         verificationMessage.value = 'Your email has been successfully verified.'
 
@@ -115,7 +123,15 @@ onMounted(async () => {
               try {
                 const resendResponse = await resendVerificationLink(userId)
                 if (resendResponse.status === 200) {
-                  verificationMessage.value = 'A new verification link has been sent to your email.'
+                  userSession.setModalContent(
+                    {
+                      icon: 'SentIcon',
+                      mainMessage: $t('texts.thanks'),
+                      subMessage: $t('texts.subMessage'),
+                      buttonText: $t('texts.buttonText')
+                    },
+                    () => userSession.redirectToEmailProvider(email)
+                  )
                 } else {
                   verificationMessage.value = 'Failed to resend verification link.'
                 }
@@ -126,13 +142,6 @@ onMounted(async () => {
             } else {
               verificationMessage.value = 'Invalid verification URL.'
             }
-
-            // const resendResponse = await resendVerificationLink(userId)
-            // if (resendResponse.status === 200) {
-            //   verificationMessage.value = 'A new verification link has been sent to your email.'
-            // } else {
-            //   verificationMessage.value = 'Failed to resend verification link.'
-            // }
           }
         )
         verificationMessage.value = error.response.data.message
