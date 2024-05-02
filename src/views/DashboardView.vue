@@ -5,7 +5,7 @@
 </template>
 
 <script setup lang="ts">
-import { logoutUser, getCsrfCookie } from '@/service/authService.ts'
+import { logoutUser, getCsrfCookie } from '@/service/authService'
 import { useRouter } from 'vue-router'
 const router = useRouter()
 
