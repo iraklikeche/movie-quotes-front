@@ -6,7 +6,11 @@
     sessionButton="sign up"
     class="top-0 w-full"
   >
-    <Form @submit="onSubmit" class="flex flex-col max-w-[26rem]" v-slot="{ errors }">
+    <Form
+      @submit="(values, setFieldError) => onSubmit(values as LoginValues, setFieldError)"
+      class="flex flex-col max-w-[26rem]"
+      v-slot="{ errors }"
+    >
       <CustomInput
         :label="$t('sessions.email')"
         name="email"
@@ -45,6 +49,8 @@
         {{ $t('buttons.login') }}
       </button>
       <button
+        type="button"
+        @click="registerWithGoogle"
         class="bg-transparent border border-white py-2 rounded-md flex items-center gap-2 justify-center text-white"
       >
         <GoogleIcon /> {{ $t('buttons.google') }}
@@ -63,16 +69,19 @@
 </template>
 
 <script setup lang="ts">
-import { getCsrfCookie, loginUser } from '@/service/authService.js'
+import { getCsrfCookie, loginUser, signUpWithGoogle } from '@/service/authService'
 import CustomInput from '../Form/CustomInput.vue'
 import { Form, Field } from 'vee-validate'
 import TheModal from '../TheModal.vue'
 import GoogleIcon from '@/components/icons/GoogleIcon.vue'
 import { useUserSessionStore } from '@/stores/UserSessionStore'
 import { ref } from 'vue'
+import { useRouter } from 'vue-router'
+import type { SubmissionHandler } from 'vee-validate'
 
 const userSession = useUserSessionStore()
 
+const router = useRouter()
 const remember = ref(false)
 type LoginValues = {
   email: string
@@ -80,7 +89,7 @@ type LoginValues = {
   remember?: boolean
 }
 
-const onSubmit = async (values: LoginValues, { setFieldError }) => {
+const onSubmit: SubmissionHandler<LoginValues> = async (values: LoginValues, { setFieldError }) => {
   await getCsrfCookie()
   values.remember = remember.value
   try {
@@ -89,11 +98,18 @@ const onSubmit = async (values: LoginValues, { setFieldError }) => {
       password: values.password,
       remember: values.remember
     })
-    localStorage.setItem('isLoggedIn', true)
-  } catch (error) {
+    localStorage.setItem('isLoggedIn', 'true')
+    router.push('/dashboard')
+  } catch (error: any) {
     if (error.response?.data?.message) {
       setFieldError('email', error.response.data.message)
     }
   }
+}
+
+const registerWithGoogle = async () => {
+  const res = await signUpWithGoogle()
+  console.log(res)
+  window.location.href = res.data
 }
 </script>

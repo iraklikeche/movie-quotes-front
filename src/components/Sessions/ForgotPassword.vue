@@ -4,7 +4,11 @@
     :paragraph="$t('sessions.forgot_subheader')"
     class="top-0 w-full"
   >
-    <Form @submit="onSubmit" class="flex flex-col gap-2" v-slot="{ errors }">
+    <Form
+      @submit="(values, setFieldError) => onSubmit(values as LoginValues, setFieldError)"
+      class="flex flex-col gap-2"
+      v-slot="{ errors }"
+    >
       <CustomInput
         :label="$t('sessions.email')"
         name="email"
@@ -29,10 +33,11 @@
 
 <script setup lang="ts">
 import CustomInput from '../Form/CustomInput.vue'
-import { forgotPassword, getCsrfCookie } from '@/service/authService.js'
+import { forgotPassword, getCsrfCookie } from '@/service/authService'
 import { Form } from 'vee-validate'
 import TheModal from '../TheModal.vue'
 import GoBackArrow from '@/components/icons/GoBackArrow.vue'
+import type { SubmissionHandler } from 'vee-validate'
 
 import { useUserSessionStore } from '@/stores/UserSessionStore'
 
@@ -41,11 +46,10 @@ const userSession = useUserSessionStore()
 type LoginValues = {
   email: string
 }
-const onSubmit = async (values: LoginValues, { setFieldError, resetForm }) => {
+const onSubmit: SubmissionHandler<LoginValues> = async (values: LoginValues, { setFieldError }) => {
   await getCsrfCookie()
   try {
     await forgotPassword(values.email)
-    resetForm()
     userSession.showForgotPassword = false
 
     userSession.setModalContent(
@@ -57,9 +61,9 @@ const onSubmit = async (values: LoginValues, { setFieldError, resetForm }) => {
       },
       () => userSession.redirectToEmailProvider(values.email)
     )
-  } catch (error: unknown) {
+  } catch (error: any) {
     for (const fieldName in error.response.data.errors) {
-      setFieldError(fieldName, error.response.data.errors[fieldName])
+      setFieldError(fieldName as keyof LoginValues, error.response.data.errors[fieldName])
     }
   }
 }

@@ -1,5 +1,12 @@
 {
   "homeMainText": " Find any quote in",
   "MainTextSpan": "millions of movie lines",
-  "already_register": "Already have an account"
+  "already_register": "Already have an account",
+  "thanks": "Thank you!",
+  "subMessage": "Please check your email to activate your account.",
+  "buttonText": "Go to my email",
+  "activate": "Your account has been activated",
+  "link_expired": "Link expired!",
+  "expired_text": "Login link has expired, because you haven’t used it",
+  "expired_btn_text": "Request another link"
 }

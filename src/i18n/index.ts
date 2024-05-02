@@ -1,6 +1,6 @@
 import { createI18n } from 'vue-i18n'
-import en from './lang/en/index.js'
-import ka from './lang/ka/index.js'
+import en from './lang/en/index'
+import ka from './lang/ka/index'
 
 const messages = {
   en,

@@ -16,7 +16,14 @@ export const useUserSessionStore = defineStore('UserSessionStore', () => {
   const showForgotPassword = ref(false)
   const showResetPassword = ref(false)
   const successModal = ref(false)
-  const modalContent = ref({
+  // const modalContent = ref({
+  //   icon: '',
+  //   mainMessage: '',
+  //   subMessage: '',
+  //   buttonText: '',
+  //   buttonAction: null
+  // })
+  const modalContent: Ref<ModalContent> = ref({
     icon: '',
     mainMessage: '',
     subMessage: '',
@@ -43,7 +50,6 @@ export const useUserSessionStore = defineStore('UserSessionStore', () => {
   function redirectToEmailProvider(email: string) {
     const emailDomain = email.split('@')[1]
     let url = ''
-    console.log(emailDomain)
 
     switch (emailDomain) {
       case 'gmail.com':
@@ -69,7 +75,7 @@ export const useUserSessionStore = defineStore('UserSessionStore', () => {
     modalContent.value.mainMessage = content.mainMessage
     modalContent.value.subMessage = content.subMessage
     modalContent.value.buttonText = content.buttonText
-    modalContent.value.buttonAction = action ?? content.buttonAction
+    modalContent.value.buttonAction = action ?? content.buttonAction ?? null
     successModal.value = true
   }
 

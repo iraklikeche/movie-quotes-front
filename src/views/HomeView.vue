@@ -16,7 +16,7 @@
     </div>
   </main>
   <section class="">
-    <MovieCover :coverImage="cover1" :movieTitleKey="'interstellar_title'"R>
+    <MovieCover :coverImage="cover1" :movieTitleKey="'interstellar_title'" R>
       {{ $t('movieQuotes.interstellar_quote') }}
       <br class="hidden sm:block" />
       <span> {{ $t('movieQuotes.interstellar_quote_part') }} </span>
@@ -56,30 +56,94 @@ import TheHeader from '@/components/TheHeader.vue'
 import cover1 from '@/assets/images/cover1.png'
 import cover2 from '@/assets/images/cover2.png'
 import cover3 from '@/assets/images/cover3.png'
-import { getCsrfCookie, logoutUser, verifyEmail } from '@/service/authService.js'
+import { verifyEmail, getCsrfCookie, resendVerificationLink } from '@/service/authService'
 import { useUserSessionStore } from '@/stores/UserSessionStore'
 import { onMounted, ref } from 'vue'
 import { useRoute } from 'vue-router'
 import MovieCover from '@/components/MovieCover.vue'
+import { useI18n } from 'vue-i18n'
+const { t: $t } = useI18n()
 
 const userSession = useUserSessionStore()
 const route = useRoute()
 
 const verificationMessage = ref('')
 
+const extractIDFromURL = (url: string): number | null => {
+  const regex = /\/verify\/(\d+)/
+  const match = url.match(regex)
+  return match ? parseInt(match[1]) : null
+}
+
 onMounted(async () => {
   const verifyUrl = route.query.verify_url
-  if (verifyUrl) {
+  if (typeof verifyUrl === 'string') {
+    const url = new URL(verifyUrl)
+    const email = url.searchParams.get('email')
+
+    if (email === null) {
+      verificationMessage.value = 'No email provided in the verification URL.'
+      return
+    }
     try {
       const response = await verifyEmail(verifyUrl)
+
       if (response.status === 200) {
         verificationMessage.value = 'Your email has been successfully verified.'
+
+        const verified = route.query.verified
+        if (verified) {
+          userSession.setModalContent(
+            {
+              icon: 'Success',
+              mainMessage: $t('texts.thanks'),
+              subMessage: $t('texts.subMessage'),
+              buttonText: $t('buttons.login')
+            },
+            () => userSession.backToLogIn()
+          )
+        }
         console.log(response)
       } else {
         verificationMessage.value = response.data.message
       }
-    } catch (error) {
-      if (error.response) {
+    } catch (error: any) {
+      if (error.response.status === 403) {
+        userSession.setModalContent(
+          {
+            icon: 'TokenExpired',
+            mainMessage: $t('texts.link_expired'),
+            subMessage: $t('texts.expired_text'),
+            buttonText: $t('texts.expired_btn_text')
+          },
+          async () => {
+            await getCsrfCookie()
+            const userId = extractIDFromURL(decodeURIComponent(verifyUrl))
+            if (userId !== null) {
+              try {
+                const resendResponse = await resendVerificationLink(userId)
+                if (resendResponse.status === 200) {
+                  userSession.setModalContent(
+                    {
+                      icon: 'SentIcon',
+                      mainMessage: $t('texts.thanks'),
+                      subMessage: $t('texts.subMessage'),
+                      buttonText: $t('texts.buttonText')
+                    },
+                    () => userSession.redirectToEmailProvider(email)
+                  )
+                } else {
+                  verificationMessage.value = 'Failed to resend verification link.'
+                }
+              } catch (error: any) {
+                verificationMessage.value =
+                  error.response?.data.message || 'Failed to process your request.'
+              }
+            } else {
+              verificationMessage.value = 'Invalid verification URL.'
+            }
+          }
+        )
         verificationMessage.value = error.response.data.message
       } else {
         verificationMessage.value = 'An error occurred during the verification process.'
@@ -87,14 +151,4 @@ onMounted(async () => {
     }
   }
 })
-
-const onLogout = async () => {
-  await getCsrfCookie()
-  try {
-    await logoutUser()
-    localStorage.removeItem('isLoggedIn')
-  } catch (error) {
-    //
-  }
-}
 </script>
