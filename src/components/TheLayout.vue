@@ -9,8 +9,10 @@
           :class="$route.path === '/profile' ? 'border-red-600' : 'border-none'"
         />
         <div>
-          <p>Username</p>
-          <p class="text-[#ced4da]">{{ $t('texts.edit_profile') }}</p>
+          <p>{{ username }}</p>
+          <RouterLink :to="{ name: 'profile' }" class="text-[#ced4da]">{{
+            $t('texts.edit_profile')
+          }}</RouterLink>
         </div>
       </div>
       <div class="flex gap-8 items-center text-white pl-2">
@@ -30,8 +32,20 @@
 
 <script setup lang="ts">
 import ListOfMovies from '@/components/icons/ListOfMovies.vue'
+import { onMounted, ref } from 'vue'
 import NewsFeed from '@/components/icons/NewsFeed.vue'
 import TheHeader from '@/components/TheHeader.vue'
+import { useUserSessionStore } from '@/stores/UserSessionStore'
+import { RouterLink } from 'vue-router'
 
 const props = defineProps(['customHeight'])
+const userSession = useUserSessionStore()
+const username = ref('')
+
+onMounted(async () => {
+  if (localStorage.getItem('isLoggedIn')) {
+    await userSession.getUserData()
+    username.value = userSession.userData.username
+  }
+})
 </script>

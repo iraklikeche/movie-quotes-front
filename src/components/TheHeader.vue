@@ -68,7 +68,7 @@ import ResetPassword from '@/components/Sessions/ResetPassword.vue'
 import ToastModal from '@/components/ToastModal.vue'
 import { useUserSessionStore } from '@/stores/UserSessionStore'
 import { useRoute, useRouter } from 'vue-router'
-import { onMounted, ref, onBeforeMount } from 'vue'
+import { onMounted, ref, onBeforeMount, reactive } from 'vue'
 import { useI18n } from 'vue-i18n'
 import LanguageArrow from './icons/LanguageArrow.vue'
 import NotificationIcon from '@/components/icons/NotificationIcon.vue'
@@ -142,7 +142,7 @@ onMounted(async () => {
     } catch (error) {
       userSession.setModalContent(
         {
-          icon: 'ErrorIcon',
+          icon: 'TokenExpired',
           mainMessage: $t('texts.link_expired'),
           subMessage: $t('texts.expired_text'),
           buttonText: $t('texts.expired_btn_text')

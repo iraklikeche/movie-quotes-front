@@ -24,7 +24,8 @@
                 <Field
                   name="username"
                   type="text"
-                  class="bg-transparent sm:bg-[#ced4da] pb-2 border-b placeholder:text-white sm:placeholder:text-[#212529] text-white outline-none sm:py-1 sm:px-3 w-full sm:rounded-[4px]"
+                  class="bg-transparent sm:bg-red-500 pb-2 border-b placeholder:text-white sm:placeholder:text-[#212529] text-white outline-none sm:py-1 sm:px-3 w-full sm:rounded-[4px]"
+                  disabled
                 />
                 <span
                   class="text-[#CED4DA] absolute sm:static right-0 top-[40%] -translate-y-1/2 sm:-translate-y-0"
@@ -38,7 +39,8 @@
                 <Field
                   name="email"
                   type="email"
-                  class="bg-transparent sm:bg-[#ced4da] pb-2 border-b placeholder:text-white sm:placeholder:text-[#212529] text-white outline-none sm:py-1 sm:px-3 w-full sm:rounded-[4px]"
+                  class="bg-transparent sm:bg-red-500 pb-2 border-b placeholder:text-white sm:placeholder:text-[#212529] text-white outline-none sm:py-1 sm:px-3 w-full sm:rounded-[4px]"
+                  disabled
                 />
                 <div
                   class="text-red-500 opacity-0 absolute sm:static right-0 top-[40%] -translate-y-1/2 sm:-translate-y-0"
@@ -53,7 +55,8 @@
                 <Field
                   name="password"
                   type="password"
-                  class="bg-transparent sm:bg-[#ced4da] pb-2 border-b placeholder:text-white sm:placeholder:text-[#212529] text-[#CED4DA] outline-none w-full sm:px-3 sm:rounded-[4px]"
+                  class="bg-transparent sm:bg-red-500 pb-2 border-b placeholder:text-white sm:placeholder:text-[#212529] text-[#CED4DA] outline-none w-full sm:px-3 sm:rounded-[4px]"
+                  disabled
                 />
                 <span
                   class="text-[#CED4DA] absolute sm:static right-0 top-[40%] -translate-y-1/2 sm:-translate-y-0 sm:py-1"
@@ -72,23 +75,38 @@
 import GoBackBtn from '@/components/icons/GoBackBtn.vue'
 import profile from '@/assets/images/profile.png'
 import TheLayout from '@/components/TheLayout.vue'
-
+import { ref, onMounted, watch } from 'vue'
 import { useForm, Field } from 'vee-validate'
+import { useUserSessionStore } from '@/stores/UserSessionStore'
 
-const { handleSubmit, values } = useForm({
-  initialValues: {
-    username: 'IrakliKeche',
-    email: 'test@example.com',
-    password: 'p@$$w0rd'
+const userSession = useUserSessionStore()
+
+const username = ref('')
+const email = ref('')
+
+const { handleSubmit, values, setValues } = useForm()
+
+watch(
+  () => username.value,
+  (newValue, oldValue) => {
+    console.log(newValue, oldValue)
   }
-})
+)
 
 const onSubmit = handleSubmit((values) => {
   console.log(values)
 })
+
+onMounted(async () => {
+  if (localStorage.getItem('isLoggedIn')) {
+    await userSession.getUserData()
+    username.value = userSession.userData.username
+    email.value = userSession.userData.email
+  }
+  setValues({
+    username: username.value,
+    email: email.value,
+    password: '**********'
+  })
+})
 </script>
-
-<!--         :label="$t('sessions.password')"
-
-        <GoogleIcon /> {{ $t('buttons.google') }}
- -->

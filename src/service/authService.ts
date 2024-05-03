@@ -78,3 +78,8 @@ export async function callBack(code: string): Promise<AxiosResponse> {
 export async function checkTokenValidity(data: CheckTokenData): Promise<AxiosResponse> {
   return await apiClient.post('/api/check-token-validity', data)
 }
+
+export async function getUser() {
+  const response = await apiClient.get('api/user')
+  return response
+}
