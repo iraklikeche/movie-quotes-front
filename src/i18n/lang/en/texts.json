@@ -8,5 +8,15 @@
   "activate": "Your account has been activated",
   "link_expired": "Link expired!",
   "expired_text": "Login link has expired, because you haven’t used it",
-  "expired_btn_text": "Request another link"
+  "expired_btn_text": "Request another link",
+  "edit_profile": "Edit your profile",
+  "my_profile": "My profile",
+  "news_feed": "news feed",
+  "movie_list": "List of movies",
+  "upload_photo": "Upload your photo",
+  "edit": "edit",
+  "new_quote": "Write new quote",
+  "search": "Search by",
+  "search_by": "Enter @ to search movies, Enter # to search quotes ",
+  "write_comment": "write a comment"
 }

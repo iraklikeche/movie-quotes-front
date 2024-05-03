@@ -21,10 +21,9 @@ type ResetPasswordData = {
   password_confirmation: string
 }
 
-// Inside authService.ts
 type CheckTokenData = {
   token: string
-  email?: string // Adding email as an optional property
+  email?: string
 }
 
 export async function getCsrfCookie(): Promise<AxiosResponse> {

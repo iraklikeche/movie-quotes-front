@@ -16,13 +16,7 @@ export const useUserSessionStore = defineStore('UserSessionStore', () => {
   const showForgotPassword = ref(false)
   const showResetPassword = ref(false)
   const successModal = ref(false)
-  // const modalContent = ref({
-  //   icon: '',
-  //   mainMessage: '',
-  //   subMessage: '',
-  //   buttonText: '',
-  //   buttonAction: null
-  // })
+
   const modalContent: Ref<ModalContent> = ref({
     icon: '',
     mainMessage: '',

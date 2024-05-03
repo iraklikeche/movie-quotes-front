@@ -29,31 +29,6 @@
   </div>
 </template>
 
-<script setup>
-import { ref, computed } from 'vue'
-import { Field, ErrorMessage } from 'vee-validate'
-import ShowPassword from '@/components/icons/ShowPassword.vue'
-import ErrorIcon from '../icons/ErrorIcon.vue'
-
-const props = defineProps({
-  label: String,
-  type: String,
-  name: String,
-  placeholder: String,
-  rules: String,
-  isPasswordField: Boolean,
-  serverError: String,
-  error: String
-})
-
-const isPasswordVisible = ref(false)
-
-const inputType = computed(() => {
-  return props.isPasswordField ? (isPasswordVisible.value ? 'text' : 'password') : props.type
-})
-
-const togglePasswordVisibility = () => {
-  console.log(isPasswordVisible.value)
-  isPasswordVisible.value = !isPasswordVisible.value
-}
+<script setup lang="ts">
+import { Field } from 'vee-validate'
 </script>

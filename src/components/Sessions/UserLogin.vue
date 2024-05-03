@@ -98,6 +98,7 @@ const onSubmit: SubmissionHandler<LoginValues> = async (values: LoginValues, { s
       password: values.password,
       remember: values.remember
     })
+    userSession.showLogin = false
     localStorage.setItem('isLoggedIn', 'true')
     router.push('/dashboard')
   } catch (error: any) {

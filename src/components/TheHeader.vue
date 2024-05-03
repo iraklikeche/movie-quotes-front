@@ -46,7 +46,14 @@
           </button>
         </div>
         <div v-else class="flex gap-6 items-center">
+          <SearchIcon class="sm:hidden" />
           <NotificationIcon />
+          <button
+            @click="onLogout"
+            class="border border-white bg-transparent text-sm px-5 py-2 rounded-lg text-white hidden sm:block"
+          >
+            {{ $t('buttons.logout') }}
+          </button>
         </div>
       </div>
     </div>
@@ -66,10 +73,16 @@ import { useI18n } from 'vue-i18n'
 import LanguageArrow from './icons/LanguageArrow.vue'
 import NotificationIcon from '@/components/icons/NotificationIcon.vue'
 import HamburgerMenu from '@/components/icons/HamburgerMenu.vue'
+import SearchIcon from './icons/SearchIcon.vue'
 import { watch } from 'vue'
 import { setLocale } from '@vee-validate/i18n'
 import Cookies from 'js-cookie'
-import { checkTokenValidity, getCsrfCookie, resendPasswordResetLink } from '@/service/authService'
+import {
+  checkTokenValidity,
+  getCsrfCookie,
+  resendPasswordResetLink,
+  logoutUser
+} from '@/service/authService'
 
 const { t: $t } = useI18n()
 
@@ -92,6 +105,19 @@ const initialLoginCheck = () => {
   }
 }
 
+// AJAX
+const onLogout = async () => {
+  await getCsrfCookie()
+  try {
+    await logoutUser()
+    localStorage.removeItem('isLoggedIn')
+    router.push('/')
+  } catch (error) {
+    //
+  }
+}
+
+// Life-cycles
 onBeforeMount(() => {
   initialLoginCheck()
 })
