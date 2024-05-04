@@ -18,5 +18,8 @@
   "new_quote": "დაამატე ციტატა",
   "search": "ძებნა",
   "search_by": "მოძებნე ფილმები @@-ით, ციტატა ##-ით",
-  "write_comment": "დაწერე კომენტარი"
+  "write_comment": "დაწერე კომენტარი",
+  "password_contain": "პაროლი უნდა შეიცვადეს",
+  "password_validation_length": "ან სიმბოლოს",
+  "password_validation_case": " პატარა სიმბოლოს"
 }

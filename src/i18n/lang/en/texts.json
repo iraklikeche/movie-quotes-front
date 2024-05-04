@@ -18,5 +18,8 @@
   "new_quote": "Write new quote",
   "search": "Search by",
   "search_by": "Enter @ to search movies, Enter # to search quotes ",
-  "write_comment": "write a comment"
+  "write_comment": "write a comment",
+  "password_contain": "Password should contain",
+  "password_validation_length": "or more characters",
+  "password_validation_case": " lowercase characters"
 }
