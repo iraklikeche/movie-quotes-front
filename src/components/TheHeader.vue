@@ -13,7 +13,7 @@
       <div class="hidden sm:block">
         <h2 class="text-[#ddCCAA] uppercase">movie quotes</h2>
       </div>
-      <div class="sm:hidden">
+      <div class="sm:hidden cursor-pointer" @click="$emit('toggle')">
         <HamburgerMenu />
       </div>
       <div class="flex items-center">

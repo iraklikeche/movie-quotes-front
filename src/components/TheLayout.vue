@@ -1,31 +1,37 @@
 <template>
-  <div class="bg-[#11101A] h-[41rem] w-[90%] absolute flex flex-col rounded-lg">
-    <div class="flex flex-col gap-12 p-8">
-      <div class="flex items-center gap-4 text-white">
-        <img src="https://picsum.photos/200" class="w-14 rounded-full border-2" />
-        <div>
-          <p>{{ username }}</p>
-          <RouterLink :to="{ name: 'profile' }" class="text-[#ced4da]">{{
-            $t('texts.edit_profile')
-          }}</RouterLink>
+  <transition name="slide">
+    <div
+      id="layout-div"
+      class="bg-[#11101A] h-[41rem] w-[90%] absolute flex flex-col rounded-lg"
+      v-show="isVisible"
+    >
+      <div class="flex flex-col gap-12 p-8">
+        <div class="flex items-center gap-4 text-white">
+          <img src="https://picsum.photos/200" class="w-14 rounded-full border-2" />
+          <div>
+            <p>{{ username }}</p>
+            <RouterLink :to="{ name: 'profile' }" class="text-[#ced4da]">{{
+              $t('texts.edit_profile')
+            }}</RouterLink>
+          </div>
+        </div>
+        <div class="flex gap-8 items-center text-white pl-2">
+          <NewsFeed />
+          <p>{{ $t('texts.news_feed') }}</p>
+        </div>
+        <div class="flex gap-8 items-center text-white pl-2">
+          <ListOfMovies />
+          <p>{{ $t('texts.movie_list') }}</p>
         </div>
       </div>
-      <div class="flex gap-8 items-center text-white pl-2">
-        <NewsFeed />
-        <p>{{ $t('texts.news_feed') }}</p>
-      </div>
-      <div class="flex gap-8 items-center text-white pl-2">
-        <ListOfMovies />
-        <p>{{ $t('texts.movie_list') }}</p>
+      <div class="mt-auto p-8">
+        <button @click="onLogout" class="text-white bg-[#e31221] px-3 py-1.5 rounded-md">
+          Log out
+        </button>
       </div>
     </div>
-    <div class="mt-auto p-8">
-      <button @click="onLogout" class="text-white bg-[#e31221] px-3 py-1.5 rounded-md">
-        Log out
-      </button>
-    </div>
-  </div>
-  <TheHeader class="bg-[#242229]" />
+  </transition>
+  <TheHeader class="bg-[#242229]" @toggle="toggleMenu" />
   <main :class="['bg-[#171623] w-full sm:px-16 sm:py-8 sm:flex', customHeight]">
     <div class="hidden sm:flex flex-col gap-8 min-w-56">
       <div class="flex items-center gap-4 text-white">
@@ -58,7 +64,7 @@
 
 <script setup lang="ts">
 import ListOfMovies from '@/components/icons/ListOfMovies.vue'
-import { onMounted, ref } from 'vue'
+import { onMounted, ref, onUnmounted } from 'vue'
 import NewsFeed from '@/components/icons/NewsFeed.vue'
 import TheHeader from '@/components/TheHeader.vue'
 import { useUserSessionStore } from '@/stores/UserSessionStore'
@@ -69,6 +75,32 @@ const props = defineProps(['customHeight'])
 const userSession = useUserSessionStore()
 const username = ref('')
 const router = useRouter()
+const isVisible = ref(false)
+
+function toggleMenu() {
+  event.stopPropagation()
+  isVisible.value = !isVisible.value
+}
+
+function handleClickOutside(event) {
+  const layoutElement = document.getElementById('layout-div')
+  if (layoutElement && !layoutElement.contains(event.target)) {
+    isVisible.value = false
+  }
+}
+
+onUnmounted(() => {
+  window.removeEventListener('click', handleClickOutside)
+})
+
+onMounted(async () => {
+  window.addEventListener('click', handleClickOutside)
+
+  if (localStorage.getItem('isLoggedIn')) {
+    await userSession.getUserData()
+    username.value = userSession.userData.username
+  }
+})
 
 const onLogout = async () => {
   await getCsrfCookie()
@@ -80,11 +112,20 @@ const onLogout = async () => {
     //
   }
 }
-
-onMounted(async () => {
-  if (localStorage.getItem('isLoggedIn')) {
-    await userSession.getUserData()
-    username.value = userSession.userData.username
-  }
-})
 </script>
+
+<style scoped>
+/* Sliding transitions for the menu */
+.slide-enter-active,
+.slide-leave-active {
+  transition: transform 0.3s ease;
+}
+.slide-enter-from,
+.slide-leave-to {
+  transform: translateX(-100%); /* Start from the left */
+}
+.slide-enter-to,
+.slide-leave-from {
+  transform: translateX(0); /* End at the normal position */
+}
+</style>

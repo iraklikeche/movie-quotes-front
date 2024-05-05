@@ -10,7 +10,9 @@ const customKaMessages = {
   names: {
     email: 'ელ-ფოსტა',
     password: 'პაროლი',
-    username: 'მომხმარებელის სახელი'
+    username: 'მომხმარებელის სახელი',
+    new_username: 'ახალი სახელი',
+    new_password: 'ახალი პაროლი'
   }
 }
 
