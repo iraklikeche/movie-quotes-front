@@ -84,15 +84,27 @@ export async function getUser() {
   return response
 }
 
+export async function updateUserProfile(updateData, file) {
+  const formData = new FormData()
+  Object.keys(updateData).forEach((key) => {
+    if (updateData[key]) {
+      formData.append(key, updateData[key])
+    }
+  })
 
-// Include in your existing API service file
+  if (file) {
+    formData.append('profile_image', file)
+  }
 
-export async function updateUserProfile(updateData) {
   try {
-    const response = await apiClient.post('api/user/update', updateData);
-    return response.data;
+    const response = await apiClient.post('api/user/update', formData, {
+      headers: {
+        'Content-Type': 'multipart/form-data'
+      }
+    })
+    return response.data
   } catch (error) {
-    console.error('Error updating user profile:', error);
-    throw error;
+    console.error('Error updating user profile:', error)
+    throw error
   }
 }

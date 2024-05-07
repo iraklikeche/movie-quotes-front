@@ -1,4 +1,16 @@
 <template>
+  <transition name="fade">
+    <div
+      v-if="showModal"
+      class="fixed top-32 right-3 z-10 bg-green-600 text-white py-3 px-4 sm:py-4 sm:px-8 rounded-lg shadow-md transition-all flex gap-20 items-center"
+    >
+      <p>{{ $t('texts.success') }}</p>
+      <span class="sm:hidden" @click="showModal = false">
+        <CloseBtn />
+      </span>
+    </div>
+  </transition>
+
   <TheLayout :customHeight="'h-screen'">
     <div class="pt-12 px-8 fixed inset-0 z-10 bg-[#24222f] top-[10%]" v-if="finalCheck">
       <div class="bg-[#24222f] rounded-xl">
@@ -71,7 +83,7 @@
     </div>
 
     <!-- Main -->
-    <div v-if="currentMode === Mode.MAIN" class="bg-[#222030]">
+    <div v-if="currentMode === Mode.MAIN" class="bg-[#222030] sm:bg-transparent">
       <span class="hidden sm:block text-white text-2xl font-medium mb-28 pl-10">{{
         $t('texts.my_profile')
       }}</span>
@@ -79,8 +91,15 @@
         <div
           class="flex flex-col justify-center items-center sm:absolute sm:right-1/2 sm:translate-x-1/2 sm:top-0 sm:-translate-y-1/2 gap-2"
         >
-          <img :src="profile" class="rounded-full max-h-48 min-w-48 max-w-48" />
-          <p class="text-white text-xl">{{ $t('texts.upload_photo') }}</p>
+          <input type="file" id="file-upload" @change="handleFileUpload" style="display: none" />
+
+          <label for="file-upload">
+            <img
+              :src="`${baseURL}/storage/${userSession.userData.profile_image}`"
+              class="rounded-full max-h-48 min-w-48 max-w-48"
+            />
+            <p class="text-white text-xl cursor-pointer">{{ $t('texts.upload_photo') }}</p>
+          </label>
         </div>
         <div class="px-8 mt-16">
           <div class="flex flex-col sm:mt-32 sm:px-48 gap-8">
@@ -138,6 +157,8 @@
                       <Field
                         name="new_password"
                         type="password"
+                        rules="required|min:3"
+                        :placeholder="$t('sessions.password_placeholder')"
                         class="bg-transparent sm:bg-red-500 pb-2 border-b placeholder:text-white sm:placeholder:text-[#212529] text-white outline-none sm:py-1 sm:px-3 w-full sm:rounded-[4px]"
                       />
                     </div>
@@ -151,8 +172,9 @@
                   <div class="relative sm:flex sm:items-center gap-8">
                     <div class="sm:w-full">
                       <Field
-                        name="confirm_new_password"
+                        name="new_password_confirmation"
                         type="password"
+                        rules="required|confirmed:@new_password"
                         class="bg-transparent sm:bg-red-500 pb-2 border-b placeholder:text-white sm:placeholder:text-[#212529] text-white outline-none sm:py-1 sm:px-3 w-full sm:rounded-[4px]"
                       />
                     </div>
@@ -167,7 +189,7 @@
               v-if="updateUsername || updatePassword"
             >
               <button class="text-[#CED4DA]" @click="cancelChanges">Cancel</button>
-              <button class="bg-[#E31221] text-white px-5 py-1.5 rounded-md" @click="confirmReset">
+              <button class="bg-[#E31221] text-white px-5 py-1.5 rounded-md" @click="onSubmit">
                 Save changes
               </button>
               <SpanStatic />
@@ -181,7 +203,6 @@
 
 <script setup lang="ts">
 import GoBackBtn from '@/components/icons/GoBackBtn.vue'
-import profile from '@/assets/images/profile.png'
 import TheLayout from '@/components/TheLayout.vue'
 import { ref, onMounted, computed } from 'vue'
 import { useForm, Field } from 'vee-validate'
@@ -193,6 +214,8 @@ import PasswordStatic from '@/components/PasswordStatic.vue'
 import UsernameStatic from '@/components/UsernameStatic.vue'
 import SpanStatic from '@/components/SpanStatic.vue'
 import { updateUserProfile } from '@/service/authService'
+import type { Ref } from 'vue'
+import CloseBtn from '@/components/icons/CloseBtn.vue'
 
 // States
 const userSession = useUserSessionStore()
@@ -202,6 +225,11 @@ const email = ref('')
 const updateUsername = ref(false)
 const updatePassword = ref(false)
 const finalCheck = ref(false)
+const showModal = ref(false)
+
+const profileUploaded: Ref<string | null> = ref(null)
+const profileFile = ref<File | null>(null)
+const baseURL = import.meta.env.VITE_API_BASE_URL
 
 const Mode = {
   MAIN: 'main',
@@ -215,6 +243,15 @@ const currentMode = ref(Mode.MAIN)
 const { setValues, handleSubmit } = useForm()
 
 // Functions
+function handleFileUpload(event: Event) {
+  const input = event.target as HTMLInputElement
+  if (input.files?.[0]) {
+    profileUploaded.value = URL.createObjectURL(input.files[0])
+    profileFile.value = input.files[0]
+    finalCheck.value = true
+  }
+}
+
 const addNewUserInput = () => {
   updateUsername.value = true
 }
@@ -257,6 +294,7 @@ onMounted(async () => {
     await userSession.getUserData()
     email.value = userSession.userData.email
   }
+
   initialValues.value = {
     username: username.value,
     email: email.value,
@@ -289,13 +327,29 @@ const onSubmit = handleSubmit(async (values) => {
         delete updateData[key]
       }
     })
-
-    await updateUserProfile(updateData)
+    await updateUserProfile(updateData, profileFile.value)
     await userSession.getUserData()
 
     closeEditForm()
+    updateUsername.value = false
+    updatePassword.value = false
+    showModal.value = true
+    setTimeout(() => {
+      showModal.value = false
+    }, 3000)
   } catch (error) {
-    console.error('Failed to update profile:', error)
+    //
   }
 })
 </script>
+
+<style scoped>
+.fade-enter-active,
+.fade-leave-active {
+  transition: opacity 0.5s;
+}
+.fade-enter-from,
+.fade-leave-to {
+  opacity: 0;
+}
+</style>

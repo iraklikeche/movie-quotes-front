@@ -3,12 +3,15 @@
     <div
       id="layout-div"
       ref="layoutElement"
-      class="bg-[#11101A] h-[41rem] w-[90%] absolute flex flex-col rounded-lg"
+      class="bg-[#11101A] h-[41rem] w-[90%] absolute flex flex-col rounded-lg z-10"
       v-show="isVisible"
     >
       <div class="flex flex-col gap-12 p-8">
         <div class="flex items-center gap-4 text-white">
-          <img src="https://picsum.photos/200" class="w-14 rounded-full border-2" />
+          <img
+            :src="`${baseURL}/storage/${userSession.userData.profile_image}`"
+            class="w-14 h-14 rounded-full border-2"
+          />
           <div>
             <p>{{ username }}</p>
             <RouterLink :to="{ name: 'profile' }" class="text-[#ced4da]">{{
@@ -37,8 +40,8 @@
     <div class="hidden sm:flex flex-col gap-8 min-w-56">
       <div class="flex items-center gap-4 text-white">
         <img
-          src="https://picsum.photos/200"
-          class="w-14 rounded-full border-2"
+          :src="`${baseURL}/storage/${userSession.userData.profile_image}`"
+          class="w-14 h-14 rounded-full border-2"
           :class="$route.path === '/profile' ? 'border-red-600' : 'border-none'"
         />
         <div>
@@ -80,6 +83,7 @@ const username = ref('')
 const router = useRouter()
 const isVisible = ref(false)
 const layoutElement: Ref<Element | null> = ref(null)
+const baseURL = import.meta.env.VITE_API_BASE_URL
 
 function toggleMenu() {
   isVisible.value = !isVisible.value
