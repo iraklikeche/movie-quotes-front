@@ -51,12 +51,12 @@
           }}</RouterLink>
         </div>
       </div>
-      <div class="flex gap-8 items-center text-white pl-2">
-        <NewsFeed :class="$route.path === '/dashboard' ? 'text-[#E31221]' : 'text-white'" />
+      <RouterLink :to="{ name: 'dashboard' }" class="flex gap-8 items-center text-white pl-2">
+        <NewsFeed :class="$route.path === '/dashboard' ? 'text-red-600' : 'text-white'" />
         <p>{{ $t('texts.news_feed') }}</p>
-      </div>
+      </RouterLink>
       <div class="flex gap-8 items-center text-white pl-2">
-        <ListOfMovies :class="$route.path === '/dashboard' ? 'text-[#E31221]' : 'text-white'" />
+        <ListOfMovies :class="$route.path === '/dashboard' ? 'text-red-600' : 'text-white'" />
         <p>{{ $t('texts.movie_list') }}</p>
       </div>
     </div>
