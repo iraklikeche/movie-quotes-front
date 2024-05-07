@@ -10,10 +10,10 @@
     <ToastModal v-if="userSession.successModal" v-bind="userSession.modalContent as any" />
 
     <div class="flex justify-between items-center px-4 py-6 sm:px-12">
-      <div class="hidden sm:block">
+      <div :class="['sm:block', { hidden: !isHomepage }]">
         <h2 class="text-[#ddCCAA] uppercase">movie quotes</h2>
       </div>
-      <div class="sm:hidden cursor-pointer" @click="$emit('toggle')">
+      <div class="sm:hidden cursor-pointer" @click.stop="$emit('toggle')" v-show="!isHomepage">
         <HamburgerMenu />
       </div>
       <div class="flex items-center">
@@ -68,7 +68,7 @@ import ResetPassword from '@/components/Sessions/ResetPassword.vue'
 import ToastModal from '@/components/ToastModal.vue'
 import { useUserSessionStore } from '@/stores/UserSessionStore'
 import { useRoute, useRouter } from 'vue-router'
-import { onMounted, ref, onBeforeMount, reactive } from 'vue'
+import { onMounted, ref, onBeforeMount, computed } from 'vue'
 import { useI18n } from 'vue-i18n'
 import LanguageArrow from './icons/LanguageArrow.vue'
 import NotificationIcon from '@/components/icons/NotificationIcon.vue'
@@ -93,6 +93,8 @@ const router = useRouter()
 
 const isLogged = ref(false)
 
+const isHomepage = ref(window.location.pathname === '/')
+
 const updateLocale = () => {
   Cookies.set('locale', locale.value, { expires: 7 })
   router.push({ path: router.currentRoute.value.fullPath })
@@ -116,11 +118,6 @@ const onLogout = async () => {
     //
   }
 }
-
-// Life-cycles
-onBeforeMount(() => {
-  initialLoginCheck()
-})
 
 function isString(value: unknown): value is string {
   return typeof value === 'string'
@@ -174,6 +171,11 @@ onMounted(async () => {
   if (cookieLocale && availableLocales.includes(cookieLocale)) {
     locale.value = cookieLocale
   }
+})
+
+// Life-cycles
+onBeforeMount(() => {
+  initialLoginCheck()
 })
 
 // Watchers

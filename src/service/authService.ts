@@ -83,3 +83,16 @@ export async function getUser() {
   const response = await apiClient.get('api/user')
   return response
 }
+
+
+// Include in your existing API service file
+
+export async function updateUserProfile(updateData) {
+  try {
+    const response = await apiClient.post('api/user/update', updateData);
+    return response.data;
+  } catch (error) {
+    console.error('Error updating user profile:', error);
+    throw error;
+  }
+}

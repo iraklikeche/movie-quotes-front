@@ -2,6 +2,7 @@
   <transition name="slide">
     <div
       id="layout-div"
+      ref="layoutElement"
       class="bg-[#11101A] h-[41rem] w-[90%] absolute flex flex-col rounded-lg"
       v-show="isVisible"
     >
@@ -64,38 +65,28 @@
 
 <script setup lang="ts">
 import ListOfMovies from '@/components/icons/ListOfMovies.vue'
-import { onMounted, ref, onUnmounted } from 'vue'
+import { onMounted, ref } from 'vue'
 import NewsFeed from '@/components/icons/NewsFeed.vue'
 import TheHeader from '@/components/TheHeader.vue'
 import { useUserSessionStore } from '@/stores/UserSessionStore'
 import { RouterLink, useRouter } from 'vue-router'
 import { getCsrfCookie, logoutUser } from '@/service/authService'
+import useClickOutside from '@/composables/useClickOutside'
 
 const props = defineProps(['customHeight'])
 const userSession = useUserSessionStore()
 const username = ref('')
 const router = useRouter()
 const isVisible = ref(false)
+const layoutElement = ref(null)
 
 function toggleMenu() {
-  event.stopPropagation()
   isVisible.value = !isVisible.value
 }
 
-function handleClickOutside(event) {
-  const layoutElement = document.getElementById('layout-div')
-  if (layoutElement && !layoutElement.contains(event.target)) {
-    isVisible.value = false
-  }
-}
-
-onUnmounted(() => {
-  window.removeEventListener('click', handleClickOutside)
-})
+useClickOutside(layoutElement, isVisible)
 
 onMounted(async () => {
-  window.addEventListener('click', handleClickOutside)
-
   if (localStorage.getItem('isLoggedIn')) {
     await userSession.getUserData()
     username.value = userSession.userData.username
@@ -115,17 +106,16 @@ const onLogout = async () => {
 </script>
 
 <style scoped>
-/* Sliding transitions for the menu */
 .slide-enter-active,
 .slide-leave-active {
   transition: transform 0.3s ease;
 }
 .slide-enter-from,
 .slide-leave-to {
-  transform: translateX(-100%); /* Start from the left */
+  transform: translateX(-100%);
 }
 .slide-enter-to,
 .slide-leave-from {
-  transform: translateX(0); /* End at the normal position */
+  transform: translateX(0);
 }
 </style>

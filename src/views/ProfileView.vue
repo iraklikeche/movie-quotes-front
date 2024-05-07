@@ -42,7 +42,7 @@
     <!-- Reset -->
     <div v-if="currentMode === Mode.RESET">
       <div class="bg-[#24222F] py-20 px-8">
-        <form @submit="onSubmit" class="flex flex-col gap-5">
+        <form class="flex flex-col gap-5">
           <CustomInput
             :label="$t('sessions.password')"
             name="new_password"
@@ -54,10 +54,10 @@
           <CustomInput
             type="password"
             :label="$t('sessions.conf_password')"
-            name="confirm_new_password"
+            name="new_password_confirmation"
             :placeholder="$t('sessions.conf_password_placeholder')"
             isPasswordField
-            rules="confirmed:@confirm_new_password"
+            rules="required|confirmed:@new_password"
           />
         </form>
       </div>
@@ -77,7 +77,7 @@
       }}</span>
       <div class="bg-[#222030] py-8 sm:min-w-[62rem] relative sm:pb-24 sm:rounded-md">
         <div
-          class="flex flex-col justify-center items-center sm:absolute sm:right-1/2 sm:translate-x-1/2 sm:top-0 sm:-translate-y-1/2"
+          class="flex flex-col justify-center items-center sm:absolute sm:right-1/2 sm:translate-x-1/2 sm:top-0 sm:-translate-y-1/2 gap-2"
         >
           <img :src="profile" class="rounded-full max-h-48 min-w-48 max-w-48" />
           <p class="text-white text-xl">{{ $t('texts.upload_photo') }}</p>
@@ -183,7 +183,7 @@
 import GoBackBtn from '@/components/icons/GoBackBtn.vue'
 import profile from '@/assets/images/profile.png'
 import TheLayout from '@/components/TheLayout.vue'
-import { ref, onMounted } from 'vue'
+import { ref, onMounted, computed } from 'vue'
 import { useForm, Field } from 'vee-validate'
 import { useUserSessionStore } from '@/stores/UserSessionStore'
 import CustomInput from '@/components/Form/CustomInput.vue'
@@ -192,11 +192,12 @@ import EmailStatic from '@/components/EmailStatic.vue'
 import PasswordStatic from '@/components/PasswordStatic.vue'
 import UsernameStatic from '@/components/UsernameStatic.vue'
 import SpanStatic from '@/components/SpanStatic.vue'
+import { updateUserProfile } from '@/service/authService'
 
 // States
 const userSession = useUserSessionStore()
 const router = useRouter()
-const username = ref('')
+const username = computed(() => userSession.userData.username)
 const email = ref('')
 const updateUsername = ref(false)
 const updatePassword = ref(false)
@@ -214,6 +215,23 @@ const currentMode = ref(Mode.MAIN)
 const { setValues, handleSubmit } = useForm()
 
 // Functions
+const addNewUserInput = () => {
+  updateUsername.value = true
+}
+
+const addNewPasswordInput = () => {
+  updatePassword.value = true
+}
+
+const cancelChanges = () => {
+  updatePassword.value = false
+  updateUsername.value = false
+}
+
+const goBack = () => {
+  router.go(-1)
+}
+
 const openMode = (mode: string) => {
   currentMode.value = mode
 }
@@ -233,37 +251,10 @@ const confirmReset = () => {
   finalCheck.value = true
 }
 
-const onSubmit = handleSubmit((values) => {
-  console.log('Form Values:', values)
-  console.log('Username:', values.new_username)
-  console.log('Password:', values.new_password)
-  console.log('Password Confirmation:', values.confirm_new_password)
-
-  closeEditForm()
-})
-
-const addNewUserInput = () => {
-  updateUsername.value = true
-}
-
-const addNewPasswordInput = () => {
-  updatePassword.value = true
-}
-
-const cancelChanges = () => {
-  updatePassword.value = false
-  updateUsername.value = false
-}
-
-const goBack = () => {
-  router.go(-1)
-}
-
 // Life-cycles
 onMounted(async () => {
   if (localStorage.getItem('isLoggedIn')) {
     await userSession.getUserData()
-    username.value = userSession.userData.username
     email.value = userSession.userData.email
   }
   initialValues.value = {
@@ -276,5 +267,35 @@ onMounted(async () => {
     email: email.value,
     password: initialValues.value.password
   })
+})
+
+// AJAX
+
+const onSubmit = handleSubmit(async (values) => {
+  try {
+    const updateData: {
+      new_username: any
+      new_password: any
+      new_password_confirmation: any
+      [key: string]: any
+    } = {
+      new_username: values.new_username,
+      new_password: values.new_password,
+      new_password_confirmation: values.new_password_confirmation
+    }
+
+    Object.keys(updateData).forEach((key) => {
+      if (!updateData[key]) {
+        delete updateData[key]
+      }
+    })
+
+    await updateUserProfile(updateData)
+    await userSession.getUserData()
+
+    closeEditForm()
+  } catch (error) {
+    console.error('Failed to update profile:', error)
+  }
 })
 </script>

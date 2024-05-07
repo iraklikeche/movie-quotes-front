@@ -79,15 +79,16 @@ import { ref } from 'vue'
 import { useRouter } from 'vue-router'
 import type { SubmissionHandler } from 'vee-validate'
 
-const userSession = useUserSessionStore()
-
-const router = useRouter()
-const remember = ref(false)
 type LoginValues = {
   email: string
   password: string
   remember?: boolean
 }
+
+const userSession = useUserSessionStore()
+
+const router = useRouter()
+const remember = ref(false)
 
 const onSubmit: SubmissionHandler<LoginValues> = async (values: LoginValues, { setFieldError }) => {
   await getCsrfCookie()

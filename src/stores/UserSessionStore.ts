@@ -95,6 +95,10 @@ export const useUserSessionStore = defineStore('UserSessionStore', () => {
     }
   }
 
+  function updateUsername(newUsername) {
+    userData.username = newUsername
+  }
+
   return {
     showRegister,
     showLogin,
@@ -119,6 +123,7 @@ export const useUserSessionStore = defineStore('UserSessionStore', () => {
     setModalContent,
     redirectToEmailProvider,
     getUserData,
-    userData
+    userData,
+    updateUsername
   }
 })
