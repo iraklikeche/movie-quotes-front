@@ -1,4 +1,16 @@
 <template>
+  <transition name="fade">
+    <div
+      v-if="showModal"
+      class="fixed top-32 right-3 z-10 bg-green-600 text-white py-3 px-4 sm:py-4 sm:px-8 rounded-lg shadow-md transition-all flex gap-20 items-center"
+    >
+      <p>{{ $t('texts.success') }}</p>
+      <span class="sm:hidden" @click="showModal = false">
+        <CloseBtn />
+      </span>
+    </div>
+  </transition>
+
   <TheLayout :customHeight="'h-screen'">
     <div class="pt-12 px-8 fixed inset-0 z-10 bg-[#24222f] top-[10%]" v-if="finalCheck">
       <div class="bg-[#24222f] rounded-xl">
@@ -203,6 +215,7 @@ import UsernameStatic from '@/components/UsernameStatic.vue'
 import SpanStatic from '@/components/SpanStatic.vue'
 import { updateUserProfile } from '@/service/authService'
 import type { Ref } from 'vue'
+import CloseBtn from '@/components/icons/CloseBtn.vue'
 
 // States
 const userSession = useUserSessionStore()
@@ -212,6 +225,7 @@ const email = ref('')
 const updateUsername = ref(false)
 const updatePassword = ref(false)
 const finalCheck = ref(false)
+const showModal = ref(false)
 
 const profileUploaded: Ref<string | null> = ref(null)
 const profileFile = ref<File | null>(null)
@@ -319,8 +333,23 @@ const onSubmit = handleSubmit(async (values) => {
     closeEditForm()
     updateUsername.value = false
     updatePassword.value = false
+    showModal.value = true
+    setTimeout(() => {
+      showModal.value = false
+    }, 3000)
   } catch (error) {
-    console.error('Failed to update profile:', error)
+    //
   }
 })
 </script>
+
+<style scoped>
+.fade-enter-active,
+.fade-leave-active {
+  transition: opacity 0.5s;
+}
+.fade-enter-from,
+.fade-leave-to {
+  opacity: 0;
+}
+</style>
