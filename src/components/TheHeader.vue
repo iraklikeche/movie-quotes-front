@@ -10,10 +10,10 @@
     <ToastModal v-if="userSession.successModal" v-bind="userSession.modalContent as any" />
 
     <div class="flex justify-between items-center px-4 py-6 sm:px-12">
-      <div class="hidden sm:block">
+      <div :class="['sm:block', { hidden: !isHomepage }]">
         <h2 class="text-[#ddCCAA] uppercase">movie quotes</h2>
       </div>
-      <div class="sm:hidden">
+      <div class="sm:hidden cursor-pointer" @click.stop="$emit('toggle')" v-show="!isHomepage">
         <HamburgerMenu />
       </div>
       <div class="flex items-center">
@@ -46,7 +46,14 @@
           </button>
         </div>
         <div v-else class="flex gap-6 items-center">
+          <SearchIcon class="sm:hidden" />
           <NotificationIcon />
+          <button
+            @click="onLogout"
+            class="border border-white bg-transparent text-sm px-5 py-2 rounded-lg text-white hidden sm:block"
+          >
+            {{ $t('buttons.logout') }}
+          </button>
         </div>
       </div>
     </div>
@@ -66,10 +73,16 @@ import { useI18n } from 'vue-i18n'
 import LanguageArrow from './icons/LanguageArrow.vue'
 import NotificationIcon from '@/components/icons/NotificationIcon.vue'
 import HamburgerMenu from '@/components/icons/HamburgerMenu.vue'
+import SearchIcon from './icons/SearchIcon.vue'
 import { watch } from 'vue'
 import { setLocale } from '@vee-validate/i18n'
 import Cookies from 'js-cookie'
-import { checkTokenValidity, getCsrfCookie, resendPasswordResetLink } from '@/service/authService'
+import {
+  checkTokenValidity,
+  getCsrfCookie,
+  resendPasswordResetLink,
+  logoutUser
+} from '@/service/authService'
 
 const { t: $t } = useI18n()
 
@@ -79,6 +92,8 @@ const route = useRoute()
 const router = useRouter()
 
 const isLogged = ref(false)
+
+const isHomepage = ref(window.location.pathname === '/')
 
 const updateLocale = () => {
   Cookies.set('locale', locale.value, { expires: 7 })
@@ -92,9 +107,17 @@ const initialLoginCheck = () => {
   }
 }
 
-onBeforeMount(() => {
-  initialLoginCheck()
-})
+// AJAX
+const onLogout = async () => {
+  await getCsrfCookie()
+  try {
+    await logoutUser()
+    localStorage.removeItem('isLoggedIn')
+    router.push('/')
+  } catch (error) {
+    //
+  }
+}
 
 function isString(value: unknown): value is string {
   return typeof value === 'string'
@@ -116,7 +139,7 @@ onMounted(async () => {
     } catch (error) {
       userSession.setModalContent(
         {
-          icon: 'ErrorIcon',
+          icon: 'TokenExpired',
           mainMessage: $t('texts.link_expired'),
           subMessage: $t('texts.expired_text'),
           buttonText: $t('texts.expired_btn_text')
@@ -148,6 +171,11 @@ onMounted(async () => {
   if (cookieLocale && availableLocales.includes(cookieLocale)) {
     locale.value = cookieLocale
   }
+})
+
+// Life-cycles
+onBeforeMount(() => {
+  initialLoginCheck()
 })
 
 // Watchers

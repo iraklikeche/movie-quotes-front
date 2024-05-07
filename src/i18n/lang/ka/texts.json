@@ -8,5 +8,18 @@
   "activate": "ანგარიში გააქტიურდა",
   "link_expired": "ბმულის დრო ამოიუწურა",
   "expired_text": "ვერიფიკაციის დრო ამოიწურა, გამოუყენლობის გამო.",
-  "expired_btn_text": "მოითხოვე ხელახლა"
+  "expired_btn_text": "მოითხოვე ხელახლა",
+  "edit_profile": "პროფილის რედაქტირება",
+  "my_profile": "პროფილი",
+  "news_feed": "სიახლეები",
+  "movie_list": "ფილმები",
+  "upload_photo": "ატვირთე ფოტო",
+  "edit": "შეცვლა",
+  "new_quote": "დაამატე ციტატა",
+  "search": "ძებნა",
+  "search_by": "მოძებნე ფილმები @@-ით, ციტატა ##-ით",
+  "write_comment": "დაწერე კომენტარი",
+  "password_contain": "პაროლი უნდა შეიცვადეს",
+  "password_validation_length": "ან სიმბოლოს",
+  "password_validation_case": " პატარა სიმბოლოს"
 }

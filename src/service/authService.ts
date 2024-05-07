@@ -21,10 +21,9 @@ type ResetPasswordData = {
   password_confirmation: string
 }
 
-// Inside authService.ts
 type CheckTokenData = {
   token: string
-  email?: string // Adding email as an optional property
+  email?: string
 }
 
 export async function getCsrfCookie(): Promise<AxiosResponse> {
@@ -78,4 +77,22 @@ export async function callBack(code: string): Promise<AxiosResponse> {
 
 export async function checkTokenValidity(data: CheckTokenData): Promise<AxiosResponse> {
   return await apiClient.post('/api/check-token-validity', data)
+}
+
+export async function getUser() {
+  const response = await apiClient.get('api/user')
+  return response
+}
+
+
+// Include in your existing API service file
+
+export async function updateUserProfile(updateData) {
+  try {
+    const response = await apiClient.post('api/user/update', updateData);
+    return response.data;
+  } catch (error) {
+    console.error('Error updating user profile:', error);
+    throw error;
+  }
 }

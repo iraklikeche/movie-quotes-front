@@ -1,6 +1,7 @@
-import { ref } from 'vue'
+import { ref, reactive } from 'vue'
 import type { Ref } from 'vue'
 import { defineStore } from 'pinia'
+import { getUser } from '@/service/authService'
 
 type ModalContent = {
   icon: string
@@ -16,13 +17,13 @@ export const useUserSessionStore = defineStore('UserSessionStore', () => {
   const showForgotPassword = ref(false)
   const showResetPassword = ref(false)
   const successModal = ref(false)
-  // const modalContent = ref({
-  //   icon: '',
-  //   mainMessage: '',
-  //   subMessage: '',
-  //   buttonText: '',
-  //   buttonAction: null
-  // })
+
+  const userData = reactive({
+    username: '',
+    email: '',
+    password: ''
+  })
+
   const modalContent: Ref<ModalContent> = ref({
     icon: '',
     mainMessage: '',
@@ -79,6 +80,25 @@ export const useUserSessionStore = defineStore('UserSessionStore', () => {
     successModal.value = true
   }
 
+  const getUserData = async () => {
+    try {
+      const response = await getUser()
+      if (response.data) {
+        userData.username = response.data.data.username
+        userData.email = response.data.data.email
+        userData.password = response.data.data.password
+      }
+    } catch (err: any) {
+      if (err.response?.status === 401 && localStorage.getItem('isLoggedIn')) {
+        localStorage.removeItem('isLoggedIn')
+      }
+    }
+  }
+
+  function updateUsername(newUsername: string) {
+    userData.username = newUsername
+  }
+
   return {
     showRegister,
     showLogin,
@@ -101,6 +121,9 @@ export const useUserSessionStore = defineStore('UserSessionStore', () => {
     successModal,
     modalContent,
     setModalContent,
-    redirectToEmailProvider
+    redirectToEmailProvider,
+    getUserData,
+    userData,
+    updateUsername
   }
 })

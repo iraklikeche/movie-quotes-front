@@ -17,5 +17,8 @@
   "forgot_subheader": "Enter the email and we'll send an email with instruction to reset your password",
   "back_to_login": "Back to log in",
   "reset_header": "Reset new password",
-  "reset_subheader": "Your new password must be different from previous used passwords"
+  "reset_subheader": "Your new password must be different from previous used passwords",
+  "new_username": "New username",
+  "new_password": "New password",
+  "confirm_new_password": "Confirm new password"
 }

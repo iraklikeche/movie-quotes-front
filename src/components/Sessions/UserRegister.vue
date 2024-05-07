@@ -44,7 +44,7 @@
         name="password_confirmation"
         :placeholder="$t('sessions.conf_password_placeholder')"
         isPasswordField
-        rules="confirmed:@password_confirmation"
+        rules="confirmed:@password"
         :serverError="errors.password_confirmation"
       />
 

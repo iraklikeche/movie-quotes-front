@@ -19,7 +19,6 @@ app.use(createPinia())
 app.use(router)
 app.use(i18n)
 
-// @ts-ignore
-setupValidation(i18n)
+setupValidation(i18n as any)
 
 app.mount('#app')

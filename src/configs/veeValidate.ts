@@ -10,22 +10,21 @@ const customKaMessages = {
   names: {
     email: 'ელ-ფოსტა',
     password: 'პაროლი',
-    username: 'მომხმარებელის სახელი'
+    username: 'მომხმარებელის სახელი',
+    new_username: 'ახალი სახელი',
+    new_password: 'ახალი პაროლი'
   }
 }
 
-Object.keys(AllRules).forEach((rule) => {
-  // @ts-ignore
-  defineRule(rule, AllRules[rule])
+type AllRulesObg = {
+  [key: string]: any
+}
+
+const rulesObj: AllRulesObg = AllRules
+
+Object.keys(rulesObj).forEach((rule) => {
+  defineRule(rule, rulesObj[rule])
 })
-
-// function keysFromObject<T extends object>(object: T): (keyof T)[] {
-//   return Object.keys(object) as (keyof T)[]
-// }
-
-// keysFromObject(AllRules).forEach((rule) => {
-//   defineRule(rule, AllRules[rule])
-// })
 
 configure({
   generateMessage: localize({

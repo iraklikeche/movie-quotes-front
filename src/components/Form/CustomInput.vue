@@ -43,11 +43,7 @@ const props = defineProps({
   rules: String,
   isPasswordField: Boolean,
   serverError: String,
-  error: String,
-  additionalClass: {
-    type: Object,
-    required: false
-  }
+  error: String
 })
 
 const isPasswordVisible = ref(false)
@@ -57,7 +53,6 @@ const inputType = computed(() => {
 })
 
 const togglePasswordVisibility = () => {
-  console.log(isPasswordVisible.value)
   isPasswordVisible.value = !isPasswordVisible.value
 }
 </script>
