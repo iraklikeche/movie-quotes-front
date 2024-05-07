@@ -83,10 +83,6 @@
 
           <label for="file-upload">
             <img :src="profileImageUrl" class="rounded-full max-h-48 min-w-48 max-w-48" />
-            <!-- <img
-              :src="profileUploaded ? profileUploaded : profile"
-              class="rounded-full max-h-48 min-w-48 max-w-48"
-            /> -->
             <p class="text-white text-xl cursor-pointer">{{ $t('texts.upload_photo') }}</p>
           </label>
         </div>
@@ -318,7 +314,6 @@ const onSubmit = handleSubmit(async (values) => {
       }
     })
     await updateUserProfile(updateData, profileFile.value)
-    // await updateUserProfile(updateData)
     await userSession.getUserData()
 
     closeEditForm()

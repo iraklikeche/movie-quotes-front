@@ -84,17 +84,6 @@ export async function getUser() {
   return response
 }
 
-// export async function updateUserProfile(updateData) {
-//   try {
-//     const response = await apiClient.post('api/user/update', updateData)
-//     return response.data
-//   } catch (error) {
-//     console.error('Error updating user profile:', error)
-//     throw error
-//   }
-// }
-
-// In your authService.js or wherever the updateUserProfile is defined
 export async function updateUserProfile(updateData, file) {
   const formData = new FormData()
   Object.keys(updateData).forEach((key) => {
@@ -103,7 +92,6 @@ export async function updateUserProfile(updateData, file) {
     }
   })
 
-  // Append file if it exists
   if (file) {
     formData.append('profile_image', file)
   }
