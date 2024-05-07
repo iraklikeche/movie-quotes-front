@@ -71,7 +71,7 @@
     </div>
 
     <!-- Main -->
-    <div v-if="currentMode === Mode.MAIN" class="bg-[#222030]">
+    <div v-if="currentMode === Mode.MAIN" class="bg-[#222030] sm:bg-transparent">
       <span class="hidden sm:block text-white text-2xl font-medium mb-28 pl-10">{{
         $t('texts.my_profile')
       }}</span>
@@ -79,8 +79,16 @@
         <div
           class="flex flex-col justify-center items-center sm:absolute sm:right-1/2 sm:translate-x-1/2 sm:top-0 sm:-translate-y-1/2 gap-2"
         >
-          <img :src="profile" class="rounded-full max-h-48 min-w-48 max-w-48" />
-          <p class="text-white text-xl">{{ $t('texts.upload_photo') }}</p>
+          <input type="file" id="file-upload" @change="handleFileUpload" style="display: none" />
+
+          <label for="file-upload">
+            <img :src="profileImageUrl" class="rounded-full max-h-48 min-w-48 max-w-48" />
+            <!-- <img
+              :src="profileUploaded ? profileUploaded : profile"
+              class="rounded-full max-h-48 min-w-48 max-w-48"
+            /> -->
+            <p class="text-white text-xl cursor-pointer">{{ $t('texts.upload_photo') }}</p>
+          </label>
         </div>
         <div class="px-8 mt-16">
           <div class="flex flex-col sm:mt-32 sm:px-48 gap-8">
@@ -181,7 +189,6 @@
 
 <script setup lang="ts">
 import GoBackBtn from '@/components/icons/GoBackBtn.vue'
-import profile from '@/assets/images/profile.png'
 import TheLayout from '@/components/TheLayout.vue'
 import { ref, onMounted, computed } from 'vue'
 import { useForm, Field } from 'vee-validate'
@@ -193,6 +200,7 @@ import PasswordStatic from '@/components/PasswordStatic.vue'
 import UsernameStatic from '@/components/UsernameStatic.vue'
 import SpanStatic from '@/components/SpanStatic.vue'
 import { updateUserProfile } from '@/service/authService'
+import type { Ref } from 'vue'
 
 // States
 const userSession = useUserSessionStore()
@@ -202,6 +210,16 @@ const email = ref('')
 const updateUsername = ref(false)
 const updatePassword = ref(false)
 const finalCheck = ref(false)
+
+const profileUploaded: Ref<string | null> = ref(null)
+const profileFile = ref<File | null>(null)
+const baseURL = import.meta.env.VITE_API_BASE_URL
+
+const profileImageUrl = computed(() => {
+  return profileUploaded.value
+    ? profileUploaded.value
+    : `${baseURL}` + `${'/storage/' + userSession.userData.profile_image}`
+})
 
 const Mode = {
   MAIN: 'main',
@@ -215,6 +233,14 @@ const currentMode = ref(Mode.MAIN)
 const { setValues, handleSubmit } = useForm()
 
 // Functions
+function handleFileUpload(event: Event) {
+  const input = event.target as HTMLInputElement
+  if (input.files?.[0]) {
+    profileUploaded.value = URL.createObjectURL(input.files[0])
+    profileFile.value = input.files[0]
+  }
+}
+
 const addNewUserInput = () => {
   updateUsername.value = true
 }
@@ -257,6 +283,8 @@ onMounted(async () => {
     await userSession.getUserData()
     email.value = userSession.userData.email
   }
+  console.log(`${baseURL}` + `${'/storage/' + userSession.userData.profile_image}`)
+
   initialValues.value = {
     username: username.value,
     email: email.value,
@@ -289,8 +317,8 @@ const onSubmit = handleSubmit(async (values) => {
         delete updateData[key]
       }
     })
-
-    await updateUserProfile(updateData)
+    await updateUserProfile(updateData, profileFile.value)
+    // await updateUserProfile(updateData)
     await userSession.getUserData()
 
     closeEditForm()

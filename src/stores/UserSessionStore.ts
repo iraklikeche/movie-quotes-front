@@ -21,7 +21,8 @@ export const useUserSessionStore = defineStore('UserSessionStore', () => {
   const userData = reactive({
     username: '',
     email: '',
-    password: ''
+    password: '',
+    profile_image: ''
   })
 
   const modalContent: Ref<ModalContent> = ref({
@@ -87,7 +88,9 @@ export const useUserSessionStore = defineStore('UserSessionStore', () => {
         userData.username = response.data.data.username
         userData.email = response.data.data.email
         userData.password = response.data.data.password
+        userData.profile_image = response.data.data.profile_image
       }
+      console.log(response.data.data)
     } catch (err: any) {
       if (err.response?.status === 401 && localStorage.getItem('isLoggedIn')) {
         localStorage.removeItem('isLoggedIn')
