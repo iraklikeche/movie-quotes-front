@@ -82,7 +82,10 @@
           <input type="file" id="file-upload" @change="handleFileUpload" style="display: none" />
 
           <label for="file-upload">
-            <img :src="profileImageUrl" class="rounded-full max-h-48 min-w-48 max-w-48" />
+            <img
+              :src="`${baseURL}/storage/${userSession.userData.profile_image}`"
+              class="rounded-full max-h-48 min-w-48 max-w-48"
+            />
             <p class="text-white text-xl cursor-pointer">{{ $t('texts.upload_photo') }}</p>
           </label>
         </div>
@@ -142,6 +145,8 @@
                       <Field
                         name="new_password"
                         type="password"
+                        rules="required|min:3"
+                        :placeholder="$t('sessions.password_placeholder')"
                         class="bg-transparent sm:bg-red-500 pb-2 border-b placeholder:text-white sm:placeholder:text-[#212529] text-white outline-none sm:py-1 sm:px-3 w-full sm:rounded-[4px]"
                       />
                     </div>
@@ -155,8 +160,9 @@
                   <div class="relative sm:flex sm:items-center gap-8">
                     <div class="sm:w-full">
                       <Field
-                        name="confirm_new_password"
+                        name="new_password_confirmation"
                         type="password"
+                        rules="required|confirmed:@new_password"
                         class="bg-transparent sm:bg-red-500 pb-2 border-b placeholder:text-white sm:placeholder:text-[#212529] text-white outline-none sm:py-1 sm:px-3 w-full sm:rounded-[4px]"
                       />
                     </div>
@@ -171,7 +177,7 @@
               v-if="updateUsername || updatePassword"
             >
               <button class="text-[#CED4DA]" @click="cancelChanges">Cancel</button>
-              <button class="bg-[#E31221] text-white px-5 py-1.5 rounded-md" @click="confirmReset">
+              <button class="bg-[#E31221] text-white px-5 py-1.5 rounded-md" @click="onSubmit">
                 Save changes
               </button>
               <SpanStatic />
@@ -211,12 +217,6 @@ const profileUploaded: Ref<string | null> = ref(null)
 const profileFile = ref<File | null>(null)
 const baseURL = import.meta.env.VITE_API_BASE_URL
 
-const profileImageUrl = computed(() => {
-  return profileUploaded.value
-    ? profileUploaded.value
-    : `${baseURL}` + `${'/storage/' + userSession.userData.profile_image}`
-})
-
 const Mode = {
   MAIN: 'main',
   EDIT: 'edit',
@@ -234,6 +234,7 @@ function handleFileUpload(event: Event) {
   if (input.files?.[0]) {
     profileUploaded.value = URL.createObjectURL(input.files[0])
     profileFile.value = input.files[0]
+    finalCheck.value = true
   }
 }
 
@@ -279,7 +280,6 @@ onMounted(async () => {
     await userSession.getUserData()
     email.value = userSession.userData.email
   }
-  console.log(`${baseURL}` + `${'/storage/' + userSession.userData.profile_image}`)
 
   initialValues.value = {
     username: username.value,
@@ -317,6 +317,8 @@ const onSubmit = handleSubmit(async (values) => {
     await userSession.getUserData()
 
     closeEditForm()
+    updateUsername.value = false
+    updatePassword.value = false
   } catch (error) {
     console.error('Failed to update profile:', error)
   }

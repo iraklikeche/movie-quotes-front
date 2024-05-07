@@ -90,7 +90,6 @@ export const useUserSessionStore = defineStore('UserSessionStore', () => {
         userData.password = response.data.data.password
         userData.profile_image = response.data.data.profile_image
       }
-      console.log(response.data.data)
     } catch (err: any) {
       if (err.response?.status === 401 && localStorage.getItem('isLoggedIn')) {
         localStorage.removeItem('isLoggedIn')
