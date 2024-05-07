@@ -95,7 +95,7 @@ export const useUserSessionStore = defineStore('UserSessionStore', () => {
     }
   }
 
-  function updateUsername(newUsername) {
+  function updateUsername(newUsername: string) {
     userData.username = newUsername
   }
 

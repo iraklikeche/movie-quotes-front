@@ -72,13 +72,14 @@ import { useUserSessionStore } from '@/stores/UserSessionStore'
 import { RouterLink, useRouter } from 'vue-router'
 import { getCsrfCookie, logoutUser } from '@/service/authService'
 import useClickOutside from '@/composables/useClickOutside'
+import type { Ref } from 'vue'
 
 const props = defineProps(['customHeight'])
 const userSession = useUserSessionStore()
 const username = ref('')
 const router = useRouter()
 const isVisible = ref(false)
-const layoutElement = ref(null)
+const layoutElement: Ref<Element | null> = ref(null)
 
 function toggleMenu() {
   isVisible.value = !isVisible.value

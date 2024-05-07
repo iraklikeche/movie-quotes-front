@@ -274,10 +274,10 @@ onMounted(async () => {
 const onSubmit = handleSubmit(async (values) => {
   try {
     const updateData: {
-      new_username: any
-      new_password: any
-      new_password_confirmation: any
-      [key: string]: any
+      new_username: string
+      new_password: string
+      new_password_confirmation: string
+      [key: string]: string
     } = {
       new_username: values.new_username,
       new_password: values.new_password,
