@@ -24,6 +24,21 @@ const router = createRouter({
       path: '/dashboard',
       name: 'dashboard',
       component: () => import('../views/DashboardView.vue')
+    },
+    {
+      path: '/movies',
+      name: 'movies',
+      component: () => import('../views/MoviesView.vue')
+    },
+    {
+      path: '/error',
+      name: 'error',
+      component: () => import('../views/errors/ServerError.vue')
+    },
+    {
+      path: '/:catchAll(.*)',
+      name: 'notFound',
+      component: () => import('../views/errors/NotFound404.vue')
     }
   ]
 })

@@ -95,7 +95,7 @@
 
           <label for="file-upload">
             <img
-              :src="`${baseURL}/storage/${userSession.userData.profile_image}`"
+              :src="userSession.userData.profile_image"
               class="rounded-full max-h-48 min-w-48 max-w-48"
             />
             <p class="text-white text-xl cursor-pointer">{{ $t('texts.upload_photo') }}</p>
@@ -216,6 +216,7 @@ import SpanStatic from '@/components/SpanStatic.vue'
 import { updateUserProfile } from '@/service/authService'
 import type { Ref } from 'vue'
 import CloseBtn from '@/components/icons/CloseBtn.vue'
+// :src="`${baseURL}/storage/${userSession.userData.profile_image}`"
 
 // States
 const userSession = useUserSessionStore()
@@ -327,7 +328,8 @@ const onSubmit = handleSubmit(async (values) => {
         delete updateData[key]
       }
     })
-    await updateUserProfile(updateData, profileFile.value)
+    const res = await updateUserProfile(updateData, profileFile.value)
+    console.log(res)
     await userSession.getUserData()
 
     closeEditForm()
