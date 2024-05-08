@@ -26,6 +26,12 @@ type CheckTokenData = {
   email?: string
 }
 
+type UserProfileUpdate = {
+  name?: string
+  email?: string
+  [key: string]: string | undefined
+}
+
 export async function getCsrfCookie(): Promise<AxiosResponse> {
   return await apiClient.get('/sanctum/csrf-cookie', { withCredentials: true })
 }
@@ -84,11 +90,15 @@ export async function getUser() {
   return response
 }
 
-export async function updateUserProfile(updateData, file) {
+export async function updateUserProfile(
+  updateData: UserProfileUpdate,
+  file: File
+): Promise<AxiosResponse> {
   const formData = new FormData()
   Object.keys(updateData).forEach((key) => {
-    if (updateData[key]) {
-      formData.append(key, updateData[key])
+    const value = updateData[key]
+    if (value !== undefined) {
+      formData.append(key, value)
     }
   })
 

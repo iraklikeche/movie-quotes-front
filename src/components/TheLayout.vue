@@ -8,25 +8,22 @@
     >
       <div class="flex flex-col gap-12 p-8">
         <div class="flex items-center gap-4 text-white">
-          <img
-            :src="`${baseURL}/storage/${userSession.userData.profile_image}`"
-            class="w-14 h-14 rounded-full border-2"
-          />
+          <img :src="userSession.userData.profile_image" class="w-14 h-14 rounded-full border-2" />
           <div>
-            <p>{{ username }}</p>
+            <p>{{ userSession.userData.profile_image }}</p>
             <RouterLink :to="{ name: 'profile' }" class="text-[#ced4da]">{{
               $t('texts.edit_profile')
             }}</RouterLink>
           </div>
         </div>
-        <div class="flex gap-8 items-center text-white pl-2">
+        <RouterLink :to="{ name: 'dashboard' }" class="flex gap-8 items-center text-white pl-2">
           <NewsFeed />
           <p>{{ $t('texts.news_feed') }}</p>
-        </div>
-        <div class="flex gap-8 items-center text-white pl-2">
+        </RouterLink>
+        <RouterLink :to="{ name: 'movies' }" class="flex gap-8 items-center text-white pl-2">
           <ListOfMovies />
           <p>{{ $t('texts.movie_list') }}</p>
-        </div>
+        </RouterLink>
       </div>
       <div class="mt-auto p-8">
         <button @click="onLogout" class="text-white bg-[#e31221] px-3 py-1.5 rounded-md">
@@ -40,25 +37,25 @@
     <div class="hidden sm:flex flex-col gap-8 min-w-56">
       <div class="flex items-center gap-4 text-white">
         <img
-          :src="`${baseURL}/storage/${userSession.userData.profile_image}`"
+          :src="userSession.userData.profile_image"
           class="w-14 h-14 rounded-full border-2"
           :class="$route.path === '/profile' ? 'border-red-600' : 'border-none'"
         />
         <div>
-          <p>{{ username }}</p>
+          <p>{{ userSession.userData.username }}</p>
           <RouterLink :to="{ name: 'profile' }" class="text-[#ced4da]">{{
             $t('texts.edit_profile')
           }}</RouterLink>
         </div>
       </div>
       <RouterLink :to="{ name: 'dashboard' }" class="flex gap-8 items-center text-white pl-2">
-        <NewsFeed :class="$route.path === '/dashboard' ? 'text-red-600' : 'text-white'" />
+        <NewsFeed :class="$route.path === '/dashboard' ? 'text-red-700' : 'text-white'" />
         <p>{{ $t('texts.news_feed') }}</p>
       </RouterLink>
-      <div class="flex gap-8 items-center text-white pl-2">
-        <ListOfMovies :class="$route.path === '/dashboard' ? 'text-red-600' : 'text-white'" />
+      <RouterLink :to="{ name: 'movies' }" class="flex gap-8 items-center text-white pl-2">
+        <ListOfMovies :class="$route.path === '/movies' ? 'text-red-700' : 'text-white'" />
         <p>{{ $t('texts.movie_list') }}</p>
-      </div>
+      </RouterLink>
     </div>
     <div class="sm:flex justify-center sm:w-full">
       <slot />
@@ -79,11 +76,9 @@ import type { Ref } from 'vue'
 
 const props = defineProps(['customHeight'])
 const userSession = useUserSessionStore()
-const username = ref('')
 const router = useRouter()
 const isVisible = ref(false)
 const layoutElement: Ref<Element | null> = ref(null)
-const baseURL = import.meta.env.VITE_API_BASE_URL
 
 function toggleMenu() {
   isVisible.value = !isVisible.value
@@ -94,7 +89,6 @@ useClickOutside(layoutElement, isVisible)
 onMounted(async () => {
   if (localStorage.getItem('isLoggedIn')) {
     await userSession.getUserData()
-    username.value = userSession.userData.username
   }
 })
 
