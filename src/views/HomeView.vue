@@ -8,7 +8,7 @@
         {{ $t('texts.homeMainText') }}<span> {{ $t('texts.MainTextSpan') }}</span>
       </h2>
       <button
-        class="bg-[#e31221] text-white px-4 py-2 text-sm rounded-lg sm:text-xl"
+        class="bg-custom-red text-white px-4 py-2 text-sm rounded-lg sm:text-xl"
         @click="userSession.toggleRegister"
       >
         {{ $t('buttons.get_started') }}

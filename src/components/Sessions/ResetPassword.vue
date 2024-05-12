@@ -30,7 +30,7 @@
         :serverError="errors.password_confirmation"
       />
 
-      <button class="bg-[#e31221] py-2 rounded-md mb-2 text-white">
+      <button class="bg-custom-red py-2 rounded-md mb-2 text-white">
         {{ $t('sessions.reset_header') }}
       </button>
       <button

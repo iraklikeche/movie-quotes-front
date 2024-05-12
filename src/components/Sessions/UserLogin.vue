@@ -45,7 +45,7 @@
         </button>
       </div>
 
-      <button class="bg-[#e31221] py-2 rounded-md my-4 text-white">
+      <button class="bg-custom-red py-2 rounded-md my-4 text-white">
         {{ $t('buttons.login') }}
       </button>
       <button

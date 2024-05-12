@@ -13,7 +13,7 @@
           <div class="w-full px-12">
             <div class="flex flex-col gap-2 items-center">
               <h2 class="text-white text-2xl font-semibold">{{ props.header }}</h2>
-              <p class="text-sm mb-4 text-[#6c757d] text-center">{{ props.paragraph }}</p>
+              <p class="text-sm mb-4 text-custom-light-gray text-center">{{ props.paragraph }}</p>
             </div>
             <div class="sm:px-7">
               <slot />

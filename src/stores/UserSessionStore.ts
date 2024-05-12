@@ -17,11 +17,12 @@ export const useUserSessionStore = defineStore('UserSessionStore', () => {
   const showForgotPassword = ref(false)
   const showResetPassword = ref(false)
   const successModal = ref(false)
+  const loading = ref(false)
 
   const userData = reactive({
     username: '',
     email: '',
-    password: '',
+    google_id: '',
     profile_image: ''
   })
 
@@ -82,18 +83,21 @@ export const useUserSessionStore = defineStore('UserSessionStore', () => {
   }
 
   const getUserData = async () => {
+    loading.value = true
     try {
       const response = await getUser()
       if (response.data) {
         userData.username = response.data.data.username
         userData.email = response.data.data.email
-        userData.password = response.data.data.password
+        userData.google_id = response.data.data.google_id
         userData.profile_image = response.data.data.profile_image
       }
     } catch (err: any) {
       if (err.response?.status === 401 && localStorage.getItem('isLoggedIn')) {
         localStorage.removeItem('isLoggedIn')
       }
+    } finally {
+      loading.value = false
     }
   }
 
@@ -126,6 +130,7 @@ export const useUserSessionStore = defineStore('UserSessionStore', () => {
     redirectToEmailProvider,
     getUserData,
     userData,
-    updateUsername
+    updateUsername,
+    loading
   }
 })

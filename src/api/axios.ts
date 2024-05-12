@@ -1,6 +1,6 @@
 import axios from 'axios'
 import router from '@/router'
-
+import Cookies from 'js-cookie'
 const baseURL = import.meta.env.VITE_API_BASE_URL
 
 const apiClient = axios.create({
@@ -24,5 +24,11 @@ apiClient.interceptors.response.use(
     return Promise.reject(error)
   }
 )
+
+apiClient.interceptors.request.use((config) => {
+  const language = Cookies.get('locale') || 'en'
+  config.headers['Accept-Language'] = language
+  return config
+})
 
 export default apiClient

@@ -40,7 +40,7 @@
           </button>
           <button
             @click="userSession.toggleRegister"
-            class="bg-[#e31221] text-white px-4 py-2 text-sm rounded-lg"
+            class="bg-custom-red text-white px-4 py-2 text-sm rounded-lg"
           >
             {{ $t('buttons.signup') }}
           </button>
@@ -98,7 +98,15 @@ const isHomepage = ref(window.location.pathname === '/')
 const updateLocale = () => {
   Cookies.set('locale', locale.value, { expires: 7 })
   router.push({ path: router.currentRoute.value.fullPath })
+  window.location.reload()
 }
+
+// const updateLocale = async () => {
+// const newLocale = locale.value
+// Cookies.set('locale', newLocale, { expires: 7 })
+// apiClient.defaults.headers.common['Accept-Language'] = newLocale
+// router.push({ path: router.currentRoute.value.fullPath })
+// }
 
 const initialLoginCheck = () => {
   const isLoggedIn = localStorage.getItem('isLoggedIn')

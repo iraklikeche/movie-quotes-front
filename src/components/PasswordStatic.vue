@@ -5,17 +5,18 @@
       <Field
         name="password"
         type="password"
-        class="bg-transparent sm:bg-red-500 pb-2 border-b placeholder:text-white sm:placeholder:text-[#212529] text-[#CED4DA] outline-none w-full sm:px-3 sm:rounded-[4px]"
+        class="bg-transparent sm:bg-custom-gray pb-2 border-b placeholder:text-white sm:placeholder:text-[#212529] text-black outline-none w-full sm:px-3 sm:rounded-[4px] sm:max-w-[28.5rem]"
         disabled
       />
       <span
         @click="() => emit('openMode', 'RESET')"
-        class="text-[#CED4DA] absolute sm:static right-0 top-[40%] -translate-y-1/2 sm:-translate-y-0 sm:py-1 sm:hidden"
+        class="text-custom-gray absolute sm:static right-0 top-[40%] -translate-y-1/2 sm:-translate-y-0 sm:py-1 sm:hidden"
         >{{ $t('texts.edit') }}</span
       >
       <span
-        @click="() => emit('addNewPassword')"
-        class="text-[#CED4DA] absolute sm:static right-0 top-[40%] -translate-y-1/2 sm:-translate-y-0 sm:py-1 hidden sm:block"
+        @click="() => emit('addNewPassword', hideSpan())"
+        v-if="isSpanHidden"
+        class="text-custom-gray absolute sm:static right-0 top-[40%] -translate-y-1/2 sm:-translate-y-0 sm:py-1 hidden sm:block"
         >{{ $t('texts.edit') }}</span
       >
     </div>
@@ -24,9 +25,15 @@
 
 <script setup lang="ts">
 import { Field } from 'vee-validate'
+import { ref } from 'vue'
 const props = defineProps({
   disabled: Boolean
 })
+const isSpanHidden = ref(true)
 
 const emit = defineEmits(['openMode', 'addNewPassword'])
+
+const hideSpan = () => {
+  isSpanHidden.value = false
+}
 </script>
