@@ -45,7 +45,7 @@
         <form @submit.prevent="onSubmit" class="mt-6 flex flex-col gap-6">
           <div class="relative">
             <Field
-              name="movie_en"
+              name="name.en"
               class="bg-transparent border border-custom-light-gray px-4 py-3 rounded-md w-full text-white placeholder:text-white pr-5"
               type="text"
               placeholder="Movie name"
@@ -57,7 +57,7 @@
           </div>
           <div class="relative">
             <Field
-              name="movie_ka"
+              name="name.ka"
               class="bg-transparent border border-custom-light-gray px-4 py-3 rounded-md w-full text-white placeholder:text-white pr-5"
               type="text"
               placeholder="ფილმის სახელი"
@@ -118,7 +118,7 @@
 
           <div class="relative">
             <Field
-              name="director_en"
+              name="director.en"
               class="bg-transparent border border-custom-light-gray px-4 py-3 rounded-md w-full placeholder:text-white text-white"
               type="text"
               placeholder="Director"
@@ -131,7 +131,7 @@
 
           <div class="relative">
             <Field
-              name="director_ka"
+              name="director.ka"
               class="bg-transparent border border-custom-light-gray px-4 py-3 rounded-md w-full placeholder:text-white text-white"
               type="text"
               placeholder="რეჟისორი"
@@ -144,7 +144,7 @@
           <!-- Description -->
           <div class="relative">
             <textarea
-              v-model="description_en"
+              v-model="description.en.value"
               class="bg-transparent border border-[#efefef] border-opacity-60 w-full py-2 px-4 placeholder:text-white italic text-white outline-none pr-5"
               cols="5"
               rows="3"
@@ -158,7 +158,7 @@
 
           <div class="relative">
             <textarea
-              v-model="description_ka"
+              v-model="description.ka.value"
               class="mt-4 bg-transparent text-white border border-[#efefef] border-opacity-60 w-full py-2 px-4 placeholder:text-white italic outline-none pr-5"
               cols="5"
               rows="3"
@@ -169,8 +169,8 @@
               >ქარ</span
             >
           </div>
-
-          <div class="mt-4">
+          <!-- IMAGE -->
+          <div class="mt-4" v-if="!file">
             <input type="file" id="file-upload" style="display: none" @change="onFileChange" />
             <label
               for="file-upload"
@@ -178,11 +178,34 @@
             >
               <div class="flex items-center gap-4">
                 <ImageIcon />
-                <span class="text-white sm:hidden">Upload image</span>
-                <span class="text-white hidden sm:block">Drag & drop your image here or</span>
+                <span class="text-white sm:hidden">{{ $t('texts.upload') }}</span>
+                <span class="text-white hidden sm:block">{{ $t('texts.drag_drop') }}</span>
               </div>
               <div class="bg-[#9747FF] bg-opacity-40 py-2 px-2 rounded-sm">
-                <p class="text-white">Choose file</p>
+                <p class="text-white">{{ $t('texts.choose_file') }}</p>
+              </div>
+            </label>
+          </div>
+          <div
+            v-else
+            class="border border-border-gray border-opacity-60 p-4 flex items-center justify-between sm:justify-normal"
+          >
+            <img v-if="imageUrl" :src="imageUrl" class="w-48 sm:w-1/2 h-28" />
+            <input type="file" id="file-upload" style="display: none" @change="onFileChange" />
+            <label
+              for="file-upload"
+              class="flex flex-col justify-between sm:justify-normal sm:items-center sm:gap-2 px-4 py-5 gap-6 sm:w-1/2"
+            >
+              <span class="text-white hidden sm:block whitespace-nowrap">{{
+                $t('texts.replace_photo')
+              }}</span>
+              <div class="flex gap-12 sm:gap-4 flex-col sm:flex-row">
+                <ImageIcon class="hidden sm:block" />
+
+                <span class="text-white hidden sm:block">{{ $t('texts.drag_drop') }}</span>
+              </div>
+              <div class="bg-[#9747FF] bg-opacity-40 py-2 px-2 rounded-sm whitespace-nowrap">
+                <p class="text-white text-sm">{{ $t('texts.choose_file') }}</p>
               </div>
             </label>
           </div>
@@ -213,20 +236,29 @@ type Category = {
 
 const { handleSubmit } = useForm({
   initialValues: {
-    movie_en: '',
-    movie_ka: '',
+    name: {
+      en: '',
+      ka: ''
+    },
+    director: {
+      en: '',
+      ka: ''
+    },
+    description: {
+      en: '',
+      ka: ''
+    },
     year: '',
-    director_en: '',
-    director_ka: '',
-    description_en: '',
-    description_ka: '',
     image: null,
     genres: []
   }
 })
 
-const description_en = ref('')
-const description_ka = ref('')
+const description = {
+  en: ref(''),
+  ka: ref('')
+}
+
 const props = defineProps<{
   showModal: boolean
 }>()
@@ -241,6 +273,7 @@ const allGenres = ref<Category[]>([])
 const genres = ref<Category[]>([])
 
 const file: Ref<File | null> = ref(null)
+const imageUrl: Ref<string | null> = ref(null)
 
 const handleCloseModal = (event: MouseEvent) => {
   if (!modalContent.value?.contains(event.target as Node)) {
@@ -272,22 +305,35 @@ const handleBlur = () => {
 }
 
 const onFileChange = (event: Event) => {
-  const files = (event.target as HTMLInputElement).files
-  if (files) {
+  const input = event.target as HTMLInputElement
+  const files = input.files
+
+  if (files && files.length > 0) {
     file.value = files[0]
+    const reader = new FileReader()
+
+    reader.onload = (e: ProgressEvent<FileReader>) => {
+      if (typeof e.target?.result === 'string') {
+        imageUrl.value = e.target.result
+      }
+    }
+
+    if (file.value) {
+      reader.readAsDataURL(file.value)
+    }
   }
 }
 
 const onSubmit = handleSubmit(async (values) => {
   let formData = new FormData()
 
-  formData.append('movie_en', values.movie_en)
-  formData.append('movie_ka', values.movie_ka)
+  formData.append('name[en]', values.name.en)
+  formData.append('name[ka]', values.name.ka)
+  formData.append('director[en]', values.director.en)
+  formData.append('director[ka]', values.director.ka)
+  formData.append('description[en]', description.en.value)
+  formData.append('description[ka]', description.ka.value)
   formData.append('year', values.year)
-  formData.append('director_en', values.director_en)
-  formData.append('director_ka', values.director_ka)
-  formData.append('description_en', description_en.value)
-  formData.append('description_ka', description_ka.value)
 
   if (genres.value.length) {
     genres.value.forEach((genre) => formData.append('genres[]', genre.id.toString()))
@@ -299,6 +345,8 @@ const onSubmit = handleSubmit(async (values) => {
   try {
     const response = await createMovie(formData)
     console.log('Success:', response)
+    emit('movie-added')
+    closeModal()
   } catch (error) {
     console.error('Error:', error)
   }
@@ -316,6 +364,5 @@ watch(
 onMounted(async () => {
   const res = await getGenres()
   allGenres.value = res.data.data
-  console.log(allGenres.value)
 })
 </script>

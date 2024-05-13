@@ -18,7 +18,7 @@ apiClient.interceptors.response.use(
     return response
   },
   (error) => {
-    if (error.response && error.response.status === 500) {
+    if (error.response && error.response.status === 403) {
       router.push('/error')
     }
     return Promise.reject(error)

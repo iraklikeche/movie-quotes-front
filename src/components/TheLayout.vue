@@ -26,7 +26,7 @@
         </RouterLink>
       </div>
       <div class="mt-auto p-8">
-        <button @click="onLogout" class="text-white bg-[#e31221] px-3 py-1.5 rounded-md">
+        <button @click="onLogout" class="text-white bg-custom-red px-3 py-1.5 rounded-md">
           Log out
         </button>
       </div>
@@ -58,11 +58,11 @@
         </div>
       </div>
       <RouterLink :to="{ name: 'dashboard' }" class="flex gap-8 items-center text-white pl-2">
-        <NewsFeed :class="$route.path === '/dashboard' ? 'text-red-700' : 'text-white'" />
+        <NewsFeed :class="$route.path === '/dashboard' ? 'text-red-600' : 'text-white'" />
         <p>{{ $t('texts.news_feed') }}</p>
       </RouterLink>
       <RouterLink :to="{ name: 'movies' }" class="flex gap-8 items-center text-white pl-2">
-        <ListOfMovies :class="$route.path === '/movies' ? 'text-red-700' : 'text-white'" />
+        <ListOfMovies :class="$route.path === '/movies' ? 'text-red-600' : 'text-white'" />
         <p>{{ $t('texts.movie_list') }}</p>
       </RouterLink>
     </div>

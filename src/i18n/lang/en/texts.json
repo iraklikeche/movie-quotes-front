@@ -31,5 +31,10 @@
   "choose_movie": "Choose movie",
   "choose_file": "Choose file",
   "drag_drop": "Drag & drop your image here or",
-  "upload": "Upload image"
+  "upload": "Upload image",
+  "replace_photo": "Replace photo",
+  "add_quote": "Add quote",
+  "all_quotes": "All Quotes",
+  "view_quote": "View quote",
+  "delete": "Delete"
 }

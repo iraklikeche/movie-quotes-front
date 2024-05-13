@@ -9,7 +9,7 @@
 
     <ToastModal v-if="userSession.successModal" v-bind="userSession.modalContent as any" />
 
-    <div class="flex justify-between items-center px-4 py-6 sm:px-12">
+    <div class="flex justify-between items-center px-4 py-6 sm:px-16">
       <div :class="['sm:block', { hidden: !isHomepage }]">
         <h2 class="text-[#ddCCAA] uppercase">movie quotes</h2>
       </div>
@@ -101,12 +101,6 @@ const updateLocale = () => {
   window.location.reload()
 }
 
-// const updateLocale = async () => {
-// const newLocale = locale.value
-// Cookies.set('locale', newLocale, { expires: 7 })
-// apiClient.defaults.headers.common['Accept-Language'] = newLocale
-// router.push({ path: router.currentRoute.value.fullPath })
-// }
 
 const initialLoginCheck = () => {
   const isLoggedIn = localStorage.getItem('isLoggedIn')

@@ -23,3 +23,7 @@ export async function createMovie(formData: FormData): Promise<AxiosResponse<any
     throw error
   }
 }
+
+export async function getSingleMovie(id) {
+  return await apiClient.get(`/api/movies/${id}`)
+}
