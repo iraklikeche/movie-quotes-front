@@ -3,10 +3,10 @@
     <div>
       <div class="px-8 sm:px-0 pt-8 flex sm:grid grid-cols-[60fr_40fr] sm:gap-x-12">
         <div
-          class="flex flex-col gap-6 border-b border-border-gray pb-8 border-opacity-60 sm:border-none"
+          class="flex flex-col gap-6 border-b border-border-gray pb-8 border-opacity-60 sm:border-none w-full"
         >
           <div class="sm:w-full" v-if="movie">
-            <img :src="movie.image_url" class="rounded-xl sm:w-full" />
+            <img :src="movie.image_url" class="rounded-xl w-full max-h-80" />
           </div>
           <div class="sm:hidden">
             <DynamicMovie />
@@ -126,7 +126,7 @@ import QuotesHeader from './../components/QuotesHeader.vue'
 import TheLayout from '@/components/TheLayout.vue'
 import { ref, onMounted } from 'vue'
 import { getSingleMovie } from '@/service/movieService'
-import { useRoute } from 'vue-router'
+import { useRoute, useRouter } from 'vue-router'
 import MessageIcon from '@/components/icons/MessageIcon.vue'
 import LikeIcon from '@/components/icons/LikeIcon.vue'
 import MoreOptions from './../components/icons/MoreOptions.vue'
@@ -139,7 +139,6 @@ type Movie = {
   image_url: string
 }
 const route = useRoute()
-
 const isVisible = ref(false)
 
 const movie = ref<Movie | null>(null)

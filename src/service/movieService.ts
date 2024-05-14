@@ -27,3 +27,7 @@ export async function createMovie(formData: FormData): Promise<AxiosResponse<any
 export async function getSingleMovie(id) {
   return await apiClient.get(`/api/movies/${id}`)
 }
+
+export async function deleteMovie(id) {
+  return await apiClient.delete(`/api/movies/${id}`)
+}
