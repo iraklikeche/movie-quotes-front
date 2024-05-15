@@ -36,20 +36,7 @@
   <main :class="['bg-[#171623] w-full sm:px-16 sm:py-8 sm:flex sm:gap-16', customHeight]">
     <div class="hidden sm:flex flex-col gap-8 min-w-56">
       <div class="flex items-center gap-4 text-white">
-        <h1 v-if="userSession.loading" class="animate-pulse text-red-500">LOADING</h1>
-
-        <img
-          v-else-if="userSession.userData.profile_image"
-          :src="userSession.userData.profile_image"
-          class="w-14 h-14 rounded-full border-2"
-          :class="$route.path === '/profile' ? 'border-red-600' : 'border-none'"
-        />
-        <img
-          v-else
-          src="https://picsum.photos/200"
-          class="w-14 h-14 rounded-full border-2"
-          :class="$route.path === '/profile' ? 'border-red-600' : 'border-none'"
-        />
+        <UserProfileImage />
         <div>
           <p>{{ userSession.userData.username }}</p>
           <RouterLink :to="{ name: 'profile' }" class="text-[#ced4da]">{{
@@ -73,6 +60,7 @@
 </template>
 
 <script setup lang="ts">
+import UserProfileImage from './UserProfileImage.vue'
 import ListOfMovies from '@/components/icons/ListOfMovies.vue'
 import { onMounted, ref } from 'vue'
 import NewsFeed from '@/components/icons/NewsFeed.vue'

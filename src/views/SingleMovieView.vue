@@ -122,17 +122,17 @@
 </template>
 
 <script setup lang="ts">
-import QuotesHeader from './../components/QuotesHeader.vue'
+import QuotesHeader from '@/components/QuotesHeader.vue'
 import TheLayout from '@/components/TheLayout.vue'
 import { ref, onMounted } from 'vue'
 import { getSingleMovie } from '@/service/movieService'
-import { useRoute, useRouter } from 'vue-router'
+import { useRoute } from 'vue-router'
 import MessageIcon from '@/components/icons/MessageIcon.vue'
 import LikeIcon from '@/components/icons/LikeIcon.vue'
-import MoreOptions from './../components/icons/MoreOptions.vue'
-import ViewIcon from './../components/icons/ViewIcon.vue'
-import EditIcon from './../components/icons/EditIcon.vue'
-import DeleteIcon from './../components/icons/DeleteIcon.vue'
+import MoreOptions from '@/components/icons/MoreOptions.vue'
+import ViewIcon from '@/components/icons/ViewIcon.vue'
+import EditIcon from '@/components/icons/EditIcon.vue'
+import DeleteIcon from '@/components/icons/DeleteIcon.vue'
 import DynamicMovie from '@/components/DynamicMovie.vue'
 
 type Movie = {

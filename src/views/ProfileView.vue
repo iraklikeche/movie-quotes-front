@@ -1,14 +1,5 @@
 <template>
   <transition name="fade">
-    <!-- <div
-      v-if="showModal"
-      class="fixed top-32 right-3 z-10 bg-green-600 text-white py-3 px-4 sm:py-4 sm:px-8 rounded-lg shadow-md transition-all flex gap-20 items-center"
-    >
-      <p>{{ $t('texts.success') }}</p>
-      <span class="sm:hidden" @click="showModal = false">
-        <CloseBtn />
-      </span>
-    </div> -->
     <div
       v-if="showModal"
       :class="[
@@ -106,16 +97,9 @@
           <input type="file" id="file-upload" @change="handleFileUpload" style="display: none" />
 
           <label for="file-upload" class="flex flex-col items-center gap-2">
-            <h1 v-if="userSession.loading" class="animate-pulse text-3xl text-red-500">LOADING</h1>
-            <img
-              v-else-if="userSession.userData.profile_image"
-              :src="userSession.userData.profile_image"
-              class="rounded-full max-h-48 min-w-48 max-w-48"
-            />
-            <img
-              v-else
-              src="https://picsum.photos/200"
-              class="rounded-full max-h-48 min-w-48 max-w-48"
+            <UserProfileImage
+              loadingClass="text-red-500 text-3xl"
+              imageClass="rounded-full max-h-48 min-w-48 max-w-48"
             />
             <p class="text-white text-xl cursor-pointer">{{ $t('texts.upload_photo') }}</p>
           </label>
@@ -230,6 +214,7 @@
 </template>
 
 <script setup lang="ts">
+import UserProfileImage from './../components/UserProfileImage.vue'
 import GoBackBtn from '@/components/icons/GoBackBtn.vue'
 import TheLayout from '@/components/TheLayout.vue'
 import { ref, onMounted, computed } from 'vue'

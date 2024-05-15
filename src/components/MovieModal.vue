@@ -25,48 +25,13 @@
 
       <div class="px-8 py-10 bg-[#222030] sm:bg-[#11101A]">
         <div class="flex items-center gap-4 text-white">
-          <h1 v-if="userSession.loading" class="animate-pulse text-red-500">LOADING</h1>
-
-          <img
-            v-else-if="userSession.userData.profile_image"
-            :src="userSession.userData.profile_image"
-            class="w-14 h-14 rounded-full border-2"
-            :class="$route.path === '/profile' ? 'border-red-600' : 'border-none'"
-          />
-          <img
-            v-else
-            src="https://picsum.photos/200"
-            class="w-14 h-14 rounded-full border-2"
-            :class="$route.path === '/profile' ? 'border-red-600' : 'border-none'"
-          />
+          <UserProfileImage />
           <p class="text-xl">{{ userSession.userData.username }}</p>
         </div>
 
         <form @submit.prevent="onSubmit" class="mt-6 flex flex-col gap-6">
-          <div class="relative">
-            <Field
-              name="name.en"
-              class="bg-transparent border border-custom-light-gray px-4 py-3 rounded-md w-full text-white placeholder:text-white pr-5"
-              type="text"
-              placeholder="Movie name"
-            />
-            <span
-              class="absolute right-0 -translate-x-[50%] translate-y-[50%] text-custom-light-gray"
-              >Eng</span
-            >
-          </div>
-          <div class="relative">
-            <Field
-              name="name.ka"
-              class="bg-transparent border border-custom-light-gray px-4 py-3 rounded-md w-full text-white placeholder:text-white pr-5"
-              type="text"
-              placeholder="ფილმის სახელი"
-            />
-            <span
-              class="absolute right-0 -translate-x-[50%] translate-y-[50%] text-custom-light-gray"
-              >ქარ</span
-            >
-          </div>
+          <TextInput name="name.en" placeholder="Movie name" label="Eng" />
+          <TextInput name="name.ka" placeholder="ფილმის სახელი" label="ქარ" />
 
           <!-- DROPDOWN -->
 
@@ -116,31 +81,8 @@
             />
           </div>
 
-          <div class="relative">
-            <Field
-              name="director.en"
-              class="bg-transparent border border-custom-light-gray px-4 py-3 rounded-md w-full placeholder:text-white text-white"
-              type="text"
-              placeholder="Director"
-            />
-            <span
-              class="absolute right-0 -translate-x-[50%] translate-y-[50%] text-custom-light-gray"
-              >ქარ</span
-            >
-          </div>
-
-          <div class="relative">
-            <Field
-              name="director.ka"
-              class="bg-transparent border border-custom-light-gray px-4 py-3 rounded-md w-full placeholder:text-white text-white"
-              type="text"
-              placeholder="რეჟისორი"
-            />
-            <span
-              class="absolute right-0 -translate-x-[50%] translate-y-[50%] text-custom-light-gray"
-              >Eng</span
-            >
-          </div>
+          <TextInput name="director.en" placeholder="Director" label="Eng" />
+          <TextInput name="director.ka" placeholder="რეჟისორი" label="ქარ" />
           <!-- Description -->
           <div class="relative">
             <textarea
@@ -150,8 +92,7 @@
               rows="3"
               placeholder="Description"
             />
-            <span
-              class="absolute right-0 -translate-x-[50%] translate-y-[50%] text-custom-light-gray"
+            <span class="absolute right-0 -translate-x-1/2 translate-y-1/2 text-custom-light-gray"
               >Eng</span
             >
           </div>
@@ -165,50 +106,11 @@
               placeholder="აღწერა"
             />
             <span
-              class="absolute right-0 -translate-x-[50%] translate-y-[100%] text-custom-light-gray"
+              class="absolute right-0 -translate-x-1/2 translate-y-[100%] text-custom-light-gray"
               >ქარ</span
             >
           </div>
-          <!-- IMAGE -->
-          <div class="mt-4" v-if="!file">
-            <input type="file" id="file-upload" style="display: none" @change="onFileChange" />
-            <label
-              for="file-upload"
-              class="flex justify-between sm:justify-normal sm:gap-2 items-center border border-border-gray border-opacity-60 px-4 py-5"
-            >
-              <div class="flex items-center gap-4">
-                <ImageIcon />
-                <span class="text-white sm:hidden">{{ $t('texts.upload') }}</span>
-                <span class="text-white hidden sm:block">{{ $t('texts.drag_drop') }}</span>
-              </div>
-              <div class="bg-[#9747FF] bg-opacity-40 py-2 px-2 rounded-sm">
-                <p class="text-white">{{ $t('texts.choose_file') }}</p>
-              </div>
-            </label>
-          </div>
-          <div
-            v-else
-            class="border border-border-gray border-opacity-60 p-4 flex items-center justify-between sm:justify-normal"
-          >
-            <img v-if="imageUrl" :src="imageUrl" class="w-48 sm:w-1/2 h-28" />
-            <input type="file" id="file-upload" style="display: none" @change="onFileChange" />
-            <label
-              for="file-upload"
-              class="flex flex-col justify-between sm:justify-normal sm:items-center sm:gap-2 px-4 py-5 gap-6 sm:w-1/2"
-            >
-              <span class="text-white hidden sm:block whitespace-nowrap">{{
-                $t('texts.replace_photo')
-              }}</span>
-              <div class="flex gap-12 sm:gap-4 flex-col sm:flex-row">
-                <ImageIcon class="hidden sm:block" />
-
-                <span class="text-white hidden sm:block">{{ $t('texts.drag_drop') }}</span>
-              </div>
-              <div class="bg-[#9747FF] bg-opacity-40 py-2 px-2 rounded-sm whitespace-nowrap">
-                <p class="text-white text-sm">{{ $t('texts.choose_file') }}</p>
-              </div>
-            </label>
-          </div>
+          <ImageUpload :file="file" :imageUrl="imageUrl" @file-change="onFileChange" />
 
           <button class="bg-custom-red py-2 text-white">{{ $t('texts.post') }}</button>
         </form>
@@ -218,8 +120,8 @@
 </template>
 
 <script setup lang="ts">
+import UserProfileImage from './UserProfileImage.vue'
 import CloseBtn from '@/components/icons/CloseBtn.vue'
-import ImageIcon from '@/components/icons/ImageIcon.vue'
 import RemoveGenre from '@/components/icons/RemoveGenre.vue'
 import { defineProps } from 'vue'
 import { useUserSessionStore } from '@/stores/UserSessionStore'
@@ -228,6 +130,8 @@ import { useModal } from '@/composables/useModal'
 import { Field, useForm } from 'vee-validate'
 import { getGenres, createMovie } from '@/service/movieService'
 import type { Ref } from 'vue'
+import ImageUpload from './ImageUpload.vue'
+import TextInput from './TextInput.vue'
 
 type Category = {
   id: number
@@ -264,7 +168,7 @@ const props = defineProps<{
 }>()
 const userSession = useUserSessionStore()
 
-const emit = defineEmits(['update:showModal'])
+const emit = defineEmits(['update:showModal', 'movie-added'])
 const modalContent = ref<HTMLElement | null>(null)
 const { showModal: internalShowModal, closeModal, openModal } = useModal()
 const isFocused = ref(false)
@@ -304,23 +208,12 @@ const handleBlur = () => {
   isDropdownOpen.value = false
 }
 
-const onFileChange = (event: Event) => {
-  const input = event.target as HTMLInputElement
-  const files = input.files
-
-  if (files && files.length > 0) {
-    file.value = files[0]
-    const reader = new FileReader()
-
-    reader.onload = (e: ProgressEvent<FileReader>) => {
-      if (typeof e.target?.result === 'string') {
-        imageUrl.value = e.target.result
-      }
-    }
-
-    if (file.value) {
-      reader.readAsDataURL(file.value)
-    }
+const onFileChange = (newFile: File) => {
+  file.value = newFile
+  if (newFile) {
+    imageUrl.value = URL.createObjectURL(newFile)
+  } else {
+    imageUrl.value = ''
   }
 }
 
