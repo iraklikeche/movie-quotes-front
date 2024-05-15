@@ -19,7 +19,7 @@
 import { useUserSessionStore } from '@/stores/UserSessionStore'
 
 const userSession = useUserSessionStore()
-const props = defineProps({
+defineProps({
   loadingClass: {
     type: String,
     default: 'text-red-500 text-3xl'

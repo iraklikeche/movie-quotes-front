@@ -189,7 +189,7 @@ const modalType = ref('success')
 const modalMessage = ref('')
 
 const profileUploaded: Ref<string | null> = ref(null)
-const profileFile = ref<File | null>(null)
+const profileFile: Ref<File | null> = ref(null)
 
 const Mode = {
   MAIN: 'main',
@@ -289,7 +289,7 @@ const onSubmit = handleSubmit(async (values) => {
         delete updateData[key]
       }
     })
-    await updateUserProfile(updateData, profileFile.value)
+    await updateUserProfile(updateData, profileFile.value || undefined)
     await userSession.getUserData()
 
     closeEditForm()

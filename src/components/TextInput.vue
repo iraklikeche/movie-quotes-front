@@ -15,7 +15,7 @@
 <script setup lang="ts">
 import { Field } from 'vee-validate'
 
-const props = defineProps<{
+defineProps<{
   name: string
   placeholder: string
   label: string

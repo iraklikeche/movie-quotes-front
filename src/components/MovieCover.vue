@@ -26,5 +26,5 @@ type Props = {
   customClass?: string
 }
 
-const props = defineProps<Props>()
+defineProps<Props>()
 </script>

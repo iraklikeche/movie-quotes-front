@@ -71,7 +71,7 @@ import { getCsrfCookie, logoutUser } from '@/service/authService'
 import useClickOutside from '@/composables/useClickOutside'
 import type { Ref } from 'vue'
 
-const props = defineProps(['customHeight'])
+defineProps(['customHeight'])
 const userSession = useUserSessionStore()
 const router = useRouter()
 const isVisible = ref(false)
