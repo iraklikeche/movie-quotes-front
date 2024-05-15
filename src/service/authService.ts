@@ -92,7 +92,7 @@ export async function getUser() {
 
 export async function updateUserProfile(
   updateData: UserProfileUpdate,
-  file: File
+  file?: File
 ): Promise<AxiosResponse> {
   const formData = new FormData()
   Object.keys(updateData).forEach((key) => {
