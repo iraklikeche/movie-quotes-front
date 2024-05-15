@@ -138,64 +138,7 @@
                 @openMode="openMode(Mode.RESET)"
                 @addNewPassword="addNewPasswordInput"
               />
-
-              <div
-                v-if="updatePassword"
-                class="relative sm:flex sm:items-center gap-8 sm:max-w-[28.5rem]"
-              >
-                <div
-                  class="border border-custom-gray border-opacity-20 hidden sm:block mt-8 px-8 py-5 rounded-md w-full"
-                >
-                  <p class="text-white">{{ $t('texts.password_contain') }}:</p>
-                  <ul class="mt-4">
-                    <li
-                      :class="{ 'text-green-500': isLengthValid, 'text-[#9C9A9A]': !isLengthValid }"
-                    >
-                      * 8 {{ $t('texts.password_validation_length') }}
-                    </li>
-                    <li :class="{ 'text-green-500': isCaseValid, 'text-[#9C9A9A]': !isCaseValid }">
-                      * 15 {{ $t('texts.password_validation_case') }}
-                    </li>
-                  </ul>
-                </div>
-              </div>
-
-              <!-- New Password -->
-              <div class="mt-8 hidden sm:block" v-if="updatePassword">
-                <div class="flex flex-col">
-                  <label class="text-white mb-1">{{ $t('sessions.new_password') }}</label>
-                  <div class="relative sm:flex sm:items-center gap-8">
-                    <div class="sm:w-full">
-                      <Field
-                        name="new_password"
-                        type="password"
-                        v-model="newPassword"
-                        :placeholder="$t('sessions.password_placeholder')"
-                        class="bg-transparent sm:bg-custom-gray pb-2 border-b placeholder:text-white sm:placeholder:text-[#212529] text-black outline-none sm:py-1 sm:px-3 w-full sm:rounded-[4px] sm:max-w-[28.5rem]"
-                        @input="validatePassword"
-                        :validateOnInput="true"
-                        :rules="{ min: 8, regex: /^(?=.*[a-z])(?=.*[A-Z]).+$/ }"
-                      />
-                    </div>
-                  </div>
-                  <ErrorMessage name="new_password" class="text-red-500" />
-                </div>
-
-                <div class="flex flex-col mt-8">
-                  <label class="text-white mb-1">{{ $t('sessions.confirm_new_password') }}</label>
-                  <div class="relative sm:flex sm:items-center gap-8">
-                    <div class="sm:w-full">
-                      <Field
-                        name="new_password_confirmation"
-                        type="password"
-                        :rules="{ confirmed: 'new_password' }"
-                        class="bg-transparent sm:bg-custom-gray pb-2 border-b placeholder:text-white sm:placeholder:text-[#212529] text-black outline-none sm:py-1 sm:px-3 w-full sm:rounded-[4px] sm:max-w-[28.5rem]"
-                      />
-                    </div>
-                  </div>
-                  <ErrorMessage name="new_password_confirmation" class="text-red-500" />
-                </div>
-              </div>
+              <PasswordResetField v-if="updatePassword" />
             </div>
             <div
               class="justify-end mt-6 gap-8 hidden sm:flex relative sm:max-w-[28.5rem]"
@@ -214,6 +157,7 @@
 </template>
 
 <script setup lang="ts">
+import PasswordResetField from './../components/PasswordResetField.vue'
 import UserProfileImage from './../components/UserProfileImage.vue'
 import GoBackBtn from '@/components/icons/GoBackBtn.vue'
 import TheLayout from '@/components/TheLayout.vue'
@@ -241,7 +185,7 @@ const updatePassword = ref(false)
 const finalCheck = ref(false)
 const showModal = ref(false)
 const showPass = ref(false)
-const modalType = ref('success') // New state variable for modal type
+const modalType = ref('success')
 const modalMessage = ref('')
 
 const profileUploaded: Ref<string | null> = ref(null)
@@ -257,22 +201,6 @@ const Mode = {
 const initialValues = ref({ username: '', email: '', password: '**********' })
 const currentMode = ref(Mode.MAIN)
 const { setValues, handleSubmit } = useForm()
-
-// Computed properties for validation
-const newPassword = ref('')
-
-const isLengthValid = computed(() => {
-  return newPassword.value.length >= 8
-})
-
-const isCaseValid = computed(() => {
-  return /^(?=.*[a-z])(?=.*[A-Z]).+$/.test(newPassword.value)
-})
-
-const validatePassword = () => {
-  isLengthValid.value
-  isCaseValid.value
-}
 
 // Functions
 function handleFileUpload(event: Event) {
@@ -295,6 +223,7 @@ const addNewPasswordInput = () => {
 const cancelChanges = () => {
   updatePassword.value = false
   updateUsername.value = false
+  window.dispatchEvent(new Event('showEditSpan'))
 }
 
 const goBack = () => {
@@ -360,19 +289,16 @@ const onSubmit = handleSubmit(async (values) => {
         delete updateData[key]
       }
     })
-
-    if (profileFile.value) {
-      await updateUserProfile(updateData, profileFile.value)
-    }
+    await updateUserProfile(updateData, profileFile.value)
     await userSession.getUserData()
 
     closeEditForm()
+    window.dispatchEvent(new Event('showEditSpan'))
+
     updateUsername.value = false
     updatePassword.value = false
     showModal.value = true
-    // setTimeout(() => {
-    //   showModal.value = false
-    // }, 3000)
+
     modalType.value = 'success'
     modalMessage.value = t('texts.success')
     showModal.value = true
