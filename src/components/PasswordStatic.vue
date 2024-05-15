@@ -25,15 +25,9 @@
 
 <script setup lang="ts">
 import { Field } from 'vee-validate'
-import { ref } from 'vue'
-const props = defineProps({
-  disabled: Boolean
-})
-const isSpanHidden = ref(true)
+import { useShowEditSpan } from '@/composables/useShowEditSpan'
+
+const { isSpanHidden, hideSpan } = useShowEditSpan()
 
 const emit = defineEmits(['openMode', 'addNewPassword'])
-
-const hideSpan = () => {
-  isSpanHidden.value = false
-}
 </script>
