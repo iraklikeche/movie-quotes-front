@@ -7,7 +7,7 @@
     />
 
     <!-- *************** -->
-    <main class="px-8 pt-4 sm:w-full">
+    <main class="px-8 sm:px-0 pt-4 sm:pt-0 sm:w-full">
       <div class="flex items-center justify-between">
         <h2 class="text-white flex flex-col sm:flex-row gap-2">
           {{ $t('texts.my_list') }} <span> ({{ $t('texts.total') }} {{ movies.length }}) </span>

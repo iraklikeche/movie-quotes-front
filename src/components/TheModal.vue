@@ -6,8 +6,8 @@
     @click.self="closeModal"
   >
     <div class="relative w-full max-w-xl h-full sm:h-auto sm:max-h-full bg-[#222030] sm:rounded-lg">
-      <div class="relative bg-[#222030] sm:rounded-lg">
-        <div class="sm:p-4 md:p-5 flex flex-col items-center gap-3 justify-center">
+      <div class="relative bg-[#222030] sm:rounded-lg pt-12">
+        <div class="sm:p-4 md:p-5 flex flex-col items-center gap-8 justify-center">
           <button @click="userSession.closeModal" class="text-center">
             <CloseBtn />
           </button>

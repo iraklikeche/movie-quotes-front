@@ -36,5 +36,6 @@
   "add_quote": "Add quote",
   "all_quotes": "All Quotes",
   "view_quote": "View quote",
-  "delete": "Delete"
+  "delete": "Delete",
+  "failed": "Oops,something went wrong."
 }

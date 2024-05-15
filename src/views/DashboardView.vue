@@ -1,5 +1,5 @@
 <template>
-  <TheLayout>
+  <TheLayout :customHeight="'min-h-screen'">
     <QuoteModal :showModal="showModal" @update:showModal="(value) => (showModal = value)" />
 
     <div>

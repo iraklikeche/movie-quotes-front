@@ -1,10 +1,22 @@
 <template>
   <transition name="fade">
-    <div
+    <!-- <div
       v-if="showModal"
       class="fixed top-32 right-3 z-10 bg-green-600 text-white py-3 px-4 sm:py-4 sm:px-8 rounded-lg shadow-md transition-all flex gap-20 items-center"
     >
       <p>{{ $t('texts.success') }}</p>
+      <span class="sm:hidden" @click="showModal = false">
+        <CloseBtn />
+      </span>
+    </div> -->
+    <div
+      v-if="showModal"
+      :class="[
+        'fixed top-32 right-3 z-10 text-white py-3 px-4 sm:py-4 sm:px-8 rounded-lg shadow-md transition-all flex gap-20 items-center',
+        modalType === 'success' ? 'bg-green-600' : 'bg-red-500'
+      ]"
+    >
+      <p>{{ modalMessage }}</p>
       <span class="sm:hidden" @click="showModal = false">
         <CloseBtn />
       </span>
@@ -121,13 +133,17 @@
               <div class="relative sm:flex sm:items-center gap-8 mt-8" v-if="updateUsername">
                 <div class="sm:w-full">
                   <label class="text-white mb-1">{{ $t('sessions.new_username') }}</label>
+
                   <Field
                     name="new_username"
                     type="text"
                     class="bg-transparent sm:bg-custom-gray pb-2 border-b placeholder:text-white sm:placeholder:text-[#212529] text-black outline-none sm:py-1 sm:px-3 w-full sm:rounded-[4px] sm:max-w-[28.5rem]"
+                    :validateOnInput="true"
+                    rules="required|min:3"
                   />
                 </div>
               </div>
+              <ErrorMessage name="new_username" class="text-red-500" />
             </div>
 
             <EmailStatic />
@@ -148,8 +164,14 @@
                 >
                   <p class="text-white">{{ $t('texts.password_contain') }}:</p>
                   <ul class="mt-4">
-                    <li class="text-[#9C9A9A]">* 8 {{ $t('texts.password_validation_length') }}</li>
-                    <li class="text-[#9C9A9A]">* 15 {{ $t('texts.password_validation_case') }}</li>
+                    <li
+                      :class="{ 'text-green-500': isLengthValid, 'text-[#9C9A9A]': !isLengthValid }"
+                    >
+                      * 8 {{ $t('texts.password_validation_length') }}
+                    </li>
+                    <li :class="{ 'text-green-500': isCaseValid, 'text-[#9C9A9A]': !isCaseValid }">
+                      * 15 {{ $t('texts.password_validation_case') }}
+                    </li>
                   </ul>
                 </div>
               </div>
@@ -163,8 +185,12 @@
                       <Field
                         name="new_password"
                         type="password"
+                        v-model="newPassword"
                         :placeholder="$t('sessions.password_placeholder')"
                         class="bg-transparent sm:bg-custom-gray pb-2 border-b placeholder:text-white sm:placeholder:text-[#212529] text-black outline-none sm:py-1 sm:px-3 w-full sm:rounded-[4px] sm:max-w-[28.5rem]"
+                        @input="validatePassword"
+                        :validateOnInput="true"
+                        :rules="{ min: 8, regex: /^(?=.*[a-z])(?=.*[A-Z]).+$/ }"
                       />
                     </div>
                   </div>
@@ -178,6 +204,7 @@
                       <Field
                         name="new_password_confirmation"
                         type="password"
+                        :rules="{ confirmed: 'new_password' }"
                         class="bg-transparent sm:bg-custom-gray pb-2 border-b placeholder:text-white sm:placeholder:text-[#212529] text-black outline-none sm:py-1 sm:px-3 w-full sm:rounded-[4px] sm:max-w-[28.5rem]"
                       />
                     </div>
@@ -216,8 +243,10 @@ import UsernameStatic from '@/components/UsernameStatic.vue'
 import { updateUserProfile } from '@/service/authService'
 import type { Ref } from 'vue'
 import CloseBtn from '@/components/icons/CloseBtn.vue'
+import { useI18n } from 'vue-i18n'
 
 // States
+const { t } = useI18n()
 const userSession = useUserSessionStore()
 const router = useRouter()
 const username = computed(() => userSession.userData.username)
@@ -227,6 +256,8 @@ const updatePassword = ref(false)
 const finalCheck = ref(false)
 const showModal = ref(false)
 const showPass = ref(false)
+const modalType = ref('success') // New state variable for modal type
+const modalMessage = ref('')
 
 const profileUploaded: Ref<string | null> = ref(null)
 const profileFile = ref<File | null>(null)
@@ -241,6 +272,22 @@ const Mode = {
 const initialValues = ref({ username: '', email: '', password: '**********' })
 const currentMode = ref(Mode.MAIN)
 const { setValues, handleSubmit } = useForm()
+
+// Computed properties for validation
+const newPassword = ref('')
+
+const isLengthValid = computed(() => {
+  return newPassword.value.length >= 8
+})
+
+const isCaseValid = computed(() => {
+  return /^(?=.*[a-z])(?=.*[A-Z]).+$/.test(newPassword.value)
+})
+
+const validatePassword = () => {
+  isLengthValid.value
+  isCaseValid.value
+}
 
 // Functions
 function handleFileUpload(event: Event) {
@@ -338,11 +385,22 @@ const onSubmit = handleSubmit(async (values) => {
     updateUsername.value = false
     updatePassword.value = false
     showModal.value = true
+    // setTimeout(() => {
+    //   showModal.value = false
+    // }, 3000)
+    modalType.value = 'success'
+    modalMessage.value = t('texts.success')
+    showModal.value = true
     setTimeout(() => {
       showModal.value = false
     }, 3000)
   } catch (error) {
-    //
+    modalType.value = 'error'
+    modalMessage.value = t('texts.failed')
+    showModal.value = true
+    setTimeout(() => {
+      showModal.value = false
+    }, 3000)
   }
 })
 </script>
