@@ -2,22 +2,22 @@
   <div>
     <label class="text-white mb-1">{{ $t('sessions.username') }}</label>
     <div class="relative sm:flex sm:items-center gap-8">
-      <div class="sm:w-full">
-        <Field
-          name="username"
-          type="text"
-          class="bg-transparent sm:bg-red-500 pb-2 border-b placeholder:text-white sm:placeholder:text-[#212529] text-white outline-none sm:py-1 sm:px-3 w-full sm:rounded-[4px]"
-          :disabled="disabled"
-        />
-      </div>
+      <Field
+        name="username"
+        type="text"
+        class="bg-transparent sm:bg-custom-gray pb-2 border-b placeholder:text-white sm:placeholder:text-[#212529] text-black outline-none sm:py-1 sm:px-3 w-full sm:rounded-[4px] sm:max-w-[28.5rem]"
+        disabled
+      />
+
       <span
         @click="() => emit('openMode', 'EDIT')"
-        class="text-[#CED4DA] absolute sm:static right-0 top-[40%] -translate-y-1/2 sm:-translate-y-0 cursor-pointer sm:hidden"
+        class="text-custom-gray absolute sm:static right-0 top-[40%] -translate-y-1/2 sm:-translate-y-0 cursor-pointer sm:hidden"
         >{{ $t('texts.edit') }}</span
       >
       <span
-        @click="() => emit('addNewUser')"
-        class="text-[#CED4DA] absolute sm:static right-0 top-[40%] -translate-y-1/2 sm:-translate-y-0 cursor-pointer hidden sm:block"
+        @click="() => emit('addNewUser', addNewUserInput())"
+        v-if="isSpanHidden"
+        class="text-custom-gray absolute sm:static right-0 top-[40%] -translate-y-1/2 sm:-translate-y-0 cursor-pointer hidden sm:block"
         >{{ $t('texts.edit') }}</span
       >
     </div>
@@ -25,12 +25,17 @@
 </template>
 
 <script setup>
-import { defineProps, defineEmits } from 'vue'
+import { defineProps, defineEmits, ref } from 'vue'
 import { Field } from 'vee-validate'
 
 const props = defineProps({
   disabled: Boolean
 })
 
+const isSpanHidden = ref(true)
+
 const emit = defineEmits(['openMode', 'addNewUser'])
+const addNewUserInput = () => {
+  isSpanHidden.value = false
+}
 </script>

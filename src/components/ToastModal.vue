@@ -3,6 +3,7 @@
     id="popup-modal"
     tabindex="-1"
     class="overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 justify-center items-center w-full md:inset-0 h-[calc(100%-1rem)] max-h-full flex backdrop-blur-sm"
+    @click.self="closeModal"
   >
     <div class="relative p-4 w-full max-w-xl max-h-full">
       <div class="relative bg-[#222030] rounded-lg shadow px-12 py-12">
@@ -31,8 +32,11 @@
 </template>
 
 <script setup lang="ts">
+import { useUserSessionStore } from '@/stores/UserSessionStore'
 import { defineProps, resolveComponent, computed } from 'vue'
 import type { PropType } from 'vue'
+
+const userSession = useUserSessionStore()
 
 const props = defineProps({
   icon: String,
@@ -49,4 +53,8 @@ const dynamicIcon = computed(() => {
   const iconName = props.icon || ''
   return resolveComponent(iconName)
 })
+
+const closeModal = () => {
+  userSession.successModal = false
+}
 </script>

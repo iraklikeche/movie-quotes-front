@@ -1,6 +1,8 @@
 <template>
+  <ToastModal v-if="userSession.successModal" v-bind="userSession.modalContent as any" />
   <main class="bg-gradient-to-b from-gray-900 to-black h-screen">
     <TheHeader />
+
     <div class="flex items-center justify-center flex-col gap-10 pb-32 h-full">
       <h2
         class="text-center text-2xl sm:text-6xl font-bold text-[#ddCCAA] flex flex-col gap-2 sm:gap-6"
@@ -8,15 +10,15 @@
         {{ $t('texts.homeMainText') }}<span> {{ $t('texts.MainTextSpan') }}</span>
       </h2>
       <button
-        class="bg-[#e31221] text-white px-4 py-2 text-sm rounded-lg sm:text-xl"
+        class="bg-custom-red text-white px-4 py-2 text-sm rounded-lg sm:text-xl"
         @click="userSession.toggleRegister"
       >
         {{ $t('buttons.get_started') }}
       </button>
     </div>
   </main>
-  <section class="">
-    <MovieCover :coverImage="cover1" :movieTitleKey="'interstellar_title'" R>
+  <section>
+    <MovieCover :coverImage="cover1" :movieTitleKey="'interstellar_title'">
       {{ $t('movieQuotes.interstellar_quote') }}
       <br class="hidden sm:block" />
       <span> {{ $t('movieQuotes.interstellar_quote_part') }} </span>
@@ -62,6 +64,7 @@ import { onMounted, ref } from 'vue'
 import { useRoute } from 'vue-router'
 import MovieCover from '@/components/MovieCover.vue'
 import { useI18n } from 'vue-i18n'
+import ToastModal from '@/components/ToastModal.vue'
 const { t: $t } = useI18n()
 
 const userSession = useUserSessionStore()
@@ -74,7 +77,6 @@ const extractIDFromURL = (url: string): number | null => {
   const match = url.match(regex)
   return match ? parseInt(match[1]) : null
 }
-
 onMounted(async () => {
   const verifyUrl = route.query.verify_url
   if (typeof verifyUrl === 'string') {
@@ -88,25 +90,18 @@ onMounted(async () => {
     try {
       const response = await verifyEmail(verifyUrl)
 
-      if (response.status === 200) {
-        verificationMessage.value = 'Your email has been successfully verified.'
+      verificationMessage.value = 'Your email has been successfully verified.'
 
-        const verified = route.query.verified
-        if (verified) {
-          userSession.setModalContent(
-            {
-              icon: 'Success',
-              mainMessage: $t('texts.thanks'),
-              subMessage: $t('texts.subMessage'),
-              buttonText: $t('buttons.login')
-            },
-            () => userSession.backToLogIn()
-          )
-        }
-        console.log(response)
-      } else {
-        verificationMessage.value = response.data.message
-      }
+      userSession.setModalContent(
+        {
+          icon: 'Success',
+          mainMessage: $t('texts.thanks'),
+          subMessage: $t('texts.subMessage'),
+          buttonText: $t('buttons.login')
+        },
+        () => userSession.backToLogIn()
+      )
+      console.log(response)
     } catch (error: any) {
       if (error.response.status === 403) {
         userSession.setModalContent(
@@ -132,21 +127,14 @@ onMounted(async () => {
                     },
                     () => userSession.redirectToEmailProvider(email)
                   )
-                } else {
-                  verificationMessage.value = 'Failed to resend verification link.'
                 }
               } catch (error: any) {
                 verificationMessage.value =
                   error.response?.data.message || 'Failed to process your request.'
               }
-            } else {
-              verificationMessage.value = 'Invalid verification URL.'
             }
           }
         )
-        verificationMessage.value = error.response.data.message
-      } else {
-        verificationMessage.value = 'An error occurred during the verification process.'
       }
     }
   }

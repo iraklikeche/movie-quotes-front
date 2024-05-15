@@ -31,6 +31,11 @@ const router = createRouter({
       component: () => import('../views/MoviesView.vue')
     },
     {
+      path: '/movie/:id',
+      name: 'movie',
+      component: () => import('../views/SingleMovieView.vue')
+    },
+    {
       path: '/error',
       name: 'error',
       component: () => import('../views/errors/ServerError.vue')

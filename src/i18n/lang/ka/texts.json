@@ -22,5 +22,20 @@
   "password_contain": "პაროლი უნდა შეიცვადეს",
   "password_validation_length": "ან სიმბოლოს",
   "password_validation_case": " პატარა სიმბოლოს",
-  "success": "მონაცემები წარმატებით შეიცვალა!"
+  "success": "მონაცემები წარმატებით შეიცვალა!",
+  "my_list": "ჩემი ფილმები",
+  "total": "სულ",
+  "add_movie": "დაამატე ფილმი",
+  "search_my_movies": "ძებნა",
+  "post": "შესცხე",
+  "choose_movie": "აირჩიე ფილმი",
+  "choose_file": "აირჩიე სურათი",
+  "drag_drop": "ჩააგდე სურათი ან",
+  "upload": "ატვირთე სურათი",
+  "replace_photo": "შეცვალე ფოტო",
+  "add_quote": "დაამატე ციტატა",
+  "all_quotes": "ყველა ციტატა",
+  "view_quote": "ნახე ციტატა",
+  "delete": "წაშლა",
+  "failed": "დაფიქსირდა შეცდომა"
 }

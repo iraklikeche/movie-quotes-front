@@ -22,5 +22,20 @@
   "password_contain": "Password should contain",
   "password_validation_length": "or more characters",
   "password_validation_case": " lowercase characters",
-  "success": "Changes updated successfully!"
+  "success": "Changes updated successfully!",
+  "my_list": "My list of all movies",
+  "total": "total",
+  "add_movie": "add movie",
+  "search_my_movies": "search",
+  "post": "Post",
+  "choose_movie": "Choose movie",
+  "choose_file": "Choose file",
+  "drag_drop": "Drag & drop your image here or",
+  "upload": "Upload image",
+  "replace_photo": "Replace photo",
+  "add_quote": "Add quote",
+  "all_quotes": "All Quotes",
+  "view_quote": "View quote",
+  "delete": "Delete",
+  "failed": "Oops,something went wrong."
 }

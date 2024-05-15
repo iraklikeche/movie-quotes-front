@@ -3,14 +3,14 @@
     <div
       id="layout-div"
       ref="layoutElement"
-      class="bg-[#11101A] h-[41rem] w-[90%] absolute flex flex-col rounded-lg z-10"
+      class="bg-[#11101A] h-[35rem] w-[90%] flex flex-col rounded-lg z-10 fixed"
       v-show="isVisible"
     >
       <div class="flex flex-col gap-12 p-8">
         <div class="flex items-center gap-4 text-white">
           <img :src="userSession.userData.profile_image" class="w-14 h-14 rounded-full border-2" />
           <div>
-            <p>{{ userSession.userData.profile_image }}</p>
+            <p>{{ userSession.userData.username }}</p>
             <RouterLink :to="{ name: 'profile' }" class="text-[#ced4da]">{{
               $t('texts.edit_profile')
             }}</RouterLink>
@@ -26,21 +26,17 @@
         </RouterLink>
       </div>
       <div class="mt-auto p-8">
-        <button @click="onLogout" class="text-white bg-[#e31221] px-3 py-1.5 rounded-md">
+        <button @click="onLogout" class="text-white bg-custom-red px-3 py-1.5 rounded-md">
           Log out
         </button>
       </div>
     </div>
   </transition>
   <TheHeader class="bg-[#242229]" @toggle="toggleMenu" />
-  <main :class="['bg-[#171623] w-full sm:px-16 sm:py-8 sm:flex', customHeight]">
+  <main :class="['bg-[#171623] w-full sm:px-16 sm:py-8 sm:flex sm:gap-16', customHeight]">
     <div class="hidden sm:flex flex-col gap-8 min-w-56">
       <div class="flex items-center gap-4 text-white">
-        <img
-          :src="userSession.userData.profile_image"
-          class="w-14 h-14 rounded-full border-2"
-          :class="$route.path === '/profile' ? 'border-red-600' : 'border-none'"
-        />
+        <UserProfileImage />
         <div>
           <p>{{ userSession.userData.username }}</p>
           <RouterLink :to="{ name: 'profile' }" class="text-[#ced4da]">{{
@@ -49,11 +45,11 @@
         </div>
       </div>
       <RouterLink :to="{ name: 'dashboard' }" class="flex gap-8 items-center text-white pl-2">
-        <NewsFeed :class="$route.path === '/dashboard' ? 'text-red-700' : 'text-white'" />
+        <NewsFeed :class="$route.path === '/dashboard' ? 'text-red-600' : 'text-white'" />
         <p>{{ $t('texts.news_feed') }}</p>
       </RouterLink>
       <RouterLink :to="{ name: 'movies' }" class="flex gap-8 items-center text-white pl-2">
-        <ListOfMovies :class="$route.path === '/movies' ? 'text-red-700' : 'text-white'" />
+        <ListOfMovies :class="$route.path === '/movies' ? 'text-red-600' : 'text-white'" />
         <p>{{ $t('texts.movie_list') }}</p>
       </RouterLink>
     </div>
@@ -64,6 +60,7 @@
 </template>
 
 <script setup lang="ts">
+import UserProfileImage from './UserProfileImage.vue'
 import ListOfMovies from '@/components/icons/ListOfMovies.vue'
 import { onMounted, ref } from 'vue'
 import NewsFeed from '@/components/icons/NewsFeed.vue'

@@ -5,14 +5,9 @@
       <Field
         name="email"
         type="email"
-        class="bg-transparent sm:bg-red-500 pb-2 border-b placeholder:text-white sm:placeholder:text-[#212529] text-white outline-none sm:py-1 sm:px-3 w-full sm:rounded-[4px]"
+        class="bg-transparent sm:bg-custom-gray pb-2 border-b placeholder:text-white sm:placeholder:text-[#212529] text-black outline-none sm:py-1 sm:px-3 w-full sm:rounded-[4px] sm:max-w-[28.5rem]"
         disabled
       />
-      <div
-        class="text-red-500 opacity-0 absolute sm:static right-0 top-[40%] -translate-y-1/2 sm:-translate-y-0"
-      >
-        {{ $t('texts.edit') }}
-      </div>
     </div>
   </div>
 </template>

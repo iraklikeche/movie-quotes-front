@@ -1,5 +1,5 @@
 <template>
-  <div class="px-4">
+  <div>
     <div>
       <UserRegister v-if="userSession.showRegister" />
       <UserLogin v-if="userSession.showLogin" />
@@ -9,38 +9,45 @@
 
     <ToastModal v-if="userSession.successModal" v-bind="userSession.modalContent as any" />
 
-    <div class="flex justify-between items-center px-4 py-6 sm:px-12">
+    <div class="flex justify-between items-center px-4 py-6 sm:px-16">
       <div :class="['sm:block', { hidden: !isHomepage }]">
         <h2 class="text-[#ddCCAA] uppercase">movie quotes</h2>
       </div>
       <div class="sm:hidden cursor-pointer" @click.stop="$emit('toggle')" v-show="!isHomepage">
         <HamburgerMenu />
       </div>
-      <div class="flex items-center">
-        <div class="inline-flex mr-5 sm:mr-8 items-center">
-          <div class="locale-changer">
+      <div class="flex items-center sm:gap-5">
+        <div class="inline-flex items-center relative w-12">
+          <div class="locale-changer w-full">
             <select
               v-model="locale"
               @change="updateLocale"
-              class="bg-transparent text-white text-sm rounded-lg h-10 pr-2 hover:border-gray-400 focus:outline-none appearance-none cursor-pointer"
+              class="bg-transparent text-white text-sm rounded-lg h-10 hover:border-gray-400 focus:outline-none appearance-none cursor-pointer w-full"
             >
-              <option v-for="locale in availableLocales" :key="`locale-${locale}`" :value="locale">
+              <option
+                v-for="locale in availableLocales"
+                :key="`locale-${locale}`"
+                :value="locale"
+                class="bg-gray-800 text-white hover:bg-blue-500"
+              >
                 {{ locale }}
               </option>
             </select>
           </div>
-          <LanguageArrow />
+          <div class="absolute top-[30%] right-0 -translate-x-1/2 translate-y-1/2">
+            <LanguageArrow />
+          </div>
         </div>
         <div v-if="!isLogged">
           <button
             @click="userSession.toggleLogin"
-            class="border border-white bg-transparent text-sm px-5 py-2 rounded-lg text-white mr-4"
+            class="border border-white bg-transparent text-sm px-3 sm:px-5 py-2 rounded-lg text-white mr-1 sm:mr-4"
           >
             {{ $t('buttons.login') }}
           </button>
           <button
             @click="userSession.toggleRegister"
-            class="bg-[#e31221] text-white px-4 py-2 text-sm rounded-lg"
+            class="bg-custom-red text-white px-4 py-2 text-sm rounded-lg"
           >
             {{ $t('buttons.signup') }}
           </button>
@@ -98,6 +105,7 @@ const isHomepage = ref(window.location.pathname === '/')
 const updateLocale = () => {
   Cookies.set('locale', locale.value, { expires: 7 })
   router.push({ path: router.currentRoute.value.fullPath })
+  window.location.reload()
 }
 
 const initialLoginCheck = () => {
@@ -134,7 +142,6 @@ onMounted(async () => {
       const response = await checkTokenValidity({ token, email })
       if (response.data.status === 'valid') {
         userSession.showResetPassword = true
-        console.log(response.data.status)
       }
     } catch (error) {
       userSession.setModalContent(
@@ -163,7 +170,6 @@ onMounted(async () => {
         }
       )
       userSession.successModal = true
-      console.error('Token validation failed:', error)
     }
   }
 

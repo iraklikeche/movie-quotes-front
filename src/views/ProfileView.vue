@@ -2,24 +2,27 @@
   <transition name="fade">
     <div
       v-if="showModal"
-      class="fixed top-32 right-3 z-10 bg-green-600 text-white py-3 px-4 sm:py-4 sm:px-8 rounded-lg shadow-md transition-all flex gap-20 items-center"
+      :class="[
+        'fixed top-32 right-3 z-10 text-white py-3 px-4 sm:py-4 sm:px-8 rounded-lg shadow-md transition-all flex gap-20 items-center',
+        modalType === 'success' ? 'bg-green-600' : 'bg-red-500'
+      ]"
     >
-      <p>{{ $t('texts.success') }}</p>
+      <p>{{ modalMessage }}</p>
       <span class="sm:hidden" @click="showModal = false">
         <CloseBtn />
       </span>
     </div>
   </transition>
 
-  <TheLayout :customHeight="'h-screen'">
+  <TheLayout :customHeight="'min-h-screen'">
     <div class="pt-12 px-8 fixed inset-0 z-10 bg-[#24222f] top-[10%]" v-if="finalCheck">
       <div class="bg-[#24222f] rounded-xl">
-        <div class="py-12 flex items-center justify-center border-b border-[#CED4DA]">
+        <div class="py-12 flex items-center justify-center border-b border-custom-gray">
           <p class="text-white">Are you sure to make changes?</p>
         </div>
         <div class="flex justify-between py-4 px-5">
-          <button class="text-[#ced4da]" @click="closeEditForm">Cancel</button>
-          <button class="bg-[#E31221] text-white px-2 py-1.5 rounded-md" @click="onSubmit">
+          <button class="text-custom-gray" @click="closeEditForm">Cancel</button>
+          <button class="bg-custom-red text-white px-2 py-1.5 rounded-md" @click="onSubmit">
             Confirm
           </button>
         </div>
@@ -44,8 +47,8 @@
         />
       </form>
       <div class="px-8 flex justify-between mt-6">
-        <button class="text-[#CED4DA]" @click="closeEditForm">Cancel</button>
-        <button class="bg-[#E31221] text-white px-5 py-1.5 rounded-md" @click="confirmReset">
+        <button class="text-custom-gray" @click="closeEditForm">Cancel</button>
+        <button class="bg-custom-red text-white px-5 py-1.5 rounded-md" @click="confirmReset">
           Edit
         </button>
       </div>
@@ -75,8 +78,8 @@
       </div>
 
       <div class="px-8 flex justify-between mt-6">
-        <button class="text-[#CED4DA]" @click="closeEditForm">Cancel</button>
-        <button class="bg-[#E31221] text-white px-5 py-1.5 rounded-md" @click="confirmReset">
+        <button class="text-custom-gray" @click="closeEditForm">Cancel</button>
+        <button class="bg-custom-red text-white px-5 py-1.5 rounded-md" @click="confirmReset">
           Edit
         </button>
       </div>
@@ -93,10 +96,10 @@
         >
           <input type="file" id="file-upload" @change="handleFileUpload" style="display: none" />
 
-          <label for="file-upload">
-            <img
-              :src="userSession.userData.profile_image"
-              class="rounded-full max-h-48 min-w-48 max-w-48"
+          <label for="file-upload" class="flex flex-col items-center gap-2">
+            <UserProfileImage
+              loadingClass="text-red-500 text-3xl"
+              imageClass="rounded-full max-h-48 min-w-48 max-w-48"
             />
             <p class="text-white text-xl cursor-pointer">{{ $t('texts.upload_photo') }}</p>
           </label>
@@ -114,38 +117,47 @@
               <div class="relative sm:flex sm:items-center gap-8 mt-8" v-if="updateUsername">
                 <div class="sm:w-full">
                   <label class="text-white mb-1">{{ $t('sessions.new_username') }}</label>
+
                   <Field
                     name="new_username"
                     type="text"
-                    class="bg-transparent sm:bg-red-500 pb-2 border-b placeholder:text-white sm:placeholder:text-[#212529] text-white outline-none sm:py-1 sm:px-3 w-full sm:rounded-[4px]"
+                    class="bg-transparent sm:bg-custom-gray pb-2 border-b placeholder:text-white sm:placeholder:text-[#212529] text-black outline-none sm:py-1 sm:px-3 w-full sm:rounded-[4px] sm:max-w-[28.5rem]"
+                    :validateOnInput="true"
+                    rules="required|min:3"
                   />
                 </div>
-
-                <SpanStatic />
               </div>
+              <ErrorMessage name="new_username" class="text-red-500" />
             </div>
 
             <EmailStatic />
 
-            <div class="flex flex-col">
+            <div class="flex flex-col" v-if="showPass">
               <PasswordStatic
                 :disabled="!updatePassword"
                 @openMode="openMode(Mode.RESET)"
                 @addNewPassword="addNewPasswordInput"
               />
 
-              <div v-if="updatePassword" class="relative sm:flex sm:items-center gap-8">
+              <div
+                v-if="updatePassword"
+                class="relative sm:flex sm:items-center gap-8 sm:max-w-[28.5rem]"
+              >
                 <div
-                  class="border border-[#ced4da] border-opacity-20 hidden sm:block mt-8 px-8 py-5 rounded-md w-full"
+                  class="border border-custom-gray border-opacity-20 hidden sm:block mt-8 px-8 py-5 rounded-md w-full"
                 >
                   <p class="text-white">{{ $t('texts.password_contain') }}:</p>
                   <ul class="mt-4">
-                    <li class="text-[#9C9A9A]">* 8 {{ $t('texts.password_validation_length') }}</li>
-                    <li class="text-[#9C9A9A]">* 15 {{ $t('texts.password_validation_case') }}</li>
+                    <li
+                      :class="{ 'text-green-500': isLengthValid, 'text-[#9C9A9A]': !isLengthValid }"
+                    >
+                      * 8 {{ $t('texts.password_validation_length') }}
+                    </li>
+                    <li :class="{ 'text-green-500': isCaseValid, 'text-[#9C9A9A]': !isCaseValid }">
+                      * 15 {{ $t('texts.password_validation_case') }}
+                    </li>
                   </ul>
                 </div>
-
-                <SpanStatic />
               </div>
 
               <!-- New Password -->
@@ -157,14 +169,16 @@
                       <Field
                         name="new_password"
                         type="password"
-                        rules="required|min:3"
+                        v-model="newPassword"
                         :placeholder="$t('sessions.password_placeholder')"
-                        class="bg-transparent sm:bg-red-500 pb-2 border-b placeholder:text-white sm:placeholder:text-[#212529] text-white outline-none sm:py-1 sm:px-3 w-full sm:rounded-[4px]"
+                        class="bg-transparent sm:bg-custom-gray pb-2 border-b placeholder:text-white sm:placeholder:text-[#212529] text-black outline-none sm:py-1 sm:px-3 w-full sm:rounded-[4px] sm:max-w-[28.5rem]"
+                        @input="validatePassword"
+                        :validateOnInput="true"
+                        :rules="{ min: 8, regex: /^(?=.*[a-z])(?=.*[A-Z]).+$/ }"
                       />
                     </div>
-
-                    <SpanStatic />
                   </div>
+                  <ErrorMessage name="new_password" class="text-red-500" />
                 </div>
 
                 <div class="flex flex-col mt-8">
@@ -174,25 +188,23 @@
                       <Field
                         name="new_password_confirmation"
                         type="password"
-                        rules="required|confirmed:@new_password"
-                        class="bg-transparent sm:bg-red-500 pb-2 border-b placeholder:text-white sm:placeholder:text-[#212529] text-white outline-none sm:py-1 sm:px-3 w-full sm:rounded-[4px]"
+                        :rules="{ confirmed: 'new_password' }"
+                        class="bg-transparent sm:bg-custom-gray pb-2 border-b placeholder:text-white sm:placeholder:text-[#212529] text-black outline-none sm:py-1 sm:px-3 w-full sm:rounded-[4px] sm:max-w-[28.5rem]"
                       />
                     </div>
-
-                    <SpanStatic />
                   </div>
+                  <ErrorMessage name="new_password_confirmation" class="text-red-500" />
                 </div>
               </div>
             </div>
             <div
-              class="justify-end mt-6 gap-8 hidden sm:flex relative"
+              class="justify-end mt-6 gap-8 hidden sm:flex relative sm:max-w-[28.5rem]"
               v-if="updateUsername || updatePassword"
             >
-              <button class="text-[#CED4DA]" @click="cancelChanges">Cancel</button>
-              <button class="bg-[#E31221] text-white px-5 py-1.5 rounded-md" @click="onSubmit">
+              <button class="text-custom-gray" @click="cancelChanges">Cancel</button>
+              <button class="bg-custom-red text-white px-5 py-1.5 rounded-md" @click="onSubmit">
                 Save changes
               </button>
-              <SpanStatic />
             </div>
           </div>
         </div>
@@ -202,23 +214,24 @@
 </template>
 
 <script setup lang="ts">
+import UserProfileImage from './../components/UserProfileImage.vue'
 import GoBackBtn from '@/components/icons/GoBackBtn.vue'
 import TheLayout from '@/components/TheLayout.vue'
 import { ref, onMounted, computed } from 'vue'
-import { useForm, Field } from 'vee-validate'
+import { useForm, Field, ErrorMessage } from 'vee-validate'
 import { useUserSessionStore } from '@/stores/UserSessionStore'
 import CustomInput from '@/components/Form/CustomInput.vue'
 import { useRouter } from 'vue-router'
 import EmailStatic from '@/components/EmailStatic.vue'
 import PasswordStatic from '@/components/PasswordStatic.vue'
 import UsernameStatic from '@/components/UsernameStatic.vue'
-import SpanStatic from '@/components/SpanStatic.vue'
 import { updateUserProfile } from '@/service/authService'
 import type { Ref } from 'vue'
 import CloseBtn from '@/components/icons/CloseBtn.vue'
-// :src="`${baseURL}/storage/${userSession.userData.profile_image}`"
+import { useI18n } from 'vue-i18n'
 
 // States
+const { t } = useI18n()
 const userSession = useUserSessionStore()
 const router = useRouter()
 const username = computed(() => userSession.userData.username)
@@ -227,10 +240,12 @@ const updateUsername = ref(false)
 const updatePassword = ref(false)
 const finalCheck = ref(false)
 const showModal = ref(false)
+const showPass = ref(false)
+const modalType = ref('success') // New state variable for modal type
+const modalMessage = ref('')
 
 const profileUploaded: Ref<string | null> = ref(null)
 const profileFile = ref<File | null>(null)
-const baseURL = import.meta.env.VITE_API_BASE_URL
 
 const Mode = {
   MAIN: 'main',
@@ -242,6 +257,22 @@ const Mode = {
 const initialValues = ref({ username: '', email: '', password: '**********' })
 const currentMode = ref(Mode.MAIN)
 const { setValues, handleSubmit } = useForm()
+
+// Computed properties for validation
+const newPassword = ref('')
+
+const isLengthValid = computed(() => {
+  return newPassword.value.length >= 8
+})
+
+const isCaseValid = computed(() => {
+  return /^(?=.*[a-z])(?=.*[A-Z]).+$/.test(newPassword.value)
+})
+
+const validatePassword = () => {
+  isLengthValid.value
+  isCaseValid.value
+}
 
 // Functions
 function handleFileUpload(event: Event) {
@@ -294,6 +325,7 @@ onMounted(async () => {
   if (localStorage.getItem('isLoggedIn')) {
     await userSession.getUserData()
     email.value = userSession.userData.email
+    showPass.value = userSession.userData.google_id ? false : true
   }
 
   initialValues.value = {
@@ -328,19 +360,32 @@ const onSubmit = handleSubmit(async (values) => {
         delete updateData[key]
       }
     })
-    const res = await updateUserProfile(updateData, profileFile.value)
-    console.log(res)
+
+    if (profileFile.value) {
+      await updateUserProfile(updateData, profileFile.value)
+    }
     await userSession.getUserData()
 
     closeEditForm()
     updateUsername.value = false
     updatePassword.value = false
     showModal.value = true
+    // setTimeout(() => {
+    //   showModal.value = false
+    // }, 3000)
+    modalType.value = 'success'
+    modalMessage.value = t('texts.success')
+    showModal.value = true
     setTimeout(() => {
       showModal.value = false
     }, 3000)
   } catch (error) {
-    //
+    modalType.value = 'error'
+    modalMessage.value = t('texts.failed')
+    showModal.value = true
+    setTimeout(() => {
+      showModal.value = false
+    }, 3000)
   }
 })
 </script>
