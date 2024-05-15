@@ -9,20 +9,6 @@ export async function getMovies() {
   return await apiClient.get('/api/movies')
 }
 
-// export async function createMovie(formData: FormData): Promise<AxiosResponse<any>> {
-//   try {
-//     const response = await apiClient.post('/api/movies', formData, {
-//       headers: {
-//         'Content-Type': 'multipart/form-data'
-//       }
-//     })
-//     console.log('Movie creation successful:', response)
-//     return response
-//   } catch (error) {
-//     console.error('Failed to create movie:', error)
-//     throw error
-//   }
-// }
 export async function createMovie(formData: FormData): Promise<AxiosResponse<any>> {
   const response = await apiClient.post('/api/movies', formData, {
     headers: {
@@ -33,10 +19,10 @@ export async function createMovie(formData: FormData): Promise<AxiosResponse<any
   return response
 }
 
-export async function getSingleMovie(id) {
+export async function getSingleMovie(id: number | string) {
   return await apiClient.get(`/api/movies/${id}`)
 }
 
-export async function deleteMovie(id) {
+export async function deleteMovie(id: number | string) {
   return await apiClient.delete(`/api/movies/${id}`)
 }

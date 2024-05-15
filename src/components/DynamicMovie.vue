@@ -57,7 +57,9 @@ const router = useRouter()
 const showModal = ref(false)
 
 onMounted(async () => {
-  const res = await getSingleMovie(route.params.id)
+  const id = Array.isArray(route.params.id) ? route.params.id[0] : route.params.id
+
+  const res = await getSingleMovie(id)
   movie.value = res.data.data
 })
 
