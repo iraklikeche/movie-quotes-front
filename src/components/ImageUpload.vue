@@ -38,12 +38,14 @@
         </div>
       </label>
     </div>
+    <ErrorMessage name="image" class="text-red-500" />
   </div>
 </template>
 
 <script setup lang="ts">
 import { ref, watch } from 'vue'
 import ImageIcon from '@/components/icons/ImageIcon.vue'
+import { ErrorMessage } from 'vee-validate'
 
 // Props
 const props = defineProps<{

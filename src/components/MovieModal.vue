@@ -31,6 +31,7 @@
 
         <form @submit.prevent="onSubmit" class="mt-6 flex flex-col gap-6">
           <TextInput name="name.en" placeholder="Movie name" label="Eng" />
+
           <TextInput name="name.ka" placeholder="ფილმის სახელი" label="ქარ" />
 
           <!-- DROPDOWN -->
@@ -55,6 +56,7 @@
                 </span>
               </span>
             </div>
+            <p v-if="dropDownError" class="text-red-500 mt-2">{{ dropDownError }}</p>
 
             <div
               v-if="isDropdownOpen"
@@ -79,10 +81,13 @@
               type="number"
               placeholder="Year/წელი"
             />
+            <ErrorMessage name="year" class="text-red-500" />
           </div>
 
           <TextInput name="director.en" placeholder="Director" label="Eng" />
+
           <TextInput name="director.ka" placeholder="რეჟისორი" label="ქარ" />
+
           <!-- Description -->
           <div class="relative">
             <textarea
@@ -95,6 +100,7 @@
             <span class="absolute right-0 -translate-x-1/2 translate-y-1/2 text-custom-light-gray"
               >Eng</span
             >
+            <ErrorMessage name="description.en" class="text-red-500" />
           </div>
 
           <div class="relative">
@@ -109,6 +115,7 @@
               class="absolute right-0 -translate-x-1/2 translate-y-[100%] text-custom-light-gray"
               >ქარ</span
             >
+            <ErrorMessage name="description.ka" class="text-red-500" />
           </div>
           <ImageUpload :file="file" :imageUrl="imageUrl" @file-change="onFileChange" />
 
@@ -127,7 +134,7 @@ import { defineProps } from 'vue'
 import { useUserSessionStore } from '@/stores/UserSessionStore'
 import { ref, watch, onMounted } from 'vue'
 import { useModal } from '@/composables/useModal'
-import { Field, useForm } from 'vee-validate'
+import { Field, useForm, ErrorMessage } from 'vee-validate'
 import { getGenres, createMovie } from '@/service/movieService'
 import type { Ref } from 'vue'
 import ImageUpload from './ImageUpload.vue'
@@ -138,7 +145,7 @@ type Category = {
   name: string
 }
 
-const { handleSubmit } = useForm({
+const { handleSubmit, setFieldError } = useForm({
   initialValues: {
     name: {
       en: '',
@@ -175,6 +182,7 @@ const isFocused = ref(false)
 const isDropdownOpen = ref(false)
 const allGenres = ref<Category[]>([])
 const genres = ref<Category[]>([])
+const dropDownError = ref(null)
 
 const file: Ref<File | null> = ref(null)
 const imageUrl: Ref<string | null> = ref(null)
@@ -230,6 +238,8 @@ const onSubmit = handleSubmit(async (values) => {
 
   if (genres.value.length) {
     genres.value.forEach((genre) => formData.append('genres[]', genre.id.toString()))
+  } else {
+    setFieldError('genres', 'Please select at least one category.')
   }
   if (file.value) {
     formData.append('image', file.value)
@@ -240,8 +250,18 @@ const onSubmit = handleSubmit(async (values) => {
     console.log('Success:', response)
     emit('movie-added')
     closeModal()
-  } catch (error) {
+  } catch (error: any) {
     console.error('Error:', error)
+    if (error.response && error.response.data && error.response.data.errors) {
+      const serverErrors = error.response.data.errors
+      const hasOwnProperty = Object.prototype.hasOwnProperty.bind(serverErrors)
+      dropDownError.value = serverErrors.genres[0]
+      for (const key in serverErrors) {
+        if (hasOwnProperty(key)) {
+          setFieldError(key as any, serverErrors[key][0])
+        }
+      }
+    }
   }
 })
 

@@ -9,11 +9,12 @@
     <span class="absolute right-0 -translate-x-1/2 translate-y-1/2 text-custom-light-gray">{{
       label
     }}</span>
+    <ErrorMessage :name="name" class="text-red-500" />
   </div>
 </template>
 
 <script setup lang="ts">
-import { Field } from 'vee-validate'
+import { Field, ErrorMessage } from 'vee-validate'
 
 defineProps<{
   name: string
