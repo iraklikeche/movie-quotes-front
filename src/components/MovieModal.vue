@@ -1,14 +1,13 @@
 <template>
   <div
     id="popup-modal"
-    v-show="internalShowModal"
+    v-if="internalShowModal"
     tabindex="-1"
     @click="handleCloseModal"
     class="overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 justify-center items-center w-full md:inset-0 h-screen sm:h-[calc(100%-1rem)] max-h-full flex backdrop-blur-sm"
   >
     <div
       ref="modalContent"
-      @click.stop
       class="relative w-full max-w-xl h-full sm:h-auto sm:max-h-full bg-[#222030] sm:bg-[#11101A] sm:rounded-lg sm:min-w-[60rem] sm:pb-12"
     >
       <div
@@ -19,7 +18,7 @@
           <p class="text-white">{{ $t('texts.add_movie') }}</p>
         </div>
         <div>
-          <CloseBtn @click="$emit('update:showModal', false)" />
+          <CloseBtn @click="closeModal" />
         </div>
       </div>
 
@@ -96,6 +95,7 @@
               cols="5"
               rows="3"
               placeholder="Description"
+              @input="clearError('description.en')"
             />
             <span class="absolute right-0 -translate-x-1/2 translate-y-1/2 text-custom-light-gray"
               >Eng</span
@@ -110,6 +110,7 @@
               cols="5"
               rows="3"
               placeholder="აღწერა"
+              @input="clearError('description.ka')"
             />
             <span
               class="absolute right-0 -translate-x-1/2 translate-y-[100%] text-custom-light-gray"
@@ -145,7 +146,7 @@ type Category = {
   name: string
 }
 
-const { handleSubmit, setFieldError } = useForm({
+const { handleSubmit, setFieldError, resetForm } = useForm({
   initialValues: {
     name: {
       en: '',
@@ -194,6 +195,23 @@ const handleCloseModal = (event: MouseEvent) => {
   }
 }
 
+const clearError = (field) => {
+  if (errors[field]) {
+    delete errors[field]
+  }
+  if (field === 'genres') {
+    dropDownError.value = null
+  }
+}
+
+const resetFields = () => {
+  genres.value = []
+  description.en.value = ''
+  description.ka.value = ''
+  file.value = null
+  imageUrl.value = null
+}
+
 const toggleDropdown = () => {
   isFocused.value = true
   isDropdownOpen.value = !isDropdownOpen.value
@@ -204,6 +222,7 @@ const selectCategory = (category: Category) => {
     genres.value.push(category)
   }
   isDropdownOpen.value = false
+  clearError('genres')
 }
 
 const removeSelectedCategory = (event: MouseEvent, selectedCat: Category) => {
@@ -218,11 +237,13 @@ const handleBlur = () => {
 
 const onFileChange = (newFile: File) => {
   file.value = newFile
+
   if (newFile) {
     imageUrl.value = URL.createObjectURL(newFile)
   } else {
     imageUrl.value = ''
   }
+  clearError('image')
 }
 
 const onSubmit = handleSubmit(async (values) => {
@@ -248,8 +269,10 @@ const onSubmit = handleSubmit(async (values) => {
   try {
     const response = await createMovie(formData)
     console.log('Success:', response)
+    emit('update:showModal', false)
     emit('movie-added')
-    closeModal()
+    resetForm()
+    resetFields()
   } catch (error: any) {
     console.error('Error:', error)
     if (error.response && error.response.data && error.response.data.errors) {
