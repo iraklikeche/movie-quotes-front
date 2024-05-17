@@ -14,41 +14,15 @@
         <TextInput name="name.en" placeholder="Movie name" label="Eng" />
         <TextInput name="name.ka" placeholder="ფილმის სახელი" label="ქარ" />
 
-        <!-- DROPDOWN -->
-
-        <div class="relative" @click="toggleDropdown" tabindex="0" @blur="handleBlur">
-          <div
-            class="bg-transparent px-4 py-3 rounded-md w-full mt-1 border border-custom-light-gray cursor-pointer text-[#85858d] whitespace-nowrap overflow-hidden"
-          >
-            <span v-if="genres.length === 0"> აირჩიეთ კატეგორია </span>
-
-            <span
-              v-for="(selectedCat, index) in genres"
-              class="text-xs rounded-sm tracking-wider py-1 px-2 mr-2 font-medium cursor-pointer last:mr-0 relative z-10 bg-custom-light-gray text-white"
-              :key="index"
-            >
-              {{ selectedCat.name }}
-              <span class="inline-block" @click.stop="removeSelectedCategory($event, selectedCat)">
-                <RemoveGenre />
-              </span>
-            </span>
-          </div>
-          <p v-if="dropDownError" class="text-red-500 mt-2">{{ dropDownError }}</p>
-
-          <div
-            v-if="isDropdownOpen"
-            class="absolute w-full z-10 overflow-y-scroll flex flex-col gap-4 rounded-xl gap-y-2 shadow-2xl shadow-black h-32 mt-2 py-2 px-4 bg-white"
-          >
-            <div
-              v-for="category in allGenres"
-              :key="category.id"
-              @click.stop="selectCategory(category)"
-              class="text-xs tracking-wider py-2 px-4 cursor-pointer text-black hover:bg-slate-700 transition-all rounded-xl"
-            >
-              {{ category.name }}
-            </div>
-          </div>
-        </div>
+        <TheDropdown
+          :items="allGenres"
+          :selectedItems="genres"
+          placeholder="აირჩიეთ კატეგორია"
+          :error="dropDownError"
+          @update:selectedItems="updateGenres"
+          @clearError="clearError('genres')"
+          displayKey="name"
+        />
 
         <!-- YEAR -->
         <div>
@@ -105,10 +79,9 @@
 
 <script setup lang="ts">
 import UserProfileImage from './UserProfileImage.vue'
-import RemoveGenre from '@/components/icons/RemoveGenre.vue'
 import { defineProps } from 'vue'
 import { useUserSessionStore } from '@/stores/UserSessionStore'
-import { ref, watch, onMounted, reactive } from 'vue'
+import { ref, watch, onMounted } from 'vue'
 import { useModal } from '@/composables/useModal'
 import { Field, useForm, ErrorMessage } from 'vee-validate'
 import { getGenres, createMovie } from '@/service/movieService'
@@ -116,6 +89,7 @@ import type { Ref } from 'vue'
 import ImageUpload from './ImageUpload.vue'
 import TextInput from './TextInput.vue'
 import QuoteMovieWrapModal from './QuoteMovieWrapModal.vue'
+import TheDropdown from './TheDropdown.vue'
 
 type Category = {
   id: number
@@ -154,27 +128,29 @@ const userSession = useUserSessionStore()
 
 const emit = defineEmits(['update:showModal', 'movie-added'])
 const { showModal: internalShowModal, closeModal, openModal } = useModal()
-const isFocused = ref(false)
-const isDropdownOpen = ref(false)
+
 const allGenres = ref<Category[]>([])
 const genres = ref<Category[]>([])
 const dropDownError = ref(null)
-const errors = reactive({})
-console.log(errors)
+const errors: { [key: string]: string } = {}
 
 const file: Ref<File | null> = ref(null)
 const imageUrl: Ref<string | null> = ref(null)
 
-const clearError = (field) => {
+const clearError = (field: string) => {
   if (field === 'genres') {
     dropDownError.value = null
   }
   if (field === 'description.en' || field === 'description.ka') {
-    setFieldError(field, null)
+    setFieldError(field, undefined)
   }
   if (field === 'image') {
-    setFieldError(field, null)
+    setFieldError(field, undefined)
   }
+}
+
+const updateGenres = (newGenres: Category[]) => {
+  genres.value = newGenres
 }
 
 const resetFields = () => {
@@ -183,29 +159,6 @@ const resetFields = () => {
   description.ka.value = ''
   file.value = null
   imageUrl.value = null
-}
-
-const toggleDropdown = () => {
-  isFocused.value = true
-  isDropdownOpen.value = !isDropdownOpen.value
-}
-
-const selectCategory = (category: Category) => {
-  if (!genres.value.some((selectedCat) => selectedCat.id === category.id)) {
-    genres.value.push(category)
-  }
-  isDropdownOpen.value = false
-  clearError('genres')
-}
-
-const removeSelectedCategory = (event: MouseEvent, selectedCat: Category) => {
-  event.stopPropagation()
-  genres.value = genres.value.filter((cat) => cat.id !== selectedCat.id)
-}
-
-const handleBlur = () => {
-  isFocused.value = false
-  isDropdownOpen.value = false
 }
 
 const onFileChange = (newFile: File) => {

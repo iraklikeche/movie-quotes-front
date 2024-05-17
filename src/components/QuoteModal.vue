@@ -40,39 +40,17 @@
           <ErrorMessage name="content.ka" class="text-red-500" />
         </div>
         <ImageUpload :file="file" :imageUrl="imageUrl" @file-change="onFileChange" />
-        <div class="relative">
-          <div
-            class="bg-black py-6 px-4 flex items-center justify-between gap-4 mt-6 rounded-md"
-            @click="toggleDropdown"
-            v-if="!isMovies"
-          >
-            <div class="flex items-center gap-2">
-              <ListOfMovies />
-              <p class="text-white">{{ $t('texts.choose_movie') }}</p>
-            </div>
-            <div class="pr-4 sm:pr-0">
-              <ArrowDown />
-            </div>
-          </div>
-          <div v-else class="py-6 px-4 border border-border-gray border-opacity-60 mt-6">
-            <p class="text-white">{{ selectedMovie?.movie_name }}</p>
-          </div>
 
-          <div
-            v-if="isDropdownOpen"
-            class="absolute w-full z-10 overflow-y-scroll flex flex-col gap-4 rounded-xl gap-y-2 shadow-2xl shadow-black h-32 mt-2 py-2 px-4 bg-white"
-          >
-            <div
-              v-for="movie in movies"
-              :key="movie.id"
-              @click.stop="selectMovie(movie)"
-              class="text-xs tracking-wider py-2 px-4 cursor-pointer text-black hover:bg-slate-700 transition-all rounded-xl"
-            >
-              {{ movie.movie_name }}
-            </div>
-          </div>
-          <p v-if="dropDownError" class="text-red-500 mt-2">{{ dropDownError }}</p>
-        </div>
+        <TheDropdown
+          :items="movies"
+          :selectedItems="selectedMovie ? [selectedMovie] : []"
+          placeholder="აირჩიეთ ფილმი"
+          :error="dropDownError"
+          @update:selectedItems="updateSelectedMovie"
+          @clearError="clearError('movie_id')"
+          displayKey="movie_name"
+        />
+
         <div class="bg-[#E31221] flex items-center justify-center mt-8 py-3 rounded-md">
           <button type="submit" class="text-xl text-white w-full">{{ $t('texts.post') }}</button>
         </div>
@@ -83,8 +61,7 @@
 
 <script setup lang="ts">
 import ImageUpload from './ImageUpload.vue'
-import ListOfMovies from '@/components/icons/ListOfMovies.vue'
-import ArrowDown from '@/components/icons/ArrowDown.vue'
+
 import { useUserSessionStore } from '@/stores/UserSessionStore'
 import { ref, watch, onMounted, reactive } from 'vue'
 import { useModal } from '@/composables/useModal'
@@ -92,6 +69,7 @@ import type { Ref } from 'vue'
 import { createQuote, getMovies } from '@/service/movieService'
 import { useForm, ErrorMessage } from 'vee-validate'
 import QuoteMovieWrapModal from './QuoteMovieWrapModal.vue'
+import TheDropdown from './TheDropdown.vue'
 
 const props = defineProps<{
   showModal: boolean
@@ -109,8 +87,6 @@ const userSession = useUserSessionStore()
 const { showModal: internalShowModal, closeModal, openModal } = useModal()
 
 const emit = defineEmits(['update:showModal', 'quote-added'])
-const isDropdownOpen = ref(false)
-const isFocused = ref(false)
 const isMovies: Ref<boolean> = ref(false)
 const selectedMovie: Ref<Movie | null> = ref(null)
 const movies = ref<Movie[]>([])
@@ -129,10 +105,10 @@ const formData = ref({
 
 const clearError = (field: string) => {
   if (field === 'content.en' || field === 'content.ka') {
-    setFieldError(field, null)
+    setFieldError(field, undefined)
   }
   if (field === 'image') {
-    setFieldError(field, null)
+    setFieldError(field, undefined)
   }
   if (field === 'movie_id') {
     dropDownError.value = null
@@ -151,6 +127,12 @@ const onFileChange = (newFile: File) => {
   clearError('image')
 }
 
+const updateSelectedMovie = (newMovie: Movie[]) => {
+  console.log(newMovie)
+  selectedMovie.value = newMovie[0] || null
+  formData.value.movie_id = newMovie[0]?.id || null
+}
+
 const resetFields = () => {
   formData.value = {
     content: {
@@ -163,20 +145,7 @@ const resetFields = () => {
   file.value = null
   imageUrl.value = null
   selectedMovie.value = null
-  isDropdownOpen.value = false
   isMovies.value = false
-}
-
-const toggleDropdown = () => {
-  isFocused.value = true
-  isDropdownOpen.value = !isDropdownOpen.value
-}
-const selectMovie = (movie: Movie) => {
-  formData.value.movie_id = movie.id
-  isDropdownOpen.value = false
-  isMovies.value = true
-  selectedMovie.value = movie
-  clearError('movie_id')
 }
 
 const updateShowModal = (value: boolean) => {
@@ -188,6 +157,7 @@ const updateShowModal = (value: boolean) => {
 onMounted(async () => {
   const res = await getMovies()
   movies.value = res.data.data
+  console.log(movies.value)
 })
 
 watch(
