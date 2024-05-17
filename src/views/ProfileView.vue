@@ -97,7 +97,7 @@
           <input type="file" id="file-upload" @change="handleFileUpload" style="display: none" />
 
           <label for="file-upload" class="flex flex-col items-center gap-2">
-            <UserProfileImage
+            <TheProfile
               loadingClass="text-red-500 text-3xl"
               imageClass="rounded-full max-h-48 min-w-48 max-w-48"
             />
@@ -158,7 +158,6 @@
 
 <script setup lang="ts">
 import PasswordResetField from './../components/PasswordResetField.vue'
-import UserProfileImage from './../components/UserProfileImage.vue'
 import GoBackBtn from '@/components/icons/GoBackBtn.vue'
 import TheLayout from '@/components/TheLayout.vue'
 import { ref, onMounted, computed } from 'vue'
@@ -173,6 +172,7 @@ import { updateUserProfile } from '@/service/authService'
 import type { Ref } from 'vue'
 import CloseBtn from '@/components/icons/CloseBtn.vue'
 import { useI18n } from 'vue-i18n'
+import TheProfile from '@/components/TheProfile.vue'
 
 // States
 const { t } = useI18n()

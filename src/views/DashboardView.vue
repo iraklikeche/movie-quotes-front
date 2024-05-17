@@ -21,6 +21,7 @@
           <SearchIcon />
           <input
             v-model="search"
+            @input="handleSearch"
             @focus="handleFocused"
             @blur="isFocused = false"
             class="outline-none text-white pl-4 py-2 bg-transparent w-16 transition-all duration-300 focus:w-[21rem] sm:focus:w-[42rem]"
@@ -33,7 +34,8 @@
       <div class="bg-[#181624] flex flex-col gap-10">
         <div class="bg-[#09101c] px-8 py-4 rounded-xl" v-for="quote in quotes" :key="quote.id">
           <div class="flex items-center gap-4">
-            <img :src="quote.user.profile_image_url" class="w-10 rounded-full" />
+            <ProfileImage :imageClass="'w-10 rounded-full'" />
+
             <span class="text-white">{{ quote.user.username }}</span>
           </div>
           <div class="flex flex-col gap-2 mt-2 border-b border-border-gray border-opacity-30 pb-4">
@@ -112,57 +114,16 @@
 </template>
 
 <script setup lang="ts">
+import ProfileImage from './../components/ProfileImage.vue'
 import QuoteModal from './../components/QuoteModal.vue'
 import TheLayout from '@/components/TheLayout.vue'
 import SearchIcon from '@/components/icons/SearchIcon.vue'
 import WriteQuote from '@/components/icons/WriteQuote.vue'
 import MessageIcon from '@/components/icons/MessageIcon.vue'
 import LikeIcon from '@/components/icons/LikeIcon.vue'
-import { ref, onMounted } from 'vue'
+import { ref, onMounted, watch } from 'vue'
 import { getQuotes, toggleLike } from '@/service/movieService'
-
-type User = {
-  id: number
-  username: string
-  profile_image_url: string
-}
-
-type Movie = {
-  id: number
-  name: {
-    en: string
-    ka?: string
-  }
-  year: number
-}
-
-type Comment = {
-  id: number
-  content: string
-  user_id: number
-  quote_id: number
-}
-
-type Like = {
-  id: number
-  user_id: number
-  quote_id: number
-}
-
-type Quote = {
-  id: number
-  content: {
-    en: string
-    ka?: string
-  }
-  user: User
-  movie: Movie
-  comments: Comment[]
-  likes: Like[]
-  image_url: string
-  liked_by_user: boolean
-  like_count: number
-}
+import type { Quote } from '@/types'
 
 const search = ref('')
 const isFocused = ref(false)
@@ -177,11 +138,22 @@ const openModal = () => {
   showModal.value = true
 }
 
-const fetchQuotes = async () => {
-  const res = await getQuotes()
+const fetchQuotes = async (searchQuery = '') => {
+  const res = await getQuotes(searchQuery)
   quotes.value = res.data
-  console.log(quotes.value)
 }
+
+const debounce = (func: (...args: any[]) => void, wait: number) => {
+  let timeout: ReturnType<typeof setTimeout>
+  return (...args: any[]) => {
+    clearTimeout(timeout)
+    timeout = setTimeout(() => func.apply(this, args), wait)
+  }
+}
+
+const handleSearch = debounce(async () => {
+  fetchQuotes(search.value)
+}, 300)
 
 onMounted(() => {
   fetchQuotes()
@@ -201,4 +173,10 @@ const like = async (quoteId: number) => {
     console.error('Failed to toggle like:', error)
   }
 }
+
+watch(search, (newValue, oldValue) => {
+  if (newValue !== oldValue) {
+    handleSearch()
+  }
+})
 </script>
