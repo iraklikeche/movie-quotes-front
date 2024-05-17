@@ -70,7 +70,8 @@ const openModal = () => {
   showModal.value = true
 }
 const search = ref('')
-const handleModalUpdate = (value) => {
+
+const handleModalUpdate = (value: boolean) => {
   showModal.value = value
 }
 
