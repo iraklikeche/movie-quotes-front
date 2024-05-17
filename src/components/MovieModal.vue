@@ -205,16 +205,16 @@ const onSubmit = handleSubmit(async (values) => {
     resetForm()
     resetFields()
   } catch (error: any) {
-    console.error('Error:', error)
-    if (error.response && error.response.data && error.response.data.errors) {
+    if (error) {
       const serverErrors = error.response.data.errors
-      const hasOwnProperty = Object.prototype.hasOwnProperty.bind(serverErrors)
-      dropDownError.value = serverErrors.genres[0]
+      if (serverErrors.genres) {
+        dropDownError.value = serverErrors.genres[0]
+      }
+
       for (const key in serverErrors) {
-        if (hasOwnProperty(key)) {
-          setFieldError(key as any, serverErrors[key][0])
-          errors[key] = serverErrors[key][0]
-        }
+        setFieldError(key as any, serverErrors[key][0])
+        errors[key] = serverErrors[key][0]
+        console.log(errors)
       }
     }
   }
