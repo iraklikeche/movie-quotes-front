@@ -2,8 +2,8 @@
   <TheLayout :customHeight="'min-h-screen'">
     <MovieModal
       :showModal="showModal"
-      @update:showModal="(value) => (showModal = value)"
       @movie-added="fetchMovies"
+      @update:showModal="handleModalUpdate"
     />
 
     <!-- *************** -->
@@ -70,6 +70,9 @@ const openModal = () => {
   showModal.value = true
 }
 const search = ref('')
+const handleModalUpdate = (value) => {
+  showModal.value = value
+}
 
 const filteredMovies = computed(() => {
   return movies.value.filter((movie) =>

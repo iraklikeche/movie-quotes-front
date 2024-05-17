@@ -26,3 +26,21 @@ export async function getSingleMovie(id: number | string) {
 export async function deleteMovie(id: number | string) {
   return await apiClient.delete(`/api/movies/${id}`)
 }
+
+export async function createQuote(formData: FormData): Promise<AxiosResponse<any>> {
+  const response = await apiClient.post('/api/quotes', formData, {
+    headers: {
+      'Content-Type': 'multipart/form-data'
+    }
+  })
+  console.log('Quote creation successful:', response)
+  return response
+}
+
+export async function getQuotes() {
+  return await apiClient.get('/api/quotes')
+}
+
+export async function toggleLike(quoteId: number) {
+  return await apiClient.post(`/api/quotes/${quoteId}/likes`)
+}
