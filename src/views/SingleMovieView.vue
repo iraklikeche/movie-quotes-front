@@ -1,5 +1,6 @@
 <template>
   <TheLayout :customHeight="'min-h-screen'">
+    <QuoteModal :showModal="showModal" @update:showModal="(value) => (showModal = value)" />
     <div>
       <div class="px-8 sm:px-0 pt-8 flex sm:grid grid-cols-[60fr_40fr] sm:gap-x-12">
         <div
@@ -12,11 +13,11 @@
             <DynamicMovie />
           </div>
           <div class="sm:hidden">
-            <button class="bg-custom-red px-4 py-2 text-white">
+            <button @click="openModal" class="bg-custom-red px-4 py-2 text-white">
               {{ $t('texts.add_quote') }}
             </button>
           </div>
-          <!-- ********************* -->
+          <!-- ***********DESKTOP********** -->
           <div class="hidden sm:block">
             <QuotesHeader />
             <div class="mt-6 w-full">
@@ -70,6 +71,8 @@
           <DynamicMovie />
         </div>
       </div>
+
+      <!-- ***********MOBILE********** -->
 
       <div class="sm:hidden">
         <QuotesHeader />
@@ -134,12 +137,19 @@ import ViewIcon from '@/components/icons/ViewIcon.vue'
 import EditIcon from '@/components/icons/EditIcon.vue'
 import DeleteIcon from '@/components/icons/DeleteIcon.vue'
 import DynamicMovie from '@/components/DynamicMovie.vue'
+import QuoteModal from '@/components/QuoteModal.vue'
 
 type Movie = {
   image_url: string
 }
 const route = useRoute()
 const isVisible = ref(false)
+
+const showModal = ref(false)
+
+const openModal = () => {
+  showModal.value = true
+}
 
 const movie = ref<Movie | null>(null)
 

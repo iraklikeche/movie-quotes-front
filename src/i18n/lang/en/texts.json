@@ -37,5 +37,7 @@
   "all_quotes": "All Quotes",
   "view_quote": "View quote",
   "delete": "Delete",
-  "failed": "Oops,something went wrong."
+  "failed": "Oops,something went wrong.",
+  "mobile_search_movies": "Enter @ to search movies",
+  "mobile_search_quotes": "Enter # to search quotes"
 }

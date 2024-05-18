@@ -6,7 +6,7 @@
       @quote-added="fetchQuotes"
     />
 
-    <div>
+    <div class="sm:min-w-[60rem]">
       <div class="flex items-center gap-6">
         <button
           @click="openModal"
@@ -21,7 +21,7 @@
           <SearchIcon />
           <input
             v-model="search"
-            @input="handleSearch"
+            @input="updateSearch"
             @focus="handleFocused"
             @blur="isFocused = false"
             class="outline-none text-white pl-4 py-2 bg-transparent w-16 transition-all duration-300 focus:w-[21rem] sm:focus:w-[42rem]"
@@ -30,130 +30,52 @@
           />
         </div>
       </div>
-
       <div class="bg-[#181624] flex flex-col gap-10">
-        <div class="bg-[#09101c] px-8 py-4 rounded-xl" v-for="quote in quotes" :key="quote.id">
-          <div class="flex items-center gap-4">
-            <ProfileImage :imageClass="'w-10 rounded-full'" />
-
-            <span class="text-white">{{ quote.user.username }}</span>
-          </div>
-          <div class="flex flex-col gap-2 mt-2 border-b border-border-gray border-opacity-30 pb-4">
-            <p class="text-white">
-              {{ quote.content.en }}, movie - {{ quote.movie.name.en }}. ({{ quote.movie.year }})
-            </p>
-            <img
-              :src="quote.image_url"
-              class="rounded-xl w-full max-h-52 sm:max-h-[31rem]"
-              alt="FOOO"
-            />
-            <div class="flex gap-6 mt-2">
-              <div class="flex gap-2 items-center">
-                <span class="text-white"
-                  >{{ quote.comments.length === 0 ? 0 : quote.comments.length }}
-                </span>
-                <MessageIcon />
-              </div>
-              <div class="flex gap-2 items-center">
-                <span class="text-white">{{ quote.like_count }}</span>
-                <button @click="like(quote.id)">
-                  <LikeIcon :liked="quote.liked_by_user" />
-                </button>
-              </div>
-            </div>
-          </div>
-          <div class="mt-4">
-            <div class="max-h-72 overflow-scroll">
-              <div class="mb-4 sm:flex gap-4">
-                <div class="flex items-center sm:items-start gap-4">
-                  <img src="https://picsum.photos/200" class="w-10 rounded-full" />
-                  <span class="text-white sm:hidden">Your Name</span>
-                </div>
-                <div class="sm:flex flex-col">
-                  <span class="text-white hidden sm:block">Your Name</span>
-                  <p class="text-white mt-2 border-b border-opacity-30 border-border-gray pb-4">
-                    Lorem ipsum, dolor sit amet consectetur adipisicing elit. Velit quisquam ad
-                    dolorum quo quod repellat est voluptatibus?
-                  </p>
-                </div>
-              </div>
-              <div>
-                <div class="flex items-center gap-4">
-                  <img src="https://picsum.photos/200" class="w-10 rounded-full" />
-                  <span class="text-white">Your Name</span>
-                </div>
-                <p class="text-white mt-2 border-b border-opacity-30 border-border-gray pb-4">
-                  Lorem ipsum, dolor sit amet consectetur adipisicing elit. Velit quisquam ad
-                  dolorum quo quod repellat est voluptatibus?
-                </p>
-              </div>
-              <div>
-                <div class="flex items-center gap-4">
-                  <img src="https://picsum.photos/200" class="w-10 rounded-full" />
-                  <span class="text-white">Your Name</span>
-                </div>
-                <p class="text-white mt-2 border-b border-opacity-30 border-border-gray pb-4">
-                  Lorem ipsum, dolor sit amet consectetur adipisicing elit. Velit quisquam ad
-                  dolorum quo quod repellat est voluptatibus?
-                </p>
-              </div>
-            </div>
-            <div class="flex items-center gap-4 mt-4">
-              <img src="https://picsum.photos/200" class="w-10 rounded-full" />
-              <input
-                type="text"
-                :placeholder="$t('texts.write_comment')"
-                class="bg-custom-light-gray px-2 rounded-lg py-1.5 sm:pl-4 outline-none text-white bg-transparent w-auto transition-all duration-300 focus:w-[21rem] sm:w-full"
-              />
-            </div>
-          </div>
-        </div>
+        <QuoteCard v-for="quote in quotes" :key="quote.id" :quote="quote" :like="like" />
       </div>
     </div>
   </TheLayout>
 </template>
 
 <script setup lang="ts">
-import ProfileImage from './../components/ProfileImage.vue'
 import QuoteModal from './../components/QuoteModal.vue'
 import TheLayout from '@/components/TheLayout.vue'
-import SearchIcon from '@/components/icons/SearchIcon.vue'
 import WriteQuote from '@/components/icons/WriteQuote.vue'
-import MessageIcon from '@/components/icons/MessageIcon.vue'
-import LikeIcon from '@/components/icons/LikeIcon.vue'
-import { ref, onMounted, watch } from 'vue'
-import { getQuotes, toggleLike } from '@/service/movieService'
-import type { Quote } from '@/types'
+import { ref, onMounted, computed } from 'vue'
+import { toggleLike } from '@/service/movieService'
+import QuoteCard from '@/components/QuoteCard.vue'
+import { useQuoteStore } from '@/stores/QuoteStore'
+import SearchIcon from '@/components/icons/SearchIcon.vue'
 
-const search = ref('')
-const isFocused = ref(false)
-const quotes = ref<Quote[]>([])
-
-const handleFocused = () => {
-  isFocused.value = true
+type Quote = {
+  id: number
+  liked_by_user: boolean
+  like_count: number
 }
+
+const quoteStore = useQuoteStore()
+const search = quoteStore.search
+const quotes = computed<Quote[]>(() => quoteStore.quotes)
+const isFocused = ref(false)
+
 const showModal = ref(false)
 
 const openModal = () => {
   showModal.value = true
 }
 
-const fetchQuotes = async (searchQuery = '') => {
-  const res = await getQuotes(searchQuery)
-  quotes.value = res.data
+const fetchQuotes = async () => {
+  await quoteStore.fetchQuotes(search)
 }
 
-const debounce = (func: (...args: any[]) => void, wait: number) => {
-  let timeout: ReturnType<typeof setTimeout>
-  return (...args: any[]) => {
-    clearTimeout(timeout)
-    timeout = setTimeout(() => func.apply(this, args), wait)
-  }
+const handleFocused = () => {
+  isFocused.value = true
 }
 
-const handleSearch = debounce(async () => {
-  fetchQuotes(search.value)
-}, 300)
+const updateSearch = (event: Event) => {
+  const target = event.target as HTMLInputElement
+  quoteStore.updateSearch(target.value)
+}
 
 onMounted(() => {
   fetchQuotes()
@@ -162,7 +84,6 @@ onMounted(() => {
 const like = async (quoteId: number) => {
   try {
     const response = await toggleLike(quoteId)
-    console.log(response.data.message)
 
     const quote = quotes.value.find((q) => q.id === quoteId)
     if (quote) {
@@ -173,10 +94,4 @@ const like = async (quoteId: number) => {
     console.error('Failed to toggle like:', error)
   }
 }
-
-watch(search, (newValue, oldValue) => {
-  if (newValue !== oldValue) {
-    handleSearch()
-  }
-})
 </script>

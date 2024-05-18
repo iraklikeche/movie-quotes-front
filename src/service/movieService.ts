@@ -45,3 +45,11 @@ export async function getQuotes(searchQuery = '') {
 export async function toggleLike(quoteId: number) {
   return await apiClient.post(`/api/quotes/${quoteId}/likes`)
 }
+
+export async function getComments(quoteId) {
+  return await apiClient.get(`/api/quotes/${quoteId}/comments`)
+}
+
+export async function addComment(quoteId, content) {
+  return await apiClient.post(`/api/quotes/${quoteId}/comments`, { content })
+}
