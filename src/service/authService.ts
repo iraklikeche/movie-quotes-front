@@ -1,36 +1,12 @@
 import apiClient from '@/api/axios'
 import type { AxiosResponse } from 'axios'
-
-type UserRegistration = {
-  email: string
-  password: string
-  password_confirmation: string
-  [key: string]: any
-}
-
-type UserCredentials = {
-  email: string
-  password: string
-  remember?: boolean
-}
-
-type ResetPasswordData = {
-  token: string
-  email: string
-  password: string
-  password_confirmation: string
-}
-
-type CheckTokenData = {
-  token: string
-  email?: string
-}
-
-type UserProfileUpdate = {
-  name?: string
-  email?: string
-  [key: string]: string | undefined
-}
+import type {
+  UserRegistration,
+  UserCredentials,
+  ResetPasswordData,
+  CheckTokenData,
+  UserProfileUpdate
+} from '@/types'
 
 export async function getCsrfCookie(): Promise<AxiosResponse> {
   return await apiClient.get('/sanctum/csrf-cookie', { withCredentials: true })

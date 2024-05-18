@@ -36,7 +36,7 @@
   <main :class="['bg-[#171623] w-full sm:px-16 sm:py-8 sm:flex sm:gap-16', customHeight]">
     <div class="hidden sm:flex flex-col gap-8 min-w-56">
       <div class="flex items-center gap-4 text-white">
-        <UserProfileImage />
+        <TheProfile />
         <div>
           <p>{{ userSession.userData.username }}</p>
           <RouterLink :to="{ name: 'profile' }" class="text-[#ced4da]">{{
@@ -60,7 +60,6 @@
 </template>
 
 <script setup lang="ts">
-import UserProfileImage from './UserProfileImage.vue'
 import ListOfMovies from '@/components/icons/ListOfMovies.vue'
 import { onMounted, ref } from 'vue'
 import NewsFeed from '@/components/icons/NewsFeed.vue'
@@ -70,6 +69,7 @@ import { RouterLink, useRouter } from 'vue-router'
 import { getCsrfCookie, logoutUser } from '@/service/authService'
 import useClickOutside from '@/composables/useClickOutside'
 import type { Ref } from 'vue'
+import TheProfile from './TheProfile.vue'
 
 defineProps(['customHeight'])
 const userSession = useUserSessionStore()

@@ -1,5 +1,25 @@
 <template>
   <div>
+    <Transition name="fade">
+      <div class="bg-[#12101A] z-50 h-screen w-full fixed" v-if="showSearch">
+        <div class="flex items-center p-8 border-b pb-2 border-border-gray border-opacity-60">
+          <GoBackArrow @click="showSearch = false" />
+          <input
+            v-model="search"
+            @keyup.enter="updateSearch"
+            @focus="handleFocused"
+            @blur="isFocused = false"
+            class="outline-none text-white pl-4 py-2 bg-transparent w-full"
+            :placeholder="$t('texts.search')"
+          />
+        </div>
+        <div class="p-8 pl-16 text-custom-gray">
+          <p class="mb-4">{{ $t('texts.mobile_search_movies') }}</p>
+          <p>{{ $t('texts.mobile_search_quotes') }}</p>
+        </div>
+      </div>
+    </Transition>
+
     <div>
       <UserRegister v-if="userSession.showRegister" />
       <UserLogin v-if="userSession.showLogin" />
@@ -34,7 +54,7 @@
               </option>
             </select>
           </div>
-          <div class="absolute top-[30%] right-0 -translate-x-1/2 translate-y-1/2">
+          <div class="absolute top-[30%] right-2 sm:right-0 -translate-x-1/2 translate-y-1/2">
             <LanguageArrow />
           </div>
         </div>
@@ -52,8 +72,8 @@
             {{ $t('buttons.signup') }}
           </button>
         </div>
-        <div v-else class="flex gap-6 items-center">
-          <SearchIcon class="sm:hidden" />
+        <div v-else class="flex gap-6 items-center ml-2 sm:ml-2">
+          <SearchIcon class="sm:hidden" @click="openSearch" />
           <NotificationIcon />
           <button
             @click="onLogout"
@@ -68,6 +88,7 @@
 </template>
 
 <script lang="ts" setup>
+import GoBackArrow from './icons/GoBackArrow.vue'
 import UserRegister from '@/components/Sessions/UserRegister.vue'
 import UserLogin from '@/components/Sessions/UserLogin.vue'
 import ForgotPassword from '@/components/Sessions/ForgotPassword.vue'
@@ -90,6 +111,7 @@ import {
   resendPasswordResetLink,
   logoutUser
 } from '@/service/authService'
+import { useQuoteStore } from '@/stores/QuoteStore'
 
 const { t: $t } = useI18n()
 
@@ -101,6 +123,26 @@ const router = useRouter()
 const isLogged = ref(false)
 
 const isHomepage = ref(window.location.pathname === '/')
+const showSearch = ref(false)
+
+const isFocused = ref(false)
+const handleFocused = () => {
+  isFocused.value = true
+}
+
+const quoteStore = useQuoteStore()
+const search = quoteStore.search
+
+const updateSearch = (event: Event) => {
+  const target = event.target as HTMLInputElement
+
+  quoteStore.updateSearch(target.value)
+  showSearch.value = false
+}
+
+const openSearch = () => {
+  showSearch.value = true
+}
 
 const updateLocale = () => {
   Cookies.set('locale', locale.value, { expires: 7 })
@@ -193,3 +235,14 @@ watch(
   { immediate: true }
 )
 </script>
+
+<style scoped>
+.fade-enter-active,
+.fade-leave-active {
+  transition: opacity 0.3s;
+}
+.fade-enter-from,
+.fade-leave-to {
+  opacity: 0;
+}
+</style>

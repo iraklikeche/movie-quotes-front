@@ -6,7 +6,7 @@
   >
     <div class="px-8 py-10 bg-[#222030] sm:bg-[#11101A]">
       <div class="flex items-center gap-4 text-white">
-        <UserProfileImage />
+        <TheProfile />
         <p class="text-xl">{{ userSession.userData.username }}</p>
       </div>
 
@@ -78,7 +78,6 @@
 </template>
 
 <script setup lang="ts">
-import UserProfileImage from './UserProfileImage.vue'
 import { defineProps } from 'vue'
 import { useUserSessionStore } from '@/stores/UserSessionStore'
 import { ref, watch, onMounted } from 'vue'
@@ -90,6 +89,7 @@ import ImageUpload from './ImageUpload.vue'
 import TextInput from './TextInput.vue'
 import QuoteMovieWrapModal from './QuoteMovieWrapModal.vue'
 import TheDropdown from './TheDropdown.vue'
+import TheProfile from './TheProfile.vue'
 
 type Category = {
   id: number

@@ -1,21 +1,14 @@
 <template>
   <div>
     <h1 v-if="userSession.loading" class="animate-pulse text-red-500">LOADING</h1>
-
-    <img
-      v-else-if="userSession.userData.profile_image"
-      :src="userSession.userData.profile_image"
-      :class="`${imageClass} ${$route.path === '/profile' ? 'border-red-600' : 'border-none'}`"
-    />
-    <img
-      v-else
-      src="https://picsum.photos/200"
-      :class="`${imageClass} ${$route.path === '/profile' ? 'border-red-600' : 'border-none'}`"
-    />
+    <div v-else>
+      <ProfileImage :imageClass="imageClass" />
+    </div>
   </div>
 </template>
 
 <script setup>
+import ProfileImage from './ProfileImage.vue'
 import { useUserSessionStore } from '@/stores/UserSessionStore'
 
 const userSession = useUserSessionStore()

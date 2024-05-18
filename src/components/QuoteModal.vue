@@ -6,10 +6,7 @@
   >
     <div class="px-8 pt-12 bg-[#222030] sm:bg-[#11101A]">
       <div class="flex items-center gap-4 text-white">
-        <img
-          :src="userSession.userData.profile_image"
-          class="w-12 h-12 sm:w-14 sm:h-14 rounded-full border-2"
-        />
+        <ProfileImage />
         <p class="text-xl">{{ userSession.userData.username }}</p>
       </div>
 
@@ -60,6 +57,7 @@
 </template>
 
 <script setup lang="ts">
+import ProfileImage from './ProfileImage.vue'
 import ImageUpload from './ImageUpload.vue'
 
 import { useUserSessionStore } from '@/stores/UserSessionStore'
@@ -128,7 +126,6 @@ const onFileChange = (newFile: File) => {
 }
 
 const updateSelectedMovie = (newMovie: Movie[]) => {
-  console.log(newMovie)
   selectedMovie.value = newMovie[0] || null
   formData.value.movie_id = newMovie[0]?.id || null
 }
@@ -157,7 +154,6 @@ const updateShowModal = (value: boolean) => {
 onMounted(async () => {
   const res = await getMovies()
   movies.value = res.data.data
-  console.log(movies.value)
 })
 
 watch(
@@ -169,7 +165,7 @@ watch(
   }
 )
 
-// AJAX
+//
 const onSubmit = handleSubmit(async () => {
   try {
     const data = new FormData()
@@ -178,23 +174,21 @@ const onSubmit = handleSubmit(async () => {
     data.append('movie_id', formData.value.movie_id as any)
     data.append('image', formData.value.image as any)
 
-    const response = await createQuote(data)
-    console.log('Quote creation successful:', response)
+    await createQuote(data)
     resetFields()
     emit('quote-added')
     emit('update:showModal', false)
   } catch (error: any) {
-    console.error('Quote creation failed:', error)
     if (error.response && error.response.data && error.response.data.errors) {
       const serverErrors = error.response.data.errors
-      const hasOwnProperty = Object.prototype.hasOwnProperty.bind(serverErrors)
-      dropDownError.value = serverErrors.movie_id[0]
+
+      if (serverErrors.movie_id) {
+        dropDownError.value = serverErrors.movie_id[0]
+      }
 
       for (const key in serverErrors) {
-        if (hasOwnProperty(key)) {
-          setFieldError(key, serverErrors[key][0])
-          errors[key] = serverErrors[key][0]
-        }
+        setFieldError(key, serverErrors[key][0])
+        errors[key] = serverErrors[key][0]
       }
     }
   }

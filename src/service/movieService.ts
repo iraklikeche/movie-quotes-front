@@ -37,10 +37,19 @@ export async function createQuote(formData: FormData): Promise<AxiosResponse<any
   return response
 }
 
-export async function getQuotes() {
-  return await apiClient.get('/api/quotes')
+export async function getQuotes(searchQuery = '') {
+  const params = searchQuery ? { search: searchQuery } : {}
+  return await apiClient.get('/api/quotes', { params })
 }
 
 export async function toggleLike(quoteId: number) {
   return await apiClient.post(`/api/quotes/${quoteId}/likes`)
+}
+
+export async function getComments(quoteId) {
+  return await apiClient.get(`/api/quotes/${quoteId}/comments`)
+}
+
+export async function addComment(quoteId, content) {
+  return await apiClient.post(`/api/quotes/${quoteId}/comments`, { content })
 }
