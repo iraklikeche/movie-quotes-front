@@ -18,6 +18,7 @@ export type Comment = {
   content: string
   user_id: number
   quote_id: number
+  user: User
 }
 
 export type Like = {
@@ -45,7 +46,6 @@ export type UserRegistration = {
   email: string
   password: string
   password_confirmation: string
-  [key: string]: any
 }
 
 export type UserCredentials = {
@@ -69,5 +69,4 @@ export type CheckTokenData = {
 export type UserProfileUpdate = {
   name?: string
   email?: string
-  [key: string]: string | undefined
 }

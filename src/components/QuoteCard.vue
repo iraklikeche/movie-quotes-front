@@ -62,21 +62,16 @@ import LikeIcon from '@/components/icons/LikeIcon.vue'
 import { ref, onMounted } from 'vue'
 import { getComments, addComment } from '@/service/movieService'
 import { useUserSessionStore } from '@/stores/UserSessionStore'
+import type { Quote, Comment } from '@/types'
 
 const userSession = useUserSessionStore()
 
-const props = defineProps({
-  quote: {
-    type: Object,
-    required: true
-  },
-  like: {
-    type: Function,
-    required: true
-  }
-})
+const props = defineProps<{
+  quote: Quote
+  like: (id: number) => void
+}>()
 
-const comments = ref([])
+const comments = ref<Comment[]>([])
 const newComment = ref('')
 
 onMounted(async () => {
