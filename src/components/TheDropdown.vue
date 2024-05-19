@@ -1,5 +1,5 @@
 <template>
-  <div class="relative sm:mt-6" @click="toggleDropdown" tabindex="0" @blur="handleBlur">
+  <div class="relative" @click="toggleDropdown" tabindex="0" @blur="handleBlur">
     <div
       class="bg-transparent px-4 py-3 rounded-md w-full mt-1 border border-custom-light-gray cursor-pointer text-[#85858d] whitespace-nowrap overflow-hidden"
     >

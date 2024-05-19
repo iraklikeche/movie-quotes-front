@@ -4,13 +4,22 @@ export type User = {
   profile_image_url: string
 }
 
+export type Genre = {
+  id: number
+  name: string
+}
+
 export type Movie = {
   id: number
+  movie_name: string
   name: {
     en: string
     ka?: string
   }
+  image_url: string
   year: number
+  director: string
+  genres: Genre[]
 }
 
 export type Comment = {

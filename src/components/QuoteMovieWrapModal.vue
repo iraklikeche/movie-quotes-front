@@ -21,7 +21,7 @@
           <CloseBtn />
         </div>
       </div>
-      <div class="px-8 pt-12 bg-[#222030] sm:bg-[#11101A]">
+      <div class="px-8 pt-12 sm:pt-6 bg-[#222030] sm:bg-[#11101A]">
         <slot></slot>
       </div>
     </div>
