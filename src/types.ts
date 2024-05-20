@@ -49,6 +49,7 @@ export type Quote = {
   image_url: string
   liked_by_user: boolean
   like_count: number
+  movie_id: string
 }
 
 export type UserRegistration = {

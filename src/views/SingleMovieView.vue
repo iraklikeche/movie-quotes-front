@@ -44,7 +44,7 @@
                   <img :src="quote.image_url" class="w-full max-h-36 sm:w-56" />
 
                   <p class="text-custom-light-gray italic text-2xl">
-                    {{ quote.content.en }}
+                    {{ quote.content[locale] }}
                   </p>
                 </div>
                 <div
@@ -165,6 +165,10 @@ import DeleteIcon from '@/components/icons/DeleteIcon.vue'
 import DynamicMovie from '@/components/DynamicMovie.vue'
 import QuoteModal from '@/components/QuoteModal.vue'
 import type { Quote, Movie } from '@/types'
+import { useI18n } from 'vue-i18n'
+
+const {locale} = useI18n()
+console.log(locale);
 
 const route = useRoute()
 const isVisible = ref<number | null>(null)

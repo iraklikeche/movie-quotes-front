@@ -25,70 +25,72 @@
         <span class="text-white text-xl">{{ selectedQuote.user.username }}</span>
       </div>
       <div class="px-8 py-2">
-        <textarea
-          v-if="isEditMode"
-          v-model="quoteData.content.en"
-          rows="3"
-          cols="5"
-          class="text-white bg-transparent w-full border border-border-gray border-opacity-10 placeholder:custom-gray italic pl-2 pt-2"
-        />
-        <textarea
-          v-else
-          rows="3"
-          cols="5"
-          class="bg-transparent w-full border border-border-gray border-opacity-10 placeholder:custom-gray italic pl-2 pt-2"
-          :placeholder="selectedQuote.content.en"
-          disabled
-        />
-        <textarea
-          v-if="isEditMode"
-          v-model="quoteData.content.ka"
-          rows="3"
-          cols="5"
-          class="text-white bg-transparent w-full border border-border-gray border-opacity-10 mt-2 placeholder:custom-gray italic pl-2 pt-2"
-        />
-        <textarea
-          v-else
-          rows="3"
-          cols="5"
-          class="bg-transparent w-full border border-border-gray border-opacity-10 mt-2 placeholder:custom-gray italic pl-2 pt-2"
-          :placeholder="selectedQuote.content.ka"
-          disabled
-        />
+        <form v-if="isEditMode" @submit.prevent="onSubmit">
+          <textarea
+            v-model="quoteData.content.en"
+            rows="3"
+            cols="5"
+            class="text-white bg-transparent w-full border border-border-gray border-opacity-10 placeholder:custom-gray italic pl-2 pt-2"
+          />
+          <textarea
+            v-model="quoteData.content.ka"
+            rows="3"
+            cols="5"
+            class="text-white bg-transparent w-full border border-border-gray border-opacity-10 mt-2 placeholder:custom-gray italic pl-2 pt-2"
+          />
 
-        <div v-if="isEditMode" class="relative">
-          <label for="file-upload" class="flex items-center flex-col">
-            <img :src="selectedQuote.image_url" class="w-full rounded-xl" />
-            <input type="file" class="hidden" id="file-upload" @change="handleFileChange" />
-            <div
-              class="absolute top-1/2 right-1/2 translate-x-1/2 -translate-y-1/2 bg-[#191725] bg-opacity-75 z-50 p-5 rounded-md"
-            >
-              <ImageIcon />
-              <span class="text-white">{{ $t('texts.replace_photo') }}</span>
+          <div v-if="isEditMode" class="relative">
+            <label for="file-upload" class="flex items-center flex-col">
+              <img :src="selectedQuote.image_url" class="w-full rounded-xl sm:h-[32rem]" />
+              <input type="file" class="hidden" id="file-upload" @change="handleFileChange" />
+              <div
+                class="absolute top-1/2 right-1/2 translate-x-1/2 -translate-y-1/2 bg-[#191725] bg-opacity-75 z-50 p-5 rounded-md"
+              >
+                <ImageIcon />
+                <span class="text-white">{{ $t('texts.replace_photo') }}</span>
+              </div>
+            </label>
+          </div>
+          <div class="mt-2" v-else>
+            <img :src="selectedQuote.image_url" class="w-full h-72 rounded-xl" />
+          </div>
+          <div
+            class="flex gap-6 mt-4 border-b border-border-gray opacity-60 pb-4"
+            v-if="!isEditMode"
+          >
+            <div class="flex gap-2 items-center">
+              <span class="text-white">
+                {{ selectedQuote.comments.length === 0 ? 0 : selectedQuote.comments.length }}
+              </span>
+
+              <MessageIcon />
             </div>
-          </label>
-        </div>
-        <div class="mt-2" v-else>
-          <img :src="selectedQuote.image_url" class="w-full h-72 rounded-xl" />
-        </div>
-        <div class="flex gap-6 mt-4 border-b border-border-gray opacity-60 pb-4" v-if="!isEditMode">
-          <div class="flex gap-2 items-center">
-            <span class="text-white">
-              {{ selectedQuote.comments.length === 0 ? 0 : selectedQuote.comments.length }}
-            </span>
-
-            <MessageIcon />
+            <div class="flex gap-2 items-center">
+              <span class="text-white">{{ selectedQuote.like_count }}</span>
+              <LikeIcon />
+            </div>
           </div>
-          <div class="flex gap-2 items-center">
-            <span class="text-white">{{ selectedQuote.like_count }}</span>
-            <LikeIcon />
-          </div>
-        </div>
 
-        <div v-if="isEditMode" class="mt-4 flex justify-end w-full">
-          <button @click="saveChanges" class="bg-custom-red px-4 py-2 text-white rounded w-full">
-            Save Changes
-          </button>
+          <div v-if="isEditMode" class="mt-4 flex justify-end w-full">
+            <button class="bg-custom-red px-4 py-2 text-white rounded w-full">Save Changes</button>
+          </div>
+        </form>
+        <div v-else>
+          <textarea
+            rows="3"
+            cols="5"
+            class="bg-transparent w-full border border-border-gray border-opacity-10 placeholder:custom-gray italic pl-2 pt-2"
+            :placeholder="selectedQuote.content.en"
+            disabled
+          />
+
+          <textarea
+            rows="3"
+            cols="5"
+            class="bg-transparent w-full border border-border-gray border-opacity-10 mt-2 placeholder:custom-gray italic pl-2 pt-2"
+            :placeholder="selectedQuote.content.ka"
+            disabled
+          />
         </div>
 
         <div v-if="!isEditMode">COMMENTS!</div>
@@ -106,6 +108,7 @@ import DeleteIcon from './icons/DeleteIcon.vue'
 import LikeIcon from '@/components/icons/LikeIcon.vue'
 import { ref } from 'vue'
 import { updateQuote } from '@/service/movieService'
+import { useForm } from 'vee-validate'
 
 const props = defineProps({
   selectedQuote: {
@@ -131,18 +134,17 @@ const handleFileChange = (event: Event) => {
   quoteData.value.image = file
 }
 
-const saveChanges = async () => {
+const { handleSubmit } = useForm()
+
+const onSubmit = handleSubmit(async () => {
+  console.log(quoteData.value)
   try {
     const formData = new FormData()
     formData.append('content[en]', quoteData.value.content.en)
     formData.append('content[ka]', quoteData.value.content.ka)
     formData.append('movie_id', props.selectedQuote.movie_id)
-    console.log(formData)
     if (quoteData.value.image) {
       formData.append('image', quoteData.value.image)
-    }
-    for (let pair of formData.entries()) {
-      console.log(pair[0] + ': ' + pair[1])
     }
 
     await updateQuote(props.selectedQuote.id, formData)
@@ -151,5 +153,5 @@ const saveChanges = async () => {
   } catch (error) {
     console.error('Failed to update quote:', error)
   }
-}
+})
 </script>

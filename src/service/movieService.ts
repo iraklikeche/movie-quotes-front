@@ -66,7 +66,10 @@ export async function updateQuote(
   quoteId: number,
   formData: FormData
 ): Promise<AxiosResponse<any>> {
-  return await apiClient.put(`/api/quotes/${quoteId}`, formData, {
+  return await apiClient.post(`/api/quotes/${quoteId}`, formData, {
+    params: {
+      _method: 'patch'
+    },
     headers: {
       'Content-Type': 'multipart/form-data'
     }
