@@ -46,12 +46,7 @@ import { toggleLike } from '@/service/movieService'
 import QuoteCard from '@/components/QuoteCard.vue'
 import { useQuoteStore } from '@/stores/QuoteStore'
 import SearchIcon from '@/components/icons/SearchIcon.vue'
-
-type Quote = {
-  id: number
-  liked_by_user: boolean
-  like_count: number
-}
+import type { Quote } from '@/types'
 
 const quoteStore = useQuoteStore()
 const search = quoteStore.search

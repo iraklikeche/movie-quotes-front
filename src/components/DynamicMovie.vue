@@ -30,50 +30,28 @@
 </template>
 
 <script setup lang="ts">
-import { onMounted, ref } from 'vue'
-import { getSingleMovie } from '@/service/movieService'
-import { useRoute, useRouter } from 'vue-router'
+import { ref } from 'vue'
+import { useRouter } from 'vue-router'
 import EditIcon from './icons/EditIcon.vue'
 import DeleteIcon from './icons/DeleteIcon.vue'
 import { deleteMovie } from '@/service/movieService'
 import MovieModal from './MovieModal.vue'
-type Genre = {
-  id: number
-  name: string
-}
 
-type Movie = {
-  id: number
-  movie_name: string
-  year: number
-  genres: Genre[]
-  director: string
-  description: string
-}
-
-const movie = ref<Movie | null>(null)
-const route = useRoute()
 const router = useRouter()
 const showModal = ref(false)
 
-onMounted(async () => {
-  const id = Array.isArray(route.params.id) ? route.params.id[0] : route.params.id
-
-  const res = await getSingleMovie(id)
-  movie.value = res.data.data
-})
+const props = defineProps(['movie'])
 
 const openModal = () => {
   showModal.value = true
 }
 
 const deleteCurrentMovie = async () => {
-  if (!movie.value) return
+  if (!props.movie) return
 
   if (!confirm('Are you sure you want to delete this movie?')) return
-
   try {
-    await deleteMovie(movie.value.id)
+    await deleteMovie(props.movie.id)
     router.push('/movies')
   } catch (error) {
     console.error('Error deleting movie:', error)

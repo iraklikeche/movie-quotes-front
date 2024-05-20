@@ -46,10 +46,32 @@ export async function toggleLike(quoteId: number) {
   return await apiClient.post(`/api/quotes/${quoteId}/likes`)
 }
 
-export async function getComments(quoteId) {
+export async function getComments(quoteId: number) {
   return await apiClient.get(`/api/quotes/${quoteId}/comments`)
 }
 
-export async function addComment(quoteId, content) {
+export async function addComment(quoteId: number, content: string) {
   return await apiClient.post(`/api/quotes/${quoteId}/comments`, { content })
+}
+
+export async function getQuotesByMovie(movieId: string) {
+  return await apiClient.get(`/api/movies/${movieId}/quotes`)
+}
+
+export async function deleteQuote(id: number) {
+  return await apiClient.delete(`/api/quotes/${id}`)
+}
+
+export async function updateQuote(
+  quoteId: number,
+  formData: FormData
+): Promise<AxiosResponse<any>> {
+  return await apiClient.post(`/api/quotes/${quoteId}`, formData, {
+    params: {
+      _method: 'patch'
+    },
+    headers: {
+      'Content-Type': 'multipart/form-data'
+    }
+  })
 }

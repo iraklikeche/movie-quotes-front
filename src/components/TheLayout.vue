@@ -8,7 +8,8 @@
     >
       <div class="flex flex-col gap-12 p-8">
         <div class="flex items-center gap-4 text-white">
-          <img :src="userSession.userData.profile_image" class="w-14 h-14 rounded-full border-2" />
+          <ProfileImage />
+          <!-- <img :src="userSession.userData.profile_image" class="w-14 h-14 rounded-full border-2" /> -->
           <div>
             <p>{{ userSession.userData.username }}</p>
             <RouterLink :to="{ name: 'profile' }" class="text-[#ced4da]">{{
@@ -60,6 +61,7 @@
 </template>
 
 <script setup lang="ts">
+import ProfileImage from './ProfileImage.vue'
 import ListOfMovies from '@/components/icons/ListOfMovies.vue'
 import { onMounted, ref } from 'vue'
 import NewsFeed from '@/components/icons/NewsFeed.vue'
