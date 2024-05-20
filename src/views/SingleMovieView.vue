@@ -3,11 +3,11 @@
     :showModal="showModal"
     @update:showModal="(value) => (showModal = value)"
     @quote-added="fetchQuotes"
-    :movie="movie"
+    :movie="computedMovie"
   />
   <DetailedQuoteModal
-    v-if="isView"
-    :selectedQuote="selectedQuote"
+    v-if="isView && computedSelectedQuote"
+    :selectedQuote="computedSelectedQuote"
     @close="isView = false"
     @remove="removeQuote"
     :isEditMode="isEditMode"
@@ -44,7 +44,7 @@
                   <img :src="quote.image_url" class="w-full max-h-36 sm:w-56" />
 
                   <p class="text-custom-light-gray italic text-2xl">
-                    {{ quote.content[locale] }}
+                    {{ quote.content[typedLocale] }}
                   </p>
                 </div>
                 <div
@@ -58,8 +58,8 @@
                       <MessageIcon />
                     </div>
                     <div class="flex gap-2 items-center">
-                      <span class="text-white">{{ quote.like_count }}</span>
-                      <LikeIcon />
+                      <span class="text-white">{{ quote.likes_count }}</span>
+                      <LikeIcon :liked="quote.liked_by_user" />
                     </div>
                   </div>
                   <div class="absolute top-0 right-0 -translate-x-1/2 translate-y-1/2">
@@ -118,8 +118,8 @@
                   <MessageIcon />
                 </div>
                 <div class="flex gap-2 items-center">
-                  <span class="text-white">{{ quote.like_count }}</span>
-                  <LikeIcon />
+                  <span class="text-white">{{ quote.likes_count }}</span>
+                  <LikeIcon :liked="quote.liked_by_user" />
                 </div>
               </div>
               <div class="relative">
@@ -153,7 +153,7 @@
 import DetailedQuoteModal from './../components/DetailedQuoteModal.vue'
 import QuotesHeader from '@/components/QuotesHeader.vue'
 import TheLayout from '@/components/TheLayout.vue'
-import { ref, onMounted } from 'vue'
+import { ref, onMounted, computed } from 'vue'
 import { deleteQuote, getQuotesByMovie, getSingleMovie } from '@/service/movieService'
 import { useRoute } from 'vue-router'
 import MessageIcon from '@/components/icons/MessageIcon.vue'
@@ -166,9 +166,10 @@ import DynamicMovie from '@/components/DynamicMovie.vue'
 import QuoteModal from '@/components/QuoteModal.vue'
 import type { Quote, Movie } from '@/types'
 import { useI18n } from 'vue-i18n'
+type Locale = 'en' | 'ka'
 
-const {locale} = useI18n()
-console.log(locale);
+const { locale } = useI18n()
+const typedLocale = locale as unknown as Locale
 
 const route = useRoute()
 const isVisible = ref<number | null>(null)
@@ -178,6 +179,9 @@ const selectedQuote = ref<Quote | null>(null)
 const quotesCount = ref()
 const isView = ref(false)
 const movie = ref<Movie | null>(null)
+const computedMovie = computed(() => movie.value || undefined)
+const computedSelectedQuote = computed(() => selectedQuote.value || undefined)
+
 const isEditMode = ref(false)
 
 const showModal = ref(false)
@@ -218,11 +222,9 @@ onMounted(async () => {
 
   const res = await getSingleMovie(id)
   movie.value = res.data.data
-  console.log(movie.value)
   const quotesResponse = await getQuotesByMovie(id)
   quotes.value = quotesResponse.data
   quotesCount.value = quotes.value.length
-  console.log(quotes.value)
 })
 
 const removeQuote = async (quoteId: number) => {

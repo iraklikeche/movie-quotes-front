@@ -109,24 +109,20 @@ import LikeIcon from '@/components/icons/LikeIcon.vue'
 import { ref } from 'vue'
 import { updateQuote } from '@/service/movieService'
 import { useForm } from 'vee-validate'
+import type { Quote } from '@/types'
 
-const props = defineProps({
-  selectedQuote: {
-    type: Object,
-    required: true
-  },
-  isEditMode: {
-    type: Boolean,
-    default: false
-  }
-})
+const props = defineProps<{
+  selectedQuote: Quote
+  isEditMode: boolean
+}>()
+const emit = defineEmits(['close', 'remove', 'quote-updated'])
 
 const quoteData = ref({
   content: {
     en: props.selectedQuote.content.en,
-    ka: props.selectedQuote.content.ka
+    ka: props.selectedQuote.content.ka || ''
   },
-  image: null
+  image: null as File | null
 })
 
 const handleFileChange = (event: Event) => {
