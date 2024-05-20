@@ -44,7 +44,7 @@
               <img :src="selectedQuote.image_url" class="w-full rounded-xl sm:h-[32rem]" />
               <input type="file" class="hidden" id="file-upload" @change="handleFileChange" />
               <div
-                class="absolute top-1/2 right-1/2 translate-x-1/2 -translate-y-1/2 bg-[#191725] bg-opacity-75 z-50 p-5 rounded-md"
+                class="absolute top-1/2 right-1/2 translate-x-1/2 -translate-y-1/2 bg-[#191725] bg-opacity-75 z-50 p-5 rounded-md flex flex-col items-center gap-2"
               >
                 <ImageIcon />
                 <span class="text-white">{{ $t('texts.replace_photo') }}</span>
