@@ -27,7 +27,7 @@
 
 <script setup lang="ts">
 import { ref, onMounted } from 'vue'
-import { getComments, addComment } from '@/service/movieService'
+import { getComments } from '@/service/movieService'
 import { useUserSessionStore } from '@/stores/UserSessionStore'
 import type { Comment } from '@/types'
 import { useQuoteStore } from '@/stores/QuoteStore'

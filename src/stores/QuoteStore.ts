@@ -1,10 +1,11 @@
 import { defineStore } from 'pinia'
 import { ref } from 'vue'
 import { addComment, getQuotes, toggleLike } from '@/service/movieService'
+import type { Quote } from '@/types'
 
 export const useQuoteStore = defineStore('quoteStore', () => {
   const search = ref('')
-  const quotes = ref([])
+  const quotes = ref<Quote[]>([])
 
   const fetchQuotes = async (searchQuery = '') => {
     try {
@@ -29,7 +30,7 @@ export const useQuoteStore = defineStore('quoteStore', () => {
     await fetchQuotes(newSearch)
   }, 300)
 
-  const toggleQuoteLike = async (quoteId) => {
+  const toggleQuoteLike = async (quoteId: number) => {
     try {
       const response = await toggleLike(quoteId)
       const quote = quotes.value.find((q) => q.id === quoteId)
@@ -42,7 +43,7 @@ export const useQuoteStore = defineStore('quoteStore', () => {
     }
   }
 
-  const addQuoteComment = async (quoteId, content) => {
+  const addQuoteComment = async (quoteId: number, content: string) => {
     try {
       const response = await addComment(quoteId, content)
       const quote = quotes.value.find((q) => q.id === quoteId)
@@ -54,30 +55,12 @@ export const useQuoteStore = defineStore('quoteStore', () => {
     }
   }
 
-  const getQuoteCommentsLength = (quoteId) => {
-    const quote = quotes.value.find((q) => q.id === quoteId)
-    return quote ? quote.comments.length : 0
-  }
-
-  const getQuoteLikesCount = (quoteId) => {
-    const quote = quotes.value.find((q) => q.id === quoteId)
-    return quote ? quote.likes_count : 0
-  }
-
-  const isQuoteLikedByUser = (quoteId) => {
-    const quote = quotes.value.find((q) => q.id === quoteId)
-    return quote ? quote.liked_by_user : false
-  }
-
   return {
     search,
     quotes,
     fetchQuotes,
     updateSearch,
     toggleQuoteLike,
-    addQuoteComment,
-    getQuoteCommentsLength,
-    getQuoteLikesCount,
-    isQuoteLikedByUser
+    addQuoteComment
   }
 })

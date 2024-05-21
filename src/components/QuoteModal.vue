@@ -16,7 +16,7 @@
         <img :src="movie.image_url" class="w-28 sm:w-72 sm:h-40 rounded-xl" />
         <div class="text-white flex flex-col gap-1 sm:gap-4">
           <p class="font-medium sm:text-2xl">
-            {{ movie.movie_name[typedLocale] }} <span>{{ movie.year }}</span>
+            {{ movie.movie_name[typedLocale as any] }} <span>{{ movie.year }}</span>
           </p>
           <div v-for="genre in movie.genres" :key="genre.id" class="hidden sm:block">
             <span
@@ -25,7 +25,7 @@
             >
           </div>
           <p class="sm:text-[18px]">
-            {{ $t('texts.director') }}: {{ movie.director[typedLocale] }}
+            {{ $t('texts.director') }}: {{ movie.director[typedLocale as any] }}
           </p>
           <div v-for="genre in movie.genres" :key="genre.id" class="sm:hidden">
             <span class="bg-custom-gray py-1 px-2 text-xs font-bold rounded-md">{{
@@ -112,8 +112,7 @@ import { useI18n } from 'vue-i18n'
 type Locale = 'en' | 'ka'
 
 const { locale } = useI18n()
-const typedLocale = locale as unknown as Locale
-
+const typedLocale = locale.value as Locale
 const props = defineProps<{
   showModal: boolean
   movie?: Movie

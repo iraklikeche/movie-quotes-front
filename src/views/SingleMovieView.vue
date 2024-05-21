@@ -51,18 +51,8 @@
                 <div
                   class="flex gap-6 mt-2 border-t pt-6 border-border-gray border-opacity-60 justify-between"
                 >
-                  <div class="flex gap-6">
-                    <div class="flex gap-2 items-center">
-                      <span class="text-white">{{
-                        quote.comments.length === 0 ? 0 : quote.comments.length
-                      }}</span>
-                      <MessageIcon />
-                    </div>
-                    <div class="flex gap-2 items-center">
-                      <span class="text-white">{{ quote.likes_count }}</span>
-                      <LikeIcon :liked="quote.liked_by_user" />
-                    </div>
-                  </div>
+                  <QuoteStats :quote="quote" />
+
                   <div class="absolute top-0 right-0 -translate-x-1/2 translate-y-1/2">
                     <MoreOptions @click="toggleMenu(quote.id)" />
                     <div
@@ -148,8 +138,6 @@ import TheLayout from '@/components/TheLayout.vue'
 import { ref, onMounted, computed } from 'vue'
 import { deleteQuote, getQuotesByMovie, getSingleMovie } from '@/service/movieService'
 import { useRoute } from 'vue-router'
-import MessageIcon from '@/components/icons/MessageIcon.vue'
-import LikeIcon from '@/components/icons/LikeIcon.vue'
 import MoreOptions from '@/components/icons/MoreOptions.vue'
 import ViewIcon from '@/components/icons/ViewIcon.vue'
 import EditIcon from '@/components/icons/EditIcon.vue'
@@ -210,9 +198,8 @@ const fetchQuotes = async () => {
 
 const fetchMovies = async () => {
   const id = Array.isArray(route.params.id) ? route.params.id[0] : route.params.id
-
   const res = await getSingleMovie(id)
-  console.log(res)
+  movie.value = res.data.data
 }
 
 onMounted(async () => {
@@ -220,7 +207,6 @@ onMounted(async () => {
 
   const res = await getSingleMovie(id)
   movie.value = res.data.data
-  console.log(movie.value)
   const quotesResponse = await getQuotesByMovie(id)
   quotes.value = quotesResponse.data
   quotesCount.value = quotes.value.length
