@@ -5,6 +5,7 @@
     @quote-added="fetchQuotes"
     :movie="computedMovie"
   />
+
   <DetailedQuoteModal
     v-if="isView && computedSelectedQuote"
     :selectedQuote="computedSelectedQuote"
@@ -23,7 +24,7 @@
             <img :src="movie.image_url" class="rounded-xl w-full max-h-80" />
           </div>
           <div class="sm:hidden">
-            <DynamicMovie :movie="movie" />
+            <DynamicMovie :movie="movie" @movie-updated="fetchMovies" />
           </div>
           <div class="sm:hidden">
             <button @click="openModal" class="bg-custom-red px-4 py-2 text-white">
@@ -110,18 +111,7 @@
             <div
               class="flex gap-6 mt-2 border-t pt-6 border-border-gray border-opacity-60 justify-between"
             >
-              <div class="flex gap-6">
-                <div class="flex gap-2 items-center">
-                  <span class="text-white">{{
-                    quote.comments.length === 0 ? 0 : quote.comments.length
-                  }}</span>
-                  <MessageIcon />
-                </div>
-                <div class="flex gap-2 items-center">
-                  <span class="text-white">{{ quote.likes_count }}</span>
-                  <LikeIcon :liked="quote.liked_by_user" />
-                </div>
-              </div>
+              <QuoteStats :quote="quote" />
               <div class="relative">
                 <MoreOptions @click="toggleMenu(quote.id)" />
                 <div
@@ -150,6 +140,8 @@
 </template>
 
 <script setup lang="ts">
+import QuoteModal from './../components/QuoteModal.vue'
+import QuoteStats from './../components/QuoteStats.vue'
 import DetailedQuoteModal from './../components/DetailedQuoteModal.vue'
 import QuotesHeader from '@/components/QuotesHeader.vue'
 import TheLayout from '@/components/TheLayout.vue'
@@ -163,7 +155,6 @@ import ViewIcon from '@/components/icons/ViewIcon.vue'
 import EditIcon from '@/components/icons/EditIcon.vue'
 import DeleteIcon from '@/components/icons/DeleteIcon.vue'
 import DynamicMovie from '@/components/DynamicMovie.vue'
-import QuoteModal from '@/components/QuoteModal.vue'
 import type { Quote, Movie } from '@/types'
 import { useI18n } from 'vue-i18n'
 type Locale = 'en' | 'ka'
@@ -193,7 +184,7 @@ const openModal = () => {
 
 const openView = (quote: Quote) => {
   selectedQuote.value = quote
-
+  isEditMode.value = false
   isView.value = true
   isVisible.value = null
 }
@@ -217,11 +208,19 @@ const fetchQuotes = async () => {
   showModal.value = false
 }
 
+const fetchMovies = async () => {
+  const id = Array.isArray(route.params.id) ? route.params.id[0] : route.params.id
+
+  const res = await getSingleMovie(id)
+  console.log(res)
+}
+
 onMounted(async () => {
   const id = Array.isArray(route.params.id) ? route.params.id[0] : route.params.id
 
   const res = await getSingleMovie(id)
   movie.value = res.data.data
+  console.log(movie.value)
   const quotesResponse = await getQuotesByMovie(id)
   quotes.value = quotesResponse.data
   quotesCount.value = quotes.value.length

@@ -91,12 +91,32 @@
         $t('texts.my_profile')
       }}</span>
       <div class="bg-[#222030] py-8 sm:min-w-[62rem] relative sm:pb-24 sm:rounded-md">
+        <!-- MOBILE -->
         <div
-          class="flex flex-col justify-center items-center sm:absolute sm:right-1/2 sm:translate-x-1/2 sm:top-0 sm:-translate-y-1/2 gap-2"
+          class="flex flex-col justify-center items-center sm:absolute sm:right-1/2 sm:translate-x-1/2 sm:top-0 sm:-translate-y-1/2 gap-2 sm:hidden"
         >
           <input type="file" id="file-upload" @change="handleFileUpload" style="display: none" />
 
           <label for="file-upload" class="flex flex-col items-center gap-2">
+            <TheProfile
+              loadingClass="text-red-500 text-3xl"
+              imageClass="rounded-full max-h-48 min-w-48 max-w-48"
+            />
+            <p class="text-white text-xl cursor-pointer">{{ $t('texts.upload_photo') }}</p>
+          </label>
+        </div>
+        <!-- DESKTOP-IMAGE-UPLOAD -->
+        <div
+          class="sm:flex flex-col justify-center items-center sm:absolute sm:right-1/2 sm:translate-x-1/2 sm:top-0 sm:-translate-y-1/2 gap-2 hidden"
+        >
+          <input
+            type="file"
+            id="file-upload-desktop"
+            @change="handleFileUploadDesktop"
+            style="display: none"
+          />
+
+          <label for="file-upload-desktop" class="flex flex-col items-center gap-2">
             <TheProfile
               loadingClass="text-red-500 text-3xl"
               imageClass="rounded-full max-h-48 min-w-48 max-w-48"
@@ -142,7 +162,7 @@
             </div>
             <div
               class="justify-end mt-6 gap-8 hidden sm:flex relative sm:max-w-[28.5rem]"
-              v-if="updateUsername || updatePassword"
+              v-if="updateUsername || updatePassword || updateImage"
             >
               <button class="text-custom-gray" @click="cancelChanges">Cancel</button>
               <button class="bg-custom-red text-white px-5 py-1.5 rounded-md" @click="onSubmit">
@@ -182,6 +202,7 @@ const username = computed(() => userSession.userData.username)
 const email = ref('')
 const updateUsername = ref(false)
 const updatePassword = ref(false)
+const updateImage = ref(false)
 const finalCheck = ref(false)
 const showModal = ref(false)
 const showPass = ref(false)
@@ -208,7 +229,15 @@ function handleFileUpload(event: Event) {
   if (input.files?.[0]) {
     profileUploaded.value = URL.createObjectURL(input.files[0])
     profileFile.value = input.files[0]
-    finalCheck.value = true
+    onSubmit()
+  }
+}
+function handleFileUploadDesktop(event: Event) {
+  const input = event.target as HTMLInputElement
+  if (input.files?.[0]) {
+    profileUploaded.value = URL.createObjectURL(input.files[0])
+    profileFile.value = input.files[0]
+    updateImage.value = true
   }
 }
 
@@ -320,7 +349,7 @@ const onSubmit = handleSubmit(async (values) => {
 .fade-enter-active,
 .fade-leave-active {
   transition: opacity 0.5s;
-} 
+}
 .fade-enter-from,
 .fade-leave-to {
   opacity: 0;

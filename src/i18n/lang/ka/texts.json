@@ -40,5 +40,7 @@
   "failed": "დაფიქსირდა შეცდომა",
   "mobile_search_movies": "მოძებნე ფილმი @-ით ",
   "mobile_search_quotes": "მოძებნე ციტატა #-ით ",
-  "Director": "რეჟისორი"
+  "Director": "რეჟისორი",
+  "edit_movie": "ფილმის რედაქტირება",
+  "save_changes": "ცვლილების შენახვა"
 }

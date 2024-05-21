@@ -13,7 +13,7 @@
         <div
           class="flex gap-6 mt-2 border-t pt-6 border-border-gray border-opacity-60 justify-between"
         >
-          <div class="flex gap-6">
+          <!-- <div class="flex gap-6">
             <div class="flex gap-2 items-center">
               <span class="text-white">3</span>
               <MessageIcon />
@@ -22,7 +22,8 @@
               <span class="text-white">2</span>
               <LikeIcon />
             </div>
-          </div>
+          </div> -->
+          <QuoteStats /></QuoteStats>
           <div class="absolute top-0 right-0 -translate-x-1/2 translate-y-1/2">
             <MoreOptions @click="toggleMenu" />
             <div
@@ -50,6 +51,7 @@
 </template>
 
 <script setup lang="ts">
+import QuoteStats from './QuoteStats.vue'
 import { ref } from 'vue'
 import QuotesHeader from '@/components/QuotesHeader.vue'
 import MessageIcon from '@/components/icons/MessageIcon.vue'

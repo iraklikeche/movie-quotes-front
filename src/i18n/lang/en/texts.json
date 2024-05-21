@@ -40,5 +40,7 @@
   "failed": "Oops,something went wrong.",
   "mobile_search_movies": "Enter @ to search movies",
   "mobile_search_quotes": "Enter # to search quotes",
-  "director": "Director"
+  "director": "Director",
+  "edit_movie": "edit movie",
+  "save_changes": "save changes"
 }

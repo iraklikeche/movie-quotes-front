@@ -31,22 +31,21 @@
         </div>
       </div>
       <div class="bg-[#181624] flex flex-col gap-10">
-        <QuoteCard v-for="quote in quotes" :key="quote.id" :quote="quote" :like="like" />
+        <QuoteCard v-for="quote in quotes" :key="quote.id" :quote="quote" />
       </div>
     </div>
   </TheLayout>
 </template>
 
 <script setup lang="ts">
-import QuoteModal from './../components/QuoteModal.vue'
 import TheLayout from '@/components/TheLayout.vue'
 import WriteQuote from '@/components/icons/WriteQuote.vue'
 import { ref, onMounted, computed } from 'vue'
-import { toggleLike } from '@/service/movieService'
 import QuoteCard from '@/components/QuoteCard.vue'
 import { useQuoteStore } from '@/stores/QuoteStore'
 import SearchIcon from '@/components/icons/SearchIcon.vue'
 import type { Quote } from '@/types'
+import QuoteModal from '@/components/QuoteModal.vue'
 
 const quoteStore = useQuoteStore()
 const search = quoteStore.search
@@ -75,18 +74,4 @@ const updateSearch = (event: Event) => {
 onMounted(() => {
   fetchQuotes()
 })
-
-const like = async (quoteId: number) => {
-  try {
-    const response = await toggleLike(quoteId)
-
-    const quote = quotes.value.find((q) => q.id === quoteId)
-    if (quote) {
-      quote.liked_by_user = !quote.liked_by_user
-      quote.like_count = response.data.like_count
-    }
-  } catch (error) {
-    console.error('Failed to toggle like:', error)
-  }
-}
 </script>

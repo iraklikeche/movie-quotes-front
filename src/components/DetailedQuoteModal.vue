@@ -8,7 +8,7 @@
         class="flex justify-between items-center p-8 pb-6 border-b border-border-gray border-opacity-60"
       >
         <div class="flex gap-4 items-center">
-          <div v-if="!isEditMode">
+          <div v-if="!isEditMode" class="flex items-center gap-4">
             <EditIcon /> <span class="text-custom-gray text-xl font-extralight">|</span>
           </div>
           <button @click="$emit('remove', selectedQuote.id)">
@@ -41,7 +41,10 @@
 
           <div v-if="isEditMode" class="relative">
             <label for="file-upload" class="flex items-center flex-col">
-              <img :src="selectedQuote.image_url" class="w-full rounded-xl sm:h-[32rem]" />
+              <img
+                :src="localImageUrl || selectedQuote.image_url"
+                class="w-full rounded-xl sm:h-[32rem]"
+              />
               <input type="file" class="hidden" id="file-upload" @change="handleFileChange" />
               <div
                 class="absolute top-1/2 right-1/2 translate-x-1/2 -translate-y-1/2 bg-[#191725] bg-opacity-75 z-50 p-5 rounded-md flex flex-col items-center gap-2"
@@ -53,22 +56,6 @@
           </div>
           <div class="mt-2" v-else>
             <img :src="selectedQuote.image_url" class="w-full h-72 rounded-xl" />
-          </div>
-          <div
-            class="flex gap-6 mt-4 border-b border-border-gray opacity-60 pb-4"
-            v-if="!isEditMode"
-          >
-            <div class="flex gap-2 items-center">
-              <span class="text-white">
-                {{ selectedQuote.comments.length === 0 ? 0 : selectedQuote.comments.length }}
-              </span>
-
-              <MessageIcon />
-            </div>
-            <div class="flex gap-2 items-center">
-              <span class="text-white">{{ selectedQuote.like_count }}</span>
-              <LikeIcon />
-            </div>
           </div>
 
           <div v-if="isEditMode" class="mt-4 flex justify-end w-full">
@@ -93,19 +80,24 @@
           />
         </div>
 
-        <div v-if="!isEditMode">COMMENTS!</div>
+        <div v-if="!isEditMode">
+          <QuoteStats :quote="selectedQuote" />
+          <div class="mt-4 sm:pb-8">
+            <QuoteComments :quoteId="selectedQuote.id" />
+          </div>
+        </div>
       </div>
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
+import QuoteComments from './QuoteComments.vue'
+import QuoteStats from './QuoteStats.vue'
 import ImageIcon from './icons/ImageIcon.vue'
 import EditIcon from '@/components/icons/EditIcon.vue'
 import CloseBtn from './../components/icons/CloseBtn.vue'
-import MessageIcon from '@/components/icons/MessageIcon.vue'
 import DeleteIcon from './icons/DeleteIcon.vue'
-import LikeIcon from '@/components/icons/LikeIcon.vue'
 import { ref } from 'vue'
 import { updateQuote } from '@/service/movieService'
 import { useForm } from 'vee-validate'
@@ -115,7 +107,9 @@ const props = defineProps<{
   selectedQuote: Quote
   isEditMode: boolean
 }>()
-const emit = defineEmits(['close', 'remove', 'quote-updated'])
+
+console.log(props.selectedQuote)
+const emit = defineEmits(['close', 'remove', 'quote-updated', 'like-quote'])
 
 const quoteData = ref({
   content: {
@@ -124,10 +118,17 @@ const quoteData = ref({
   },
   image: null as File | null
 })
+const localImageUrl = ref<string | null>(null)
 
 const handleFileChange = (event: Event) => {
   const file = (event.target as HTMLInputElement).files?.[0] || null
   quoteData.value.image = file
+
+  if (file) {
+    localImageUrl.value = URL.createObjectURL(file)
+  } else {
+    localImageUrl.value = null
+  }
 }
 
 const { handleSubmit } = useForm()
@@ -147,7 +148,7 @@ const onSubmit = handleSubmit(async () => {
     emit('quote-updated')
     emit('close')
   } catch (error) {
-    console.error('Failed to update quote:', error)
+    //
   }
 })
 </script>

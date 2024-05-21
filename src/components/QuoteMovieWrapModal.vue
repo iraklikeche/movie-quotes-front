@@ -15,7 +15,7 @@
       >
         <div></div>
         <div>
-          <p class="text-white">{{ title }}</p>
+          <p class="text-white whitespace-nowrap">{{ title }}</p>
         </div>
         <div @click="closeModal">
           <CloseBtn />

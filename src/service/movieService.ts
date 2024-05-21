@@ -19,6 +19,20 @@ export async function createMovie(formData: FormData): Promise<AxiosResponse<any
   return response
 }
 
+export async function updateMovie(
+  movieId: number,
+  formData: FormData
+): Promise<AxiosResponse<any>> {
+  return await apiClient.post(`/api/movies/${movieId}`, formData, {
+    params: {
+      _method: 'patch'
+    },
+    headers: {
+      'Content-Type': 'multipart/form-data'
+    }
+  })
+}
+
 export async function getSingleMovie(id: number | string) {
   return await apiClient.get(`/api/movies/${id}`)
 }
