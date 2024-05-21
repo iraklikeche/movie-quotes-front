@@ -25,7 +25,7 @@ export const useQuoteStore = defineStore('quoteStore', () => {
     }
   }
 
-  const updateSearch = debounce(async (newSearch) => {
+  const updateSearch = debounce(async (newSearch: string) => {
     search.value = newSearch
     await fetchQuotes(newSearch)
   }, 300)

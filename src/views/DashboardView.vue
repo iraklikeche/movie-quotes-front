@@ -40,15 +40,21 @@
 <script setup lang="ts">
 import TheLayout from '@/components/TheLayout.vue'
 import WriteQuote from '@/components/icons/WriteQuote.vue'
-import { ref, onMounted, computed } from 'vue'
+import { ref, onMounted, computed, watch } from 'vue'
 import QuoteCard from '@/components/QuoteCard.vue'
 import { useQuoteStore } from '@/stores/QuoteStore'
 import SearchIcon from '@/components/icons/SearchIcon.vue'
 import type { Quote } from '@/types'
 import QuoteModal from '@/components/QuoteModal.vue'
+import { useRoute, useRouter } from 'vue-router'
 
 const quoteStore = useQuoteStore()
-const search = quoteStore.search
+const route = useRoute()
+const router = useRouter()
+const search = ref<string>(
+  Array.isArray(route.query.search) ? route.query.search[0] || '' : route.query.search || ''
+)
+
 const quotes = computed<Quote[]>(() => quoteStore.quotes)
 const isFocused = ref(false)
 
@@ -59,7 +65,7 @@ const openModal = () => {
 }
 
 const fetchQuotes = async () => {
-  await quoteStore.fetchQuotes(search)
+  await quoteStore.fetchQuotes(search.value)
 }
 
 const handleFocused = () => {
@@ -73,5 +79,21 @@ const updateSearch = (event: Event) => {
 
 onMounted(() => {
   fetchQuotes()
+})
+
+watch(search, (newSearch) => {
+  router.push({ query: { ...route.query, search: newSearch } })
+  quoteStore.updateSearch(newSearch)
+})
+
+watch(route, (newRoute) => {
+  const newSearch = Array.isArray(newRoute.query.search)
+    ? newRoute.query.search[0] || ''
+    : newRoute.query.search || ''
+
+  if (newSearch !== search.value) {
+    search.value = newSearch
+    quoteStore.updateSearch(newSearch)
+  }
 })
 </script>

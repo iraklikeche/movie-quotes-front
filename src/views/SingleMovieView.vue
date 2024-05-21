@@ -7,8 +7,8 @@
   />
 
   <DetailedQuoteModal
-    v-if="isView && computedSelectedQuote"
-    :selectedQuote="computedSelectedQuote"
+    v-if="isView && selectedQuote"
+    :selectedQuote="selectedQuote"
     @close="isView = false"
     @remove="removeQuote"
     :isEditMode="isEditMode"
@@ -187,7 +187,7 @@ const quotesCount = ref()
 const isView = ref(false)
 const movie = ref<Movie | null>(null)
 const computedMovie = computed(() => movie.value || undefined)
-const computedSelectedQuote = computed(() => selectedQuote.value || undefined)
+
 
 const isEditMode = ref(false)
 
