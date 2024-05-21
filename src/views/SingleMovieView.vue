@@ -51,7 +51,20 @@
                 <div
                   class="flex gap-6 mt-2 border-t pt-6 border-border-gray border-opacity-60 justify-between"
                 >
-                  <QuoteStats :quote="quote" />
+                  <div class="flex gap-6 mt-2">
+                    <div class="flex gap-2 items-center">
+                      <span class="text-white">{{
+                        quote.comments.length === 0 ? 0 : quote.comments.length
+                      }}</span>
+                      <MessageIcon />
+                    </div>
+                    <div class="flex gap-2 items-center">
+                      <span class="text-white">{{ quote.likes_count }}</span>
+                      <button>
+                        <LikeIcon :liked="quote.liked_by_user" />
+                      </button>
+                    </div>
+                  </div>
 
                   <div class="absolute top-0 right-0 -translate-x-1/2 translate-y-1/2">
                     <MoreOptions @click="toggleMenu(quote.id)" />
@@ -101,7 +114,20 @@
             <div
               class="flex gap-6 mt-2 border-t pt-6 border-border-gray border-opacity-60 justify-between"
             >
-              <QuoteStats :quote="quote" />
+              <div class="flex gap-6 mt-2">
+                <div class="flex gap-2 items-center">
+                  <span class="text-white">{{
+                    quote.comments.length === 0 ? 0 : quote.comments.length
+                  }}</span>
+                  <MessageIcon />
+                </div>
+                <div class="flex gap-2 items-center">
+                  <span class="text-white">{{ quote.likes_count }}</span>
+                  <button>
+                    <LikeIcon :liked="quote.liked_by_user" />
+                  </button>
+                </div>
+              </div>
               <div class="relative">
                 <MoreOptions @click="toggleMenu(quote.id)" />
                 <div
@@ -131,7 +157,8 @@
 
 <script setup lang="ts">
 import QuoteModal from './../components/QuoteModal.vue'
-import QuoteStats from './../components/QuoteStats.vue'
+import LikeIcon from '@/components/icons/LikeIcon.vue'
+import MessageIcon from '@/components/icons/MessageIcon.vue'
 import DetailedQuoteModal from './../components/DetailedQuoteModal.vue'
 import QuotesHeader from '@/components/QuotesHeader.vue'
 import TheLayout from '@/components/TheLayout.vue'
@@ -145,6 +172,7 @@ import DeleteIcon from '@/components/icons/DeleteIcon.vue'
 import DynamicMovie from '@/components/DynamicMovie.vue'
 import type { Quote, Movie } from '@/types'
 import { useI18n } from 'vue-i18n'
+
 type Locale = 'en' | 'ka'
 
 const { locale } = useI18n()
@@ -219,6 +247,17 @@ const removeQuote = async (quoteId: number) => {
     quotes.value = quotes.value.filter((quote) => quote.id !== quoteId)
   } catch (error) {
     console.error('Failed to delete quote:', error)
+  }
+}
+
+// *************
+const updateQuoteInStore = (updatedQuote) => {
+  const index = quotes.value.findIndex((q) => q.id === updatedQuote.id)
+  if (index !== -1) {
+    quotes.value[index] = updatedQuote
+    if (selectedQuote.value?.id === updatedQuote.id) {
+      selectedQuote.value = updatedQuote
+    }
   }
 }
 </script>
