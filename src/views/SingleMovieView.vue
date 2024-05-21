@@ -249,15 +249,4 @@ const removeQuote = async (quoteId: number) => {
     console.error('Failed to delete quote:', error)
   }
 }
-
-// *************
-const updateQuoteInStore = (updatedQuote) => {
-  const index = quotes.value.findIndex((q) => q.id === updatedQuote.id)
-  if (index !== -1) {
-    quotes.value[index] = updatedQuote
-    if (selectedQuote.value?.id === updatedQuote.id) {
-      selectedQuote.value = updatedQuote
-    }
-  }
-}
 </script>
