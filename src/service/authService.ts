@@ -71,7 +71,7 @@ export async function updateUserProfile(
   file?: File
 ): Promise<AxiosResponse> {
   const formData = new FormData()
-  Object.keys(updateData).forEach((key) => {
+  ;(Object.keys(updateData) as (keyof UserProfileUpdate)[]).forEach((key) => {
     const value = updateData[key]
     if (value !== undefined) {
       formData.append(key, value)

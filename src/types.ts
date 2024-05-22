@@ -80,4 +80,6 @@ export type CheckTokenData = {
 export type UserProfileUpdate = {
   name?: string
   email?: string
+  new_password?: string
+  new_password_confirmation?: string
 }

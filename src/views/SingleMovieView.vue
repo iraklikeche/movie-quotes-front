@@ -5,9 +5,10 @@
     @quote-added="fetchQuotes"
     :movie="computedMovie"
   />
+
   <DetailedQuoteModal
-    v-if="isView && computedSelectedQuote"
-    :selectedQuote="computedSelectedQuote"
+    v-if="isView && selectedQuote"
+    :selectedQuote="selectedQuote"
     @close="isView = false"
     @remove="removeQuote"
     :isEditMode="isEditMode"
@@ -23,7 +24,7 @@
             <img :src="movie.image_url" class="rounded-xl w-full max-h-80" />
           </div>
           <div class="sm:hidden">
-            <DynamicMovie :movie="movie" />
+            <DynamicMovie :movie="movie" @movie-updated="fetchMovies" />
           </div>
           <div class="sm:hidden">
             <button @click="openModal" class="bg-custom-red px-4 py-2 text-white">
@@ -50,7 +51,7 @@
                 <div
                   class="flex gap-6 mt-2 border-t pt-6 border-border-gray border-opacity-60 justify-between"
                 >
-                  <div class="flex gap-6">
+                  <div class="flex gap-6 mt-2">
                     <div class="flex gap-2 items-center">
                       <span class="text-white">{{
                         quote.comments.length === 0 ? 0 : quote.comments.length
@@ -59,9 +60,12 @@
                     </div>
                     <div class="flex gap-2 items-center">
                       <span class="text-white">{{ quote.likes_count }}</span>
-                      <LikeIcon :liked="quote.liked_by_user" />
+                      <button>
+                        <LikeIcon :liked="quote.liked_by_user" />
+                      </button>
                     </div>
                   </div>
+
                   <div class="absolute top-0 right-0 -translate-x-1/2 translate-y-1/2">
                     <MoreOptions @click="toggleMenu(quote.id)" />
                     <div
@@ -110,7 +114,7 @@
             <div
               class="flex gap-6 mt-2 border-t pt-6 border-border-gray border-opacity-60 justify-between"
             >
-              <div class="flex gap-6">
+              <div class="flex gap-6 mt-2">
                 <div class="flex gap-2 items-center">
                   <span class="text-white">{{
                     quote.comments.length === 0 ? 0 : quote.comments.length
@@ -119,7 +123,9 @@
                 </div>
                 <div class="flex gap-2 items-center">
                   <span class="text-white">{{ quote.likes_count }}</span>
-                  <LikeIcon :liked="quote.liked_by_user" />
+                  <button>
+                    <LikeIcon :liked="quote.liked_by_user" />
+                  </button>
                 </div>
               </div>
               <div class="relative">
@@ -150,22 +156,23 @@
 </template>
 
 <script setup lang="ts">
+import QuoteModal from './../components/QuoteModal.vue'
+import LikeIcon from '@/components/icons/LikeIcon.vue'
+import MessageIcon from '@/components/icons/MessageIcon.vue'
 import DetailedQuoteModal from './../components/DetailedQuoteModal.vue'
 import QuotesHeader from '@/components/QuotesHeader.vue'
 import TheLayout from '@/components/TheLayout.vue'
 import { ref, onMounted, computed } from 'vue'
 import { deleteQuote, getQuotesByMovie, getSingleMovie } from '@/service/movieService'
 import { useRoute } from 'vue-router'
-import MessageIcon from '@/components/icons/MessageIcon.vue'
-import LikeIcon from '@/components/icons/LikeIcon.vue'
 import MoreOptions from '@/components/icons/MoreOptions.vue'
 import ViewIcon from '@/components/icons/ViewIcon.vue'
 import EditIcon from '@/components/icons/EditIcon.vue'
 import DeleteIcon from '@/components/icons/DeleteIcon.vue'
 import DynamicMovie from '@/components/DynamicMovie.vue'
-import QuoteModal from '@/components/QuoteModal.vue'
 import type { Quote, Movie } from '@/types'
 import { useI18n } from 'vue-i18n'
+
 type Locale = 'en' | 'ka'
 
 const { locale } = useI18n()
@@ -180,7 +187,7 @@ const quotesCount = ref()
 const isView = ref(false)
 const movie = ref<Movie | null>(null)
 const computedMovie = computed(() => movie.value || undefined)
-const computedSelectedQuote = computed(() => selectedQuote.value || undefined)
+
 
 const isEditMode = ref(false)
 
@@ -193,7 +200,7 @@ const openModal = () => {
 
 const openView = (quote: Quote) => {
   selectedQuote.value = quote
-
+  isEditMode.value = false
   isView.value = true
   isVisible.value = null
 }
@@ -215,6 +222,12 @@ const fetchQuotes = async () => {
   quotes.value = res.data
   quotesCount.value = quotes.value.length
   showModal.value = false
+}
+
+const fetchMovies = async () => {
+  const id = Array.isArray(route.params.id) ? route.params.id[0] : route.params.id
+  const res = await getSingleMovie(id)
+  movie.value = res.data.data
 }
 
 onMounted(async () => {
