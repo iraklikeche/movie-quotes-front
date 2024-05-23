@@ -25,5 +25,13 @@ defineProps<{
 }>()
 const like = (quoteId: number) => {
   quoteStore.toggleQuoteLike(quoteId)
+  // console.log(quoteId)
+  // if (quoteId.liked_by_user) {
+  //   quoteId.likes_count = quoteId.likes_count - 1
+  //   quoteId.liked_by_user = false
+  // } else {
+  //   quoteId.likes_count = quoteId.likes_count + 1
+  //   quoteId.liked_by_user = true
+  // }
 }
 </script>

@@ -120,18 +120,18 @@ const userSession = useUserSessionStore()
 const route = useRoute()
 const router = useRouter()
 
+const quoteStore = useQuoteStore()
+const search = quoteStore.search
 const isLogged = ref(false)
 
 const isHomepage = ref(window.location.pathname === '/')
 const showSearch = ref(false)
 
 const isFocused = ref(false)
+
 const handleFocused = () => {
   isFocused.value = true
 }
-
-const quoteStore = useQuoteStore()
-const search = quoteStore.search
 
 const updateSearch = (event: Event) => {
   const target = event.target as HTMLInputElement

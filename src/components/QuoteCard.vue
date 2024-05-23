@@ -28,4 +28,9 @@ import QuoteComments from './QuoteComments.vue'
 defineProps<{
   quote: Quote
 }>()
+const emit = defineEmits(['quote-selected'])
+
+const selectQuote = () => {
+  emit('quote-selected', quote.id)
+}
 </script>

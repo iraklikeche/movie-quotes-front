@@ -188,17 +188,16 @@ const isView = ref(false)
 const movie = ref<Movie | null>(null)
 const computedMovie = computed(() => movie.value || undefined)
 
-
 const isEditMode = ref(false)
 
 const showModal = ref(false)
 
 const openModal = () => {
-  console.log(1)
   showModal.value = true
 }
 
 const openView = (quote: Quote) => {
+  console.log(quote)
   selectedQuote.value = quote
   isEditMode.value = false
   isView.value = true
@@ -217,6 +216,7 @@ function toggleMenu(quoteId: number) {
 }
 
 const fetchQuotes = async () => {
+  console.log(1)
   const id = Array.isArray(route.params.id) ? route.params.id[0] : route.params.id
   const res = await getQuotesByMovie(id)
   quotes.value = res.data
@@ -237,6 +237,7 @@ onMounted(async () => {
   movie.value = res.data.data
   const quotesResponse = await getQuotesByMovie(id)
   quotes.value = quotesResponse.data
+  console.log(quotes.value)
   quotesCount.value = quotes.value.length
 })
 
