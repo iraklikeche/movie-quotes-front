@@ -88,14 +88,9 @@ const search = ref<string>(
 
 const quotes = computed<Quote[]>(() => quoteStore.quotes)
 const isFocused = ref(false)
-
 const showModal = ref(false)
-
 const showNotification = ref(false)
 
-// const openNotifications = () => {
-//   showNotification.value = true
-// }
 const openModal = () => {
   showModal.value = true
 }

@@ -6,12 +6,13 @@ import type { Quote } from '@/types'
 export const useQuoteStore = defineStore('quoteStore', () => {
   const search = ref('')
   const quotes = ref<Quote[]>([])
+  const likeId = ref<number | null>(null)
 
   const fetchQuotes = async (searchQuery = '') => {
     try {
       const res = await getQuotes(searchQuery)
       quotes.value = res.data
-      console.log(quotes.value)
+      // console.log(quotes.value)
     } catch (error) {
       //
     }
@@ -31,6 +32,8 @@ export const useQuoteStore = defineStore('quoteStore', () => {
   }, 300)
 
   const toggleQuoteLike = async (quoteId: number) => {
+    likeId.value = quoteId
+    console.log(quoteId)
     try {
       const response = await toggleLike(quoteId)
       const quote = quotes.value.find((q) => q.id === quoteId)
@@ -61,6 +64,7 @@ export const useQuoteStore = defineStore('quoteStore', () => {
     fetchQuotes,
     updateSearch,
     toggleQuoteLike,
-    addQuoteComment
+    addQuoteComment,
+    likeId
   }
 })
