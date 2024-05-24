@@ -12,7 +12,6 @@ export const useQuoteStore = defineStore('quoteStore', () => {
     try {
       const res = await getQuotes(searchQuery)
       quotes.value = res.data
-      // console.log(quotes.value)
     } catch (error) {
       //
     }

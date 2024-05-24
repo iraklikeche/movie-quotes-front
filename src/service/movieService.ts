@@ -89,3 +89,7 @@ export async function updateQuote(
     }
   })
 }
+
+export async function getNotifications() {
+  return await apiClient.get('/api/notifications')
+}

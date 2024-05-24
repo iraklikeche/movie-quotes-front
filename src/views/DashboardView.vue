@@ -5,37 +5,7 @@
       @update:showModal="(value) => (showModal = value)"
       @quote-added="fetchQuotes"
     />
-    <div>
-      <LikeNotifications />
-    </div>
-    <div
-      v-if="showNotification"
-      class="fixed inset-0 flex items-start justify-center z-50"
-      @click.self="showNotification = false"
-    >
-      <div
-        class="relative mt-2 bg-black text-white rounded-lg shadow-lg w-80 p-8 min-w-[60rem] top-20 -right-[20%]"
-      >
-        <div class="absolute -top-3 right-[7.5rem] w-8 h-12 bg-black rotate-45"></div>
-        <div class="flex justify-between items-center mb-4">
-          <h3 class="text-lg font-bold">Notifications</h3>
-          <button class="text-sm text-gray-400 hover:underline">Mark as all read</button>
-        </div>
-        <div
-          class="flex items-center mb-3 p-4 border border-border-gray gap-4 border-opacity-30 rounded-md"
-        >
-          <img src="https://picsum.photos/200" alt="avatar" class="w-20 h-20 rounded-full mr-3" />
-          <div class="flex-grow">
-            <div class="font-semibold">USERNAME</div>
-            <div class="text-sm">COMMENT</div>
-          </div>
-          <div class="text-right text-gray-400 text-sm">
-            <div>123</div>
-            <div class="text-[#198754]">New</div>
-          </div>
-        </div>
-      </div>
-    </div>
+
     <div class="sm:min-w-[60rem]">
       <div class="flex items-center gap-6">
         <button
@@ -77,9 +47,9 @@ import SearchIcon from '@/components/icons/SearchIcon.vue'
 import type { Quote } from '@/types'
 import QuoteModal from '@/components/QuoteModal.vue'
 import { useRoute, useRouter } from 'vue-router'
-import LikeNotifications from '@/components/Notifications/LikeNotifications.vue'
 
 const quoteStore = useQuoteStore()
+
 const route = useRoute()
 const router = useRouter()
 const search = ref<string>(
@@ -89,7 +59,6 @@ const search = ref<string>(
 const quotes = computed<Quote[]>(() => quoteStore.quotes)
 const isFocused = ref(false)
 const showModal = ref(false)
-const showNotification = ref(false)
 
 const openModal = () => {
   showModal.value = true

@@ -18,6 +18,7 @@ export const useUserSessionStore = defineStore('UserSessionStore', () => {
   const showResetPassword = ref(false)
   const successModal = ref(false)
   const loading = ref(false)
+  const userId = ref(null)
 
   const userData = reactive({
     username: '',
@@ -91,6 +92,7 @@ export const useUserSessionStore = defineStore('UserSessionStore', () => {
         userData.email = response.data.data.email
         userData.google_id = response.data.data.google_id
         userData.profile_image = response.data.data.profile_image
+        userId.value = response.data.data.id
       }
     } catch (err: any) {
       if (err.response?.status === 401 && localStorage.getItem('isLoggedIn')) {
@@ -131,6 +133,7 @@ export const useUserSessionStore = defineStore('UserSessionStore', () => {
     getUserData,
     userData,
     updateUsername,
-    loading
+    loading,
+    userId
   }
 })

@@ -19,6 +19,14 @@
         </div>
       </div>
     </Transition>
+    <div class="max-h-80 overflow-y-scroll pt-12">
+      <NotificationModal />
+      <!-- I WILL NEED IT AFTER I FINISH NOTIFICATIONS -->
+      <!-- <NotificationModal
+        :showNotifications="showNotification"
+        @closeNotification="closeNotification"
+      /> -->
+    </div>
 
     <div>
       <UserRegister v-if="userSession.showRegister" />
@@ -74,7 +82,17 @@
         </div>
         <div v-else class="flex gap-6 items-center ml-2 sm:ml-2">
           <SearchIcon class="sm:hidden" @click="openSearch" />
-          <NotificationIcon />
+          <div class="relative">
+            <button @click="openNotification">
+              <NotificationIcon />
+            </button>
+            <div class="absolute -top-2 -right-3">
+              <span
+                class="font-bold text-white text-xs bg-orange-600 w-1 h-1 p-2.5 rounded-full flex items-center justify-center"
+                >5</span
+              >
+            </div>
+          </div>
           <button
             @click="onLogout"
             class="border border-white bg-transparent text-sm px-5 py-2 rounded-lg text-white hidden sm:block"
@@ -88,6 +106,7 @@
 </template>
 
 <script lang="ts" setup>
+import NotificationModal from './NotificationModal.vue'
 import GoBackArrow from './icons/GoBackArrow.vue'
 import UserRegister from '@/components/Sessions/UserRegister.vue'
 import UserLogin from '@/components/Sessions/UserLogin.vue'
@@ -119,6 +138,7 @@ const { locale, availableLocales } = useI18n()
 const userSession = useUserSessionStore()
 const route = useRoute()
 const router = useRouter()
+const showNotification = ref(false)
 
 const quoteStore = useQuoteStore()
 const search = quoteStore.search
@@ -128,6 +148,10 @@ const isHomepage = ref(window.location.pathname === '/')
 const showSearch = ref(false)
 
 const isFocused = ref(false)
+
+const openNotification = () => {
+  showNotification.value = true
+}
 
 const handleFocused = () => {
   isFocused.value = true
