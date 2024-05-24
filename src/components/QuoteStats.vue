@@ -18,20 +18,21 @@ import MessageIcon from '@/components/icons/MessageIcon.vue'
 import LikeIcon from '@/components/icons/LikeIcon.vue'
 import type { Quote } from '@/types'
 import { useQuoteStore } from '@/stores/QuoteStore'
+import { ref, onMounted } from 'vue'
 
 const quoteStore = useQuoteStore()
-defineProps<{
+const props = defineProps<{
   quote: Quote
 }>()
 const like = (quoteId: number) => {
   quoteStore.toggleQuoteLike(quoteId)
-  // console.log(quoteId)
-  // if (quoteId.liked_by_user) {
-  //   quoteId.likes_count = quoteId.likes_count - 1
-  //   quoteId.liked_by_user = false
-  // } else {
-  //   quoteId.likes_count = quoteId.likes_count + 1
-  //   quoteId.liked_by_user = true
-  // }
 }
+
+onMounted(() => {
+  window.Echo.channel('quote.' + props.quote.id).listen('QuoteUnliked', (event: any) => {
+    console.log('Received QuoteUnliked event', event)
+    quoteStore.updateLikeCount(event.quote.id, event.likeCount)
+    console.log('Updated like count for unlike', event.likeCount)
+  })
+})
 </script>

@@ -42,7 +42,7 @@
 
 <script setup lang="ts">
 import { ref, onMounted } from 'vue'
-
+import { useQuoteStore } from '@/stores/QuoteStore'
 import { getNotifications } from '@/service/movieService'
 import { getUser } from '@/service/authService'
 type Notification = {
@@ -57,6 +57,7 @@ type Notification = {
   read_at: string | null
   time: string
 }
+const quoteStore = useQuoteStore()
 
 const notifications = ref<Notification[]>([])
 
@@ -82,6 +83,8 @@ onMounted(async () => {
       read_at: event.read_at,
       time: event.time
     })
+    quoteStore.updateLikeCount(event.quote.id, event.likeCount)
+    console.log(event.likeCount, event.quote.id)
     console.log('pushed notification', notifications.value)
   })
 })

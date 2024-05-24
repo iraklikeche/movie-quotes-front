@@ -45,6 +45,13 @@ export const useQuoteStore = defineStore('quoteStore', () => {
     }
   }
 
+  const updateLikeCount = (quoteId: number, likeCount: number) => {
+    const quote = quotes.value.find((q) => q.id === quoteId)
+    if (quote) {
+      quote.likes_count = likeCount
+    }
+  }
+
   const addQuoteComment = async (quoteId: number, content: string) => {
     try {
       const response = await addComment(quoteId, content)
@@ -64,6 +71,7 @@ export const useQuoteStore = defineStore('quoteStore', () => {
     updateSearch,
     toggleQuoteLike,
     addQuoteComment,
-    likeId
+    likeId,
+    updateLikeCount
   }
 })
