@@ -71,7 +71,7 @@ onMounted(async () => {
 
   window.Echo.channel('App.Models.User.' + id).listen('QuoteLiked', (event: any) => {
     console.log('event', event)
-    notifications.value.push({
+    notifications.value.unshift({
       id: event.quote.id,
       data: {
         message: event.message,
@@ -87,7 +87,7 @@ onMounted(async () => {
   })
 
   window.Echo.channel('App.Models.User.' + id).listen('QuoteCommented', (event: any) => {
-    notifications.value.push({
+    notifications.value.unshift({
       id: event.comment.id,
       data: {
         message: event.message,
