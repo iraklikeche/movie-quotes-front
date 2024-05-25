@@ -6,12 +6,12 @@ import type { Quote } from '@/types'
 export const useQuoteStore = defineStore('quoteStore', () => {
   const search = ref('')
   const quotes = ref<Quote[]>([])
+  const likeId = ref<number | null>(null)
 
   const fetchQuotes = async (searchQuery = '') => {
     try {
       const res = await getQuotes(searchQuery)
       quotes.value = res.data
-      console.log(quotes.value)
     } catch (error) {
       //
     }
@@ -31,6 +31,8 @@ export const useQuoteStore = defineStore('quoteStore', () => {
   }, 300)
 
   const toggleQuoteLike = async (quoteId: number) => {
+    likeId.value = quoteId
+    console.log(quoteId)
     try {
       const response = await toggleLike(quoteId)
       const quote = quotes.value.find((q) => q.id === quoteId)
@@ -43,9 +45,24 @@ export const useQuoteStore = defineStore('quoteStore', () => {
     }
   }
 
+  const updateLikeCount = (quoteId: number, likeCount: number) => {
+    const quote = quotes.value.find((q) => q.id === quoteId)
+    if (quote) {
+      quote.likes_count = likeCount
+    }
+  }
+
+  const updateCommentCount = (quoteId: number, commentCount: number) => {
+    const quote = quotes.value.find((q) => q.id === quoteId)
+    if (quote) {
+      quote.comments_count = commentCount
+    }
+  }
+
   const addQuoteComment = async (quoteId: number, content: string) => {
     try {
       const response = await addComment(quoteId, content)
+      console.log(response)
       const quote = quotes.value.find((q) => q.id === quoteId)
       if (quote) {
         quote.comments.push(response.data.comment)
@@ -61,6 +78,9 @@ export const useQuoteStore = defineStore('quoteStore', () => {
     fetchQuotes,
     updateSearch,
     toggleQuoteLike,
-    addQuoteComment
+    addQuoteComment,
+    likeId,
+    updateLikeCount,
+    updateCommentCount
   }
 })

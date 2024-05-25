@@ -9,7 +9,6 @@
       <div class="flex flex-col gap-12 p-8">
         <div class="flex items-center gap-4 text-white">
           <ProfileImage />
-          <!-- <img :src="userSession.userData.profile_image" class="w-14 h-14 rounded-full border-2" /> -->
           <div>
             <p>{{ userSession.userData.username }}</p>
             <RouterLink :to="{ name: 'profile' }" class="text-[#ced4da]">{{

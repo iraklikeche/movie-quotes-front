@@ -6,11 +6,11 @@
     },
     {
       "path": "./tsconfig.app.json"
-    },
-    {
-      "compilerOptions": {
-        "types": ["node"]
-      }
     }
+    // {
+    //   "compilerOptions": {
+    //     "types": ["node"]
+    //   }
+    // }
   ]
 }

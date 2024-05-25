@@ -49,6 +49,7 @@ import QuoteModal from '@/components/QuoteModal.vue'
 import { useRoute, useRouter } from 'vue-router'
 
 const quoteStore = useQuoteStore()
+
 const route = useRoute()
 const router = useRouter()
 const search = ref<string>(
@@ -57,7 +58,6 @@ const search = ref<string>(
 
 const quotes = computed<Quote[]>(() => quoteStore.quotes)
 const isFocused = ref(false)
-
 const showModal = ref(false)
 
 const openModal = () => {

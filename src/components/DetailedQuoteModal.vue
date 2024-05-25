@@ -81,7 +81,7 @@
         </div>
 
         <div v-if="!isEditMode">
-          <QuoteStats :quote="selectedQuote" />
+          <QuoteStats :quote="selectedQuote" @quote-updated="foo" />
           <div class="mt-4 sm:pb-8">
             <QuoteComments :quoteId="selectedQuote.id" />
           </div>
@@ -133,6 +133,10 @@ const handleFileChange = (event: Event) => {
 
 const { handleSubmit } = useForm()
 
+const foo = () => {
+  emit('quote-updated')
+}
+
 const onSubmit = handleSubmit(async () => {
   console.log(quoteData.value)
   try {
@@ -145,7 +149,6 @@ const onSubmit = handleSubmit(async () => {
     }
 
     await updateQuote(props.selectedQuote.id, formData)
-    emit('quote-updated')
     emit('close')
   } catch (error) {
     //
