@@ -84,8 +84,22 @@ onMounted(async () => {
       time: event.time
     })
     quoteStore.updateLikeCount(event.quote.id, event.likeCount)
-    console.log(event.likeCount, event.quote.id)
-    console.log('pushed notification', notifications.value)
+  })
+
+  window.Echo.channel('App.Models.User.' + id).listen('QuoteCommented', (event: any) => {
+    notifications.value.push({
+      id: event.comment.id,
+      data: {
+        message: event.message,
+        user: {
+          username: event.user.username,
+          profile_image_url: event.user.profile_image_url
+        }
+      },
+      read_at: null,
+      time: event.time
+    })
+    quoteStore.updateCommentCount(event.comment.quote_id, event.commentCount)
   })
 })
 </script>

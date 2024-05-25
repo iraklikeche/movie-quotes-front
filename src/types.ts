@@ -50,6 +50,7 @@ export type Quote = {
   liked_by_user: boolean
   like_count: number
   likes_count: number
+  comments_count: number
   movie_id: string
 }
 

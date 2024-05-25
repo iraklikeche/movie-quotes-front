@@ -62,13 +62,20 @@ export const useQuoteStore = defineStore('quoteStore', () => {
   const addQuoteComment = async (quoteId: number, content: string) => {
     try {
       const response = await addComment(quoteId, content)
-      console.log(response)
       const quote = quotes.value.find((q) => q.id === quoteId)
       if (quote) {
+        quote.comments_count = response.data.commentCount
         quote.comments.push(response.data.comment)
       }
     } catch (error) {
       console.error('Failed to add comment:', error)
+    }
+  }
+
+  const updateQuoteComments = (quoteId: number, comment: Comment) => {
+    const quote = quotes.value.find((q) => q.id === quoteId)
+    if (quote) {
+      quote.comments.push(comment)
     }
   }
 
@@ -81,6 +88,7 @@ export const useQuoteStore = defineStore('quoteStore', () => {
     addQuoteComment,
     likeId,
     updateLikeCount,
-    updateCommentCount
+    updateCommentCount,
+    updateQuoteComments
   }
 })
