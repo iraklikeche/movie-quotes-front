@@ -1,7 +1,7 @@
 import { defineStore } from 'pinia'
 import { ref } from 'vue'
 import { addComment, getQuotes, toggleLike } from '@/service/movieService'
-import type { Quote } from '@/types'
+import type { Quote, Comment } from '@/types'
 
 export const useQuoteStore = defineStore('quoteStore', () => {
   const search = ref('')
@@ -65,7 +65,7 @@ export const useQuoteStore = defineStore('quoteStore', () => {
       const quote = quotes.value.find((q) => q.id === quoteId)
       if (quote) {
         quote.comments_count = response.data.commentCount
-        quote.comments.push(response.data.comment)
+        quote.comments.push(response.data.comment as Comment)
       }
     } catch (error) {
       console.error('Failed to add comment:', error)
