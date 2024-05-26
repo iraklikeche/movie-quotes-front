@@ -19,14 +19,11 @@
         </div>
       </div>
     </Transition>
-    <div class="max-h-80 overflow-y-scroll pt-12">
-      <NotificationModal />
-      <!-- I WILL NEED IT AFTER I FINISH NOTIFICATIONS -->
-      <!-- <NotificationModal
-        :showNotifications="showNotification"
-        @closeNotification="closeNotification"
-      /> -->
-    </div>
+    <NotificationModal
+      v-if="showNotification"
+      :showNotifications="showNotification"
+      @closeNotification="closeNotification"
+    />
 
     <div>
       <UserRegister v-if="userSession.showRegister" />
@@ -151,6 +148,10 @@ const isFocused = ref(false)
 
 const openNotification = () => {
   showNotification.value = true
+}
+
+const closeNotification = () => {
+  showNotification.value = false
 }
 
 const handleFocused = () => {
