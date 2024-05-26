@@ -33,7 +33,7 @@
           </div>
           <!-- ***********DESKTOP********** -->
           <div class="hidden sm:block">
-            <QuotesHeader :quotesCount="quotesCount" @openModal="openModal" />
+            <QuotesHeader :quotesCount="quoteStore.quotesCount" @openModal="openModal" />
 
             <div class="mt-6 w-full">
               <div
@@ -53,9 +53,7 @@
                 >
                   <div class="flex gap-6 mt-2">
                     <div class="flex gap-2 items-center">
-                      <span class="text-white">{{
-                        quote.comments.length === 0 ? 0 : quote.comments.length
-                      }}</span>
+                      <span class="text-white">{{ quote.comments_count }}</span>
                       <MessageIcon />
                     </div>
                     <div class="flex gap-2 items-center">
@@ -163,7 +161,7 @@ import DetailedQuoteModal from './../components/DetailedQuoteModal.vue'
 import QuotesHeader from '@/components/QuotesHeader.vue'
 import TheLayout from '@/components/TheLayout.vue'
 import { ref, onMounted, computed } from 'vue'
-import { deleteQuote, getQuotesByMovie, getSingleMovie } from '@/service/movieService'
+import { getSingleMovie } from '@/service/movieService'
 import { useRoute } from 'vue-router'
 import MoreOptions from '@/components/icons/MoreOptions.vue'
 import ViewIcon from '@/components/icons/ViewIcon.vue'
@@ -172,25 +170,28 @@ import DeleteIcon from '@/components/icons/DeleteIcon.vue'
 import DynamicMovie from '@/components/DynamicMovie.vue'
 import type { Quote, Movie } from '@/types'
 import { useI18n } from 'vue-i18n'
+import { useQuoteStore } from '@/stores/QuoteStore'
 
 type Locale = 'en' | 'ka'
-
+const quoteStore = useQuoteStore()
 const { locale } = useI18n()
 const typedLocale = locale as unknown as Locale
 
 const route = useRoute()
 const isVisible = ref<number | null>(null)
-const quotes = ref<Quote[]>([])
 const selectedQuote = ref<Quote | null>(null)
 
 const quotesCount = ref()
 const isView = ref(false)
 const movie = ref<Movie | null>(null)
 const computedMovie = computed(() => movie.value || undefined)
+const quotes = computed<Quote[]>(() => quoteStore.quotesByMovie)
 
 const isEditMode = ref(false)
 
 const showModal = ref(false)
+
+const id = Array.isArray(route.params.id) ? route.params.id[0] : route.params.id
 
 const openModal = () => {
   showModal.value = true
@@ -214,14 +215,8 @@ const openEdit = (quote: Quote) => {
 function toggleMenu(quoteId: number) {
   isVisible.value = isVisible.value === quoteId ? null : quoteId
 }
-
 const fetchQuotes = async () => {
-  console.log(1)
-  const id = Array.isArray(route.params.id) ? route.params.id[0] : route.params.id
-  const res = await getQuotesByMovie(id)
-  quotes.value = res.data
-  quotesCount.value = quotes.value.length
-  showModal.value = false
+  quoteStore.fetchQuotesByMovie(id)
 }
 
 const fetchMovies = async () => {
@@ -232,22 +227,13 @@ const fetchMovies = async () => {
 
 onMounted(async () => {
   const id = Array.isArray(route.params.id) ? route.params.id[0] : route.params.id
-
   const res = await getSingleMovie(id)
   movie.value = res.data.data
-  const quotesResponse = await getQuotesByMovie(id)
-  quotes.value = quotesResponse.data
-  console.log(quotes.value)
-  quotesCount.value = quotes.value.length
+  fetchQuotes()
 })
 
-const removeQuote = async (quoteId: number) => {
-  try {
-    await deleteQuote(quoteId)
-    isView.value = false
-    quotes.value = quotes.value.filter((quote) => quote.id !== quoteId)
-  } catch (error) {
-    console.error('Failed to delete quote:', error)
-  }
+const removeQuote = async (id: number) => {
+  isView.value = false
+  await quoteStore.remove(id)
 }
 </script>

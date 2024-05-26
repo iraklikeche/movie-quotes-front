@@ -93,3 +93,11 @@ export async function updateQuote(
 export async function getNotifications() {
   return await apiClient.get('/api/notifications')
 }
+
+export const markAllNotificationsAsRead = async () => {
+  return await apiClient.post('/api/notifications/mark-all-read')
+}
+
+export const markNotificationAsRead = async (id: number) => {
+  return await apiClient.post(`/api/notifications/${id}/mark-read`)
+}

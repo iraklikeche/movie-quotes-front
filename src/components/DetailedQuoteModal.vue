@@ -109,7 +109,7 @@ const props = defineProps<{
 }>()
 
 console.log(props.selectedQuote)
-const emit = defineEmits(['close', 'remove', 'quote-updated', 'like-quote'])
+const emit = defineEmits(['close', 'remove', 'quote-updated'])
 
 const quoteData = ref({
   content: {

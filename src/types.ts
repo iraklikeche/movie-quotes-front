@@ -50,6 +50,7 @@ export type Quote = {
   liked_by_user: boolean
   like_count: number
   likes_count: number
+  comments_count: number
   movie_id: string
 }
 
@@ -82,4 +83,53 @@ export type UserProfileUpdate = {
   email?: string
   new_password?: string
   new_password_confirmation?: string
+}
+
+export type QuoteLikedEvent = {
+  quote: {
+    id: number
+    content: {
+      en: string
+      ka?: string
+    }
+
+    image_url: string
+    movie_id: number
+    user_id: number
+  }
+  user: User
+  message: string
+  reacted: boolean
+  read_at: string | null
+  time: string
+  likeCount: number
+}
+
+export type QuoteUnlikedEvent = QuoteLikedEvent
+
+export type QuoteCommentedEvent = {
+  quote: {
+    id: number
+    content: {
+      en: string
+      ka?: string
+    }
+    image_url: string
+    movie_id: number
+    user_id: number
+  }
+  comment: {
+    id: number
+    content: string
+    user_id: number
+    quote_id: number
+
+    user: User
+  }
+  user: User
+  message: string
+  commentCount: number
+  commented: boolean
+  read_at: string | null
+  time: string
 }

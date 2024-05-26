@@ -1,12 +1,20 @@
 import { defineStore } from 'pinia'
 import { ref } from 'vue'
-import { addComment, getQuotes, toggleLike } from '@/service/movieService'
-import type { Quote } from '@/types'
+import {
+  addComment,
+  getQuotes,
+  toggleLike,
+  getQuotesByMovie,
+  deleteQuote
+} from '@/service/movieService'
+import type { Quote, Comment } from '@/types'
 
 export const useQuoteStore = defineStore('quoteStore', () => {
   const search = ref('')
   const quotes = ref<Quote[]>([])
   const likeId = ref<number | null>(null)
+  const quotesByMovie = ref<Quote[]>([])
+  const quotesCount = ref()
 
   const fetchQuotes = async (searchQuery = '') => {
     try {
@@ -14,6 +22,21 @@ export const useQuoteStore = defineStore('quoteStore', () => {
       quotes.value = res.data
     } catch (error) {
       //
+    }
+  }
+
+  const fetchQuotesByMovie = async (id: string) => {
+    const res = await getQuotesByMovie(id)
+    quotesByMovie.value = res.data
+    quotesCount.value = quotesByMovie.value.length
+  }
+
+  const remove = async (quoteId: number) => {
+    try {
+      await deleteQuote(quoteId)
+      quotesByMovie.value = quotesByMovie.value.filter((quote) => quote.id !== quoteId)
+    } catch (error) {
+      console.error('Failed to delete quote:', error)
     }
   }
 
@@ -32,10 +55,12 @@ export const useQuoteStore = defineStore('quoteStore', () => {
 
   const toggleQuoteLike = async (quoteId: number) => {
     likeId.value = quoteId
-    console.log(quoteId)
     try {
       const response = await toggleLike(quoteId)
-      const quote = quotes.value.find((q) => q.id === quoteId)
+      const quote =
+        quotes.value.find((q) => q.id === quoteId) ||
+        quotesByMovie.value.find((q) => q.id === quoteId)
+      console.log(quote)
       if (quote) {
         quote.liked_by_user = response.data.liked_by_user
         quote.likes_count = response.data.like_count
@@ -62,13 +87,23 @@ export const useQuoteStore = defineStore('quoteStore', () => {
   const addQuoteComment = async (quoteId: number, content: string) => {
     try {
       const response = await addComment(quoteId, content)
-      console.log(response)
-      const quote = quotes.value.find((q) => q.id === quoteId)
+
+      const quote =
+        quotes.value.find((q) => q.id === quoteId) ||
+        quotesByMovie.value.find((q) => q.id === quoteId)
       if (quote) {
-        quote.comments.push(response.data.comment)
+        quote.comments_count = response.data.commentCount
+        quote.comments.push(response.data.comment as Comment)
       }
     } catch (error) {
       console.error('Failed to add comment:', error)
+    }
+  }
+
+  const updateQuoteComments = (quoteId: number, comment: Comment) => {
+    const quote = quotes.value.find((q) => q.id === quoteId)
+    if (quote) {
+      quote.comments.push(comment)
     }
   }
 
@@ -81,6 +116,11 @@ export const useQuoteStore = defineStore('quoteStore', () => {
     addQuoteComment,
     likeId,
     updateLikeCount,
-    updateCommentCount
+    updateCommentCount,
+    updateQuoteComments,
+    fetchQuotesByMovie,
+    quotesByMovie,
+    quotesCount,
+    remove
   }
 })

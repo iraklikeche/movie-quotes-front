@@ -1,5 +1,7 @@
 <template>
-  <h1>HELLO WORLD</h1>
+  <div class="w-full h-screen flex items-center justify-center bg-[#12101A]">
+    <h1 class="text-red-500 font-semibold text-7xl animate-pulse">Redirecting...</h1>
+  </div>
 </template>
 <script setup lang="ts">
 import { useRoute, useRouter } from 'vue-router'
