@@ -16,10 +16,9 @@
 <script setup lang="ts">
 import MessageIcon from '@/components/icons/MessageIcon.vue'
 import LikeIcon from '@/components/icons/LikeIcon.vue'
-import type { Quote } from '@/types'
+import type { Quote, QuoteLikedEvent, QuoteUnlikedEvent, QuoteCommentedEvent } from '@/types'
 import { useQuoteStore } from '@/stores/QuoteStore'
 import { onMounted } from 'vue'
-
 const quoteStore = useQuoteStore()
 const props = defineProps<{
   quote: Quote
@@ -30,13 +29,15 @@ const like = (quoteId: number) => {
 
 onMounted(() => {
   const channel = window.Echo.channel('quote.' + props.quote.id)
-  channel.listen('QuoteLiked', (event: any) => {
+  channel.listen('QuoteLiked', (event: QuoteLikedEvent) => {
+    console.log(event)
     quoteStore.updateLikeCount(event.quote.id, event.likeCount)
   })
-  channel.listen('QuoteUnliked', (event: any) => {
+  channel.listen('QuoteUnliked', (event: QuoteUnlikedEvent) => {
     quoteStore.updateLikeCount(event.quote.id, event.likeCount)
   })
-  channel.listen('QuoteCommented', (event: any) => {
+  channel.listen('QuoteCommented', (event: QuoteCommentedEvent) => {
+    console.log(event)
     quoteStore.updateCommentCount(event.quote.id, event.commentCount)
     quoteStore.updateQuoteComments(event.quote.id, event.comment)
   })

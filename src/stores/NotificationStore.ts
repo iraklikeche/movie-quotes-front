@@ -27,7 +27,6 @@ export const useNotificationStore = defineStore('notificationStore', () => {
       const id = userId.data.data.id
       const res = await getNotifications()
       notifications.value = res.data
-      console.log(notifications.value)
 
       window.Echo.channel('App.Models.User.' + id).listen('QuoteLiked', (event: any) => {
         console.log(event)
@@ -44,7 +43,6 @@ export const useNotificationStore = defineStore('notificationStore', () => {
           read_at: event.read_at,
           time: event.time
         })
-        console.log(notifications.value)
       })
 
       window.Echo.channel('App.Models.User.' + id).listen('QuoteCommented', (event: any) => {
