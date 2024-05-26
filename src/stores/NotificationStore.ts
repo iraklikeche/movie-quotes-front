@@ -31,7 +31,9 @@ export const useNotificationStore = defineStore('notificationStore', () => {
       window.Echo.channel('App.Models.User.' + id).listen('QuoteLiked', (event: any) => {
         console.log(event)
         notifications.value.unshift({
-          id: event.quote.id,
+          // id: event.quote.id,
+          id: event.notification_id,
+
           data: {
             message: event.message,
             user: {
@@ -43,12 +45,16 @@ export const useNotificationStore = defineStore('notificationStore', () => {
           read_at: event.read_at,
           time: event.time
         })
+        console.log(notifications.value);
+
       })
 
       window.Echo.channel('App.Models.User.' + id).listen('QuoteCommented', (event: any) => {
         console.log(event)
         notifications.value.unshift({
-          id: event.comment.id,
+          id: event.notification_id,
+
+          // id: event.comment.id,
           data: {
             message: event.message,
             user: {
@@ -61,7 +67,7 @@ export const useNotificationStore = defineStore('notificationStore', () => {
           time: event.time
         })
       })
-
+console.log(notifications.value);
       fetchedNotifications.value = true
     }
   }

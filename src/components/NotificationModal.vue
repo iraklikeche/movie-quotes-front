@@ -12,12 +12,15 @@
       <div v-if="notifications.length > 0">
         <div class="flex justify-between items-center mb-4">
           <h3 class="text-lg font-bold">Notifications</h3>
-          <button class="text-sm text-gray-400 hover:underline">Mark all as read</button>
+          <button class="text-sm text-gray-400 hover:underline" @click="markAllAsRead">
+            Mark all as read
+          </button>
         </div>
         <div
           v-for="notification in notifications"
           :key="notification.id"
-          class="flex items-center mb-3 p-4 border border-border-gray gap-4 border-opacity-30 rounded-md"
+          class="flex items-center mb-3 p-4 border border-border-gray gap-4 border-opacity-30 rounded-md cursor-pointer"
+          @click="markAsRead(notification.id)"
         >
           <img
             :src="notification.data.user.profile_image_url"
@@ -56,6 +59,7 @@ import ReactIcon from './icons/ReactIcon.vue'
 import QuotesIcon from './icons/QuotesIcon.vue'
 import { useNotificationStore } from '@/stores/NotificationStore'
 import { storeToRefs } from 'pinia'
+import { markAllNotificationsAsRead, markNotificationAsRead } from '@/service/movieService'
 
 const emit = defineEmits(['closeNotification'])
 const closeNotification = () => emit('closeNotification')
@@ -67,4 +71,20 @@ const { notifications } = storeToRefs(notificationStore)
 onMounted(async () => {
   await notificationStore.fetchNotifications()
 })
+
+const markAllAsRead = async () => {
+  await markAllNotificationsAsRead()
+  notifications.value.forEach((notification) => {
+    notification.read_at = new Date().toISOString()
+  })
+}
+
+const markAsRead = async (id: number) => {
+  console.log(23)
+  await markNotificationAsRead(id)
+  const notification = notifications.value.find((notification) => notification.id === id)
+  if (notification) {
+    notification.read_at = new Date().toISOString()
+  }
+}
 </script>
