@@ -30,7 +30,6 @@
           />
         </div>
       </div>
-      <button class="bg-red-500 px-10 py-5" @click="clickMe">CLICK ME</button>
       <div class="bg-[#181624] flex flex-col gap-10">
         <QuoteCard v-for="quote in quotes" :key="quote.id" :quote="quote" />
       </div>

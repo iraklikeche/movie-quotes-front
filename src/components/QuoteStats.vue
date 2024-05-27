@@ -30,14 +30,12 @@ const like = (quoteId: number) => {
 onMounted(() => {
   const channel = window.Echo.channel('quote.' + props.quote.id)
   channel.listen('QuoteLiked', (event: QuoteLikedEvent) => {
-    console.log(event)
     quoteStore.updateLikeCount(event.quote.id, event.likeCount)
   })
   channel.listen('QuoteUnliked', (event: QuoteUnlikedEvent) => {
     quoteStore.updateLikeCount(event.quote.id, event.likeCount)
   })
   channel.listen('QuoteCommented', (event: QuoteCommentedEvent) => {
-    console.log(event)
     quoteStore.updateCommentCount(event.quote.id, event.commentCount)
     quoteStore.updateQuoteComments(event.quote.id, event.comment)
   })

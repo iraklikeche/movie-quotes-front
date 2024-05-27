@@ -49,6 +49,7 @@ export const useNotificationStore = defineStore('notificationStore', () => {
 
       window.Echo.channel('App.Models.User.' + id).listen('QuoteCommented', (event: any) => {
         console.log(event)
+        console.log(event.quote_id)
         notifications.value.unshift({
           id: event.comment.id,
           data: {
@@ -57,7 +58,8 @@ export const useNotificationStore = defineStore('notificationStore', () => {
               username: event.user.username,
               profile_image_url: event.user.profile_image_url
             },
-            commented: event.commented
+            commented: event.commented,
+            quote_id: event.quote_id
           },
           created_at: event.created_at,
           read_at: null,
