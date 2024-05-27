@@ -6,7 +6,7 @@
       @quote-added="fetchQuotes"
     />
 
-    <div class="sm:min-w-[60rem]">
+    <div class="sm:min-w-[60rem]" ref="scrollEL">
       <div class="flex items-center gap-6">
         <button
           @click="openModal"
@@ -30,6 +30,7 @@
           />
         </div>
       </div>
+      <button class="bg-red-500 px-10 py-5" @click="clickMe">CLICK ME</button>
       <div class="bg-[#181624] flex flex-col gap-10">
         <QuoteCard v-for="quote in quotes" :key="quote.id" :quote="quote" />
       </div>
@@ -40,7 +41,7 @@
 <script setup lang="ts">
 import TheLayout from '@/components/TheLayout.vue'
 import WriteQuote from '@/components/icons/WriteQuote.vue'
-import { ref, onMounted, computed, watch } from 'vue'
+import { ref, onMounted, computed, watch, onUnmounted } from 'vue'
 import QuoteCard from '@/components/QuoteCard.vue'
 import { useQuoteStore } from '@/stores/QuoteStore'
 import SearchIcon from '@/components/icons/SearchIcon.vue'
@@ -52,6 +53,7 @@ const quoteStore = useQuoteStore()
 
 const route = useRoute()
 const router = useRouter()
+
 const search = ref<string>(
   Array.isArray(route.query.search) ? route.query.search[0] || '' : route.query.search || ''
 )
@@ -77,8 +79,31 @@ const updateSearch = (event: Event) => {
   quoteStore.updateSearch(target.value)
 }
 
+const loadMoreQuotes = async () => {
+  await quoteStore.loadMoreQuotes()
+}
+
+const clickMe = () => {
+  loadMoreQuotes()
+}
+
+const scrollEL = ref<HTMLElement | null>(null)
+
+const handleScroll = () => {
+  if (scrollEL.value && scrollEL.value.getBoundingClientRect().bottom <= window.innerHeight) {
+    console.log(1, scrollEL.value.getBoundingClientRect())
+    console.log(2, window.innerHeight)
+    loadMoreQuotes()
+  }
+}
+
 onMounted(() => {
   fetchQuotes()
+  window.addEventListener('scroll', handleScroll)
+})
+
+onUnmounted(() => {
+  window.removeEventListener('scroll', handleScroll)
 })
 
 watch(search, (newSearch) => {

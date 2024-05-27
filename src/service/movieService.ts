@@ -51,9 +51,19 @@ export async function createQuote(formData: FormData): Promise<AxiosResponse<any
   return response
 }
 
-export async function getQuotes(searchQuery = '') {
-  const params = searchQuery ? { search: searchQuery } : {}
-  return await apiClient.get('/api/quotes', { params })
+// export async function getQuotes(searchQuery = '') {
+//   const params = searchQuery ? { search: searchQuery } : {}
+//   return await apiClient.get('/api/quotes', { params })
+// }
+
+export const getQuotes = (searchQuery = '', page = 1, perPage = 2) => {
+  return apiClient.get('/api/quotes', {
+    params: {
+      search: searchQuery,
+      page: page,
+      per_page: perPage
+    }
+  })
 }
 
 export async function toggleLike(quoteId: number) {

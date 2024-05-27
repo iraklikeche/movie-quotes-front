@@ -19,6 +19,7 @@ export const useNotificationStore = defineStore('notificationStore', () => {
     time: string
   }
   const notifications = ref<Notification[]>([])
+
   const fetchedNotifications = ref(false)
 
   const fetchNotifications = async () => {
@@ -32,7 +33,6 @@ export const useNotificationStore = defineStore('notificationStore', () => {
         console.log(event)
         notifications.value.unshift({
           id: event.quote.id,
-
           data: {
             message: event.message,
             user: {
@@ -41,10 +41,10 @@ export const useNotificationStore = defineStore('notificationStore', () => {
             },
             reacted: event.reacted
           },
+          created_at: event.created_at,
           read_at: event.read_at,
           time: event.time
         })
-        console.log(notifications.value)
       })
 
       window.Echo.channel('App.Models.User.' + id).listen('QuoteCommented', (event: any) => {
@@ -59,11 +59,11 @@ export const useNotificationStore = defineStore('notificationStore', () => {
             },
             commented: event.commented
           },
+          created_at: event.created_at,
           read_at: null,
           time: event.time
         })
       })
-      console.log(notifications.value)
       fetchedNotifications.value = true
     }
   }

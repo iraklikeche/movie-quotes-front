@@ -9,7 +9,7 @@
       <div
         class="absolute -top-3 right-[23.5rem] sm:right-[7.8rem] w-8 h-12 bg-black rotate-45"
       ></div>
-      <div v-if="notifications.length > 0">
+      <div v-if="notifications.length > 0" class="max-h-[40rem] overflow-y-scroll">
         <div class="flex justify-between items-center mb-4">
           <h3 class="text-lg font-bold">Notifications</h3>
           <button class="text-sm text-gray-400 hover:underline" @click="markAllAsRead">
@@ -41,7 +41,7 @@
             </div>
           </div>
           <div class="text-right text-gray-400 text-sm">
-            <div>2 min ago</div>
+            <div>{{ formatTime(notification.created_at) }}</div>
             <div class="text-[#198754]" v-if="!notification.read_at">New</div>
           </div>
         </div>
@@ -60,16 +60,20 @@ import QuotesIcon from './icons/QuotesIcon.vue'
 import { useNotificationStore } from '@/stores/NotificationStore'
 import { storeToRefs } from 'pinia'
 import { markAllNotificationsAsRead, markNotificationAsRead } from '@/service/movieService'
+import { useTimeFormat } from '@/composables/useTimeFormat'
 
 const emit = defineEmits(['closeNotification'])
 const closeNotification = () => emit('closeNotification')
 defineProps<{ showNotifications: boolean }>()
+
+const { formatTime } = useTimeFormat()
 
 const notificationStore = useNotificationStore()
 const { notifications } = storeToRefs(notificationStore)
 
 onMounted(async () => {
   await notificationStore.fetchNotifications()
+  console.log(notifications.value)
 })
 
 const markAllAsRead = async () => {
@@ -80,7 +84,6 @@ const markAllAsRead = async () => {
 }
 
 const markAsRead = async (id: number) => {
-  console.log(23)
   await markNotificationAsRead(id)
   const notification = notifications.value.find((notification) => notification.id === id)
   if (notification) {

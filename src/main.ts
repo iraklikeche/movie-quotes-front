@@ -28,9 +28,9 @@ window.Echo = new Echo({
   cluster: import.meta.env.VITE_PUSHER_APP_CLUSTER,
   forceTLS: true,
   logToConsole: true,
-  authorizer: (channel, options) => {
+  authorizer: (channel: { name: string }) => {
     return {
-      authorize: (socketId, callback) => {
+      authorize: (socketId: string, callback: (error: boolean, data: any) => void) => {
         apiClient
           .post('/api/broadcasting/auth', {
             socket_id: socketId,
