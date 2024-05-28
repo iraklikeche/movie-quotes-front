@@ -1,27 +1,18 @@
-import {
-  differenceInSeconds,
-  differenceInMinutes,
-  differenceInHours,
-  differenceInDays,
-  differenceInWeeks,
-  differenceInMonths,
-  differenceInYears
-} from 'date-fns'
 import { useI18n } from 'vue-i18n'
 
 export const useTimeFormat = () => {
   const { t } = useI18n()
 
-  const formatTime = (time) => {
-    const now = new Date()
-    const date = new Date(time)
-    const diffInSeconds = differenceInSeconds(now, date)
-    const diffInMinutes = differenceInMinutes(now, date)
-    const diffInHours = differenceInHours(now, date)
-    const diffInDays = differenceInDays(now, date)
-    const diffInWeeks = differenceInWeeks(now, date)
-    const diffInMonths = differenceInMonths(now, date)
-    const diffInYears = differenceInYears(now, date)
+  const formatTime = (time: string | number | Date) => {
+    const now = new Date().getTime()
+    const date = new Date(time).getTime()
+    const diffInSeconds = Math.floor((now - date) / 1000)
+    const diffInMinutes = Math.floor(diffInSeconds / 60)
+    const diffInHours = Math.floor(diffInMinutes / 60)
+    const diffInDays = Math.floor(diffInHours / 24)
+    const diffInWeeks = Math.floor(diffInDays / 7)
+    const diffInMonths = Math.floor(diffInDays / 30)
+    const diffInYears = Math.floor(diffInDays / 365)
 
     if (diffInSeconds < 60) {
       return `${diffInSeconds} ${t('time.secondsAgo')}`
