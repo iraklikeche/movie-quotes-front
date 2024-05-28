@@ -21,6 +21,7 @@
     </Transition>
     <NotificationModal
       v-if="showNotification"
+      :notifications="notifications"
       :showNotifications="showNotification"
       @closeNotification="closeNotification"
       @openModal="openDetailedQuoteModal"
@@ -93,10 +94,10 @@
             <button @click="openNotification">
               <NotificationIcon />
             </button>
-            <div class="absolute -top-2 -right-3">
+            <div class="absolute -top-2 -right-3" v-if="unreadCount">
               <span
                 class="font-bold text-white text-xs bg-orange-600 w-1 h-1 p-2.5 rounded-full flex items-center justify-center"
-                >5</span
+                >{{ unreadCount }}</span
               >
             </div>
           </div>
@@ -122,7 +123,7 @@ import ResetPassword from '@/components/Sessions/ResetPassword.vue'
 import ToastModal from '@/components/ToastModal.vue'
 import { useUserSessionStore } from '@/stores/UserSessionStore'
 import { useRoute, useRouter } from 'vue-router'
-import { onMounted, ref, onBeforeMount } from 'vue'
+import { onMounted, ref, onBeforeMount, computed } from 'vue'
 import { useI18n } from 'vue-i18n'
 import LanguageArrow from './icons/LanguageArrow.vue'
 import NotificationIcon from '@/components/icons/NotificationIcon.vue'
@@ -139,10 +140,18 @@ import {
 } from '@/service/authService'
 import { useQuoteStore } from '@/stores/QuoteStore'
 import DetailedQuoteModal from '@/components/DetailedQuoteModal.vue'
+import { storeToRefs } from 'pinia'
+import { useNotificationStore } from '@/stores/NotificationStore'
 const { t: $t } = useI18n()
 
 const { locale, availableLocales } = useI18n()
 const userSession = useUserSessionStore()
+const notificationStore = useNotificationStore()
+const { notifications } = storeToRefs(notificationStore)
+const unreadCount = computed(() => {
+  return notifications.value.filter((notification) => !notification.read_at).length
+})
+
 const route = useRoute()
 const router = useRouter()
 const showNotification = ref(false)
@@ -174,8 +183,6 @@ const removeQuote = async (id: number) => {
 const fetchQuotes = async () => {
   await quoteStore.fetchQuotes('')
 }
-
-// *****************************
 
 const openNotification = () => {
   showNotification.value = true
@@ -228,7 +235,11 @@ const onLogout = async () => {
 function isString(value: unknown): value is string {
   return typeof value === 'string'
 }
+
+// Life-cycles
 onMounted(async () => {
+  await notificationStore.fetchNotifications()
+
   const rawToken = route.query.token
   const rawEmail = route.query.email
 
@@ -277,7 +288,6 @@ onMounted(async () => {
   }
 })
 
-// Life-cycles
 onBeforeMount(() => {
   initialLoginCheck()
 })

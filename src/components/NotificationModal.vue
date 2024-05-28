@@ -57,35 +57,30 @@
 import { onMounted } from 'vue'
 import ReactIcon from './icons/ReactIcon.vue'
 import QuotesIcon from './icons/QuotesIcon.vue'
-import { useNotificationStore } from '@/stores/NotificationStore'
-import { storeToRefs } from 'pinia'
 import { markAllNotificationsAsRead, markNotificationAsRead } from '@/service/movieService'
 import { useTimeFormat } from '@/composables/useTimeFormat'
+import type { Notification } from '@/types'
 
-const emit = defineEmits(['closeNotification', 'openModal'])
+const emit = defineEmits(['closeNotification', 'openModal', 'updateCount'])
 const closeNotification = () => emit('closeNotification')
-defineProps<{ showNotifications: boolean }>()
+const props = defineProps<{ showNotifications: boolean; notifications: Notification[] }>()
 
 const { formatTime } = useTimeFormat()
 
-const notificationStore = useNotificationStore()
-const { notifications } = storeToRefs(notificationStore)
-
 onMounted(async () => {
-  await notificationStore.fetchNotifications()
-  console.log(notifications.value)
+  console.log(props.notifications)
 })
 
 const markAllAsRead = async () => {
   await markAllNotificationsAsRead()
-  notifications.value.forEach((notification) => {
+  props.notifications.forEach((notification) => {
     notification.read_at = new Date().toISOString()
   })
 }
 
 const markAsRead = async (id: number) => {
   await markNotificationAsRead(id)
-  const notification = notifications.value.find((notification) => notification.id === id)
+  const notification = props.notifications.find((notification) => notification.id === id)
   if (notification) {
     notification.read_at = new Date().toISOString()
   }

@@ -2,24 +2,9 @@ import { defineStore } from 'pinia'
 import { ref } from 'vue'
 import { getNotifications } from '@/service/movieService'
 import { getUser } from '@/service/authService'
+import type { Notification } from '@/types'
 
 export const useNotificationStore = defineStore('notificationStore', () => {
-  type Notification = {
-    id: number
-    data: {
-      user: {
-        username: string
-        profile_image_url: string
-      }
-      message: string
-      reacted?: boolean
-      commented?: boolean
-      quote_id?: number
-    }
-    read_at: string | null
-    created_at: string
-    time: string
-  }
   const notifications = ref<Notification[]>([])
 
   const fetchedNotifications = ref(false)
@@ -38,6 +23,7 @@ export const useNotificationStore = defineStore('notificationStore', () => {
           data: {
             message: event.message,
             user: {
+              id: event.user.id,
               username: event.user.username,
               profile_image_url: event.user.profile_image_url
             },
@@ -56,6 +42,7 @@ export const useNotificationStore = defineStore('notificationStore', () => {
           data: {
             message: event.message,
             user: {
+              id: event.user.id,
               username: event.user.username,
               profile_image_url: event.user.profile_image_url
             },

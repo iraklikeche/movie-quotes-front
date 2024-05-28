@@ -133,3 +133,19 @@ export type QuoteCommentedEvent = {
   read_at: string | null
   time: string
 }
+
+export type NotificationData = {
+  user: User
+  message: string
+  reacted?: boolean
+  commented?: boolean
+  quote_id?: number
+}
+
+export type Notification = {
+  id: number
+  data: NotificationData
+  read_at: string | null
+  created_at: string
+  time: string
+}
