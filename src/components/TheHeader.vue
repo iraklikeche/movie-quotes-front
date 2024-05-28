@@ -23,6 +23,16 @@
       v-if="showNotification"
       :showNotifications="showNotification"
       @closeNotification="closeNotification"
+      @openModal="openDetailedQuoteModal"
+    />
+
+    <DetailedQuoteModal
+      v-if="isView && selectedQuote"
+      :selectedQuote="selectedQuote"
+      @close="isView = false"
+      @remove="removeQuote"
+      :isEditMode="isEditMode"
+      @quote-updated="fetchQuotes"
     />
 
     <div>
@@ -128,7 +138,7 @@ import {
   logoutUser
 } from '@/service/authService'
 import { useQuoteStore } from '@/stores/QuoteStore'
-
+import DetailedQuoteModal from '@/components/DetailedQuoteModal.vue'
 const { t: $t } = useI18n()
 
 const { locale, availableLocales } = useI18n()
@@ -145,6 +155,27 @@ const isHomepage = ref(window.location.pathname === '/')
 const showSearch = ref(false)
 
 const isFocused = ref(false)
+
+// ****************************
+const isView = ref(false)
+const selectedQuote = ref(null)
+const isEditMode = ref(false)
+
+const openDetailedQuoteModal = (data: any) => {
+  selectedQuote.value = data
+  isView.value = true
+}
+
+const removeQuote = async (id: number) => {
+  isView.value = false
+  await quoteStore.remove(id)
+}
+
+const fetchQuotes = async () => {
+  await quoteStore.fetchQuotes('')
+}
+
+// *****************************
 
 const openNotification = () => {
   showNotification.value = true

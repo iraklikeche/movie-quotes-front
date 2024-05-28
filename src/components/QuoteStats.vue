@@ -23,6 +23,7 @@ const quoteStore = useQuoteStore()
 const props = defineProps<{
   quote: Quote
 }>()
+console.log(props.quote)
 const like = (quoteId: number) => {
   quoteStore.toggleQuoteLike(quoteId)
 }

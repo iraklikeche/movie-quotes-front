@@ -75,7 +75,7 @@
             rows="3"
             cols="5"
             class="bg-transparent w-full border border-border-gray border-opacity-10 mt-2 placeholder:custom-gray italic pl-2 pt-2"
-            :placeholder="selectedQuote.content.ka"
+            :placeholder="selectedQuote.content.en"
             disabled
           />
         </div>

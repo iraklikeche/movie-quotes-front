@@ -20,7 +20,7 @@
           v-for="notification in notifications"
           :key="notification.id"
           class="flex items-center mb-3 p-4 border border-border-gray gap-4 border-opacity-30 rounded-md cursor-pointer"
-          @click="markAsRead(notification.id)"
+          @click="handleNotificationClick(notification)"
         >
           <img
             :src="notification.data.user.profile_image_url"
@@ -62,7 +62,7 @@ import { storeToRefs } from 'pinia'
 import { markAllNotificationsAsRead, markNotificationAsRead } from '@/service/movieService'
 import { useTimeFormat } from '@/composables/useTimeFormat'
 
-const emit = defineEmits(['closeNotification'])
+const emit = defineEmits(['closeNotification', 'openModal'])
 const closeNotification = () => emit('closeNotification')
 defineProps<{ showNotifications: boolean }>()
 
@@ -89,5 +89,10 @@ const markAsRead = async (id: number) => {
   if (notification) {
     notification.read_at = new Date().toISOString()
   }
+}
+
+const handleNotificationClick = async (notification: any) => {
+  emit('openModal', notification.data.quote)
+  await markAsRead(notification.id)
 }
 </script>

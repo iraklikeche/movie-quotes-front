@@ -82,16 +82,10 @@ const loadMoreQuotes = async () => {
   await quoteStore.loadMoreQuotes()
 }
 
-const clickMe = () => {
-  loadMoreQuotes()
-}
-
 const scrollEL = ref<HTMLElement | null>(null)
 
 const handleScroll = () => {
   if (scrollEL.value && scrollEL.value.getBoundingClientRect().bottom <= window.innerHeight) {
-    console.log(1, scrollEL.value.getBoundingClientRect())
-    console.log(2, window.innerHeight)
     loadMoreQuotes()
   }
 }

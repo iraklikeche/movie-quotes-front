@@ -14,8 +14,10 @@ export const useNotificationStore = defineStore('notificationStore', () => {
       message: string
       reacted?: boolean
       commented?: boolean
+      quote_id?: number
     }
     read_at: string | null
+    created_at: string
     time: string
   }
   const notifications = ref<Notification[]>([])
@@ -49,7 +51,6 @@ export const useNotificationStore = defineStore('notificationStore', () => {
 
       window.Echo.channel('App.Models.User.' + id).listen('QuoteCommented', (event: any) => {
         console.log(event)
-        console.log(event.quote_id)
         notifications.value.unshift({
           id: event.comment.id,
           data: {
