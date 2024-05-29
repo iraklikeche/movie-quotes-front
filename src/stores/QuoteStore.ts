@@ -12,16 +12,34 @@ import type { Quote, Comment } from '@/types'
 export const useQuoteStore = defineStore('quoteStore', () => {
   const search = ref('')
   const quotes = ref<Quote[]>([])
+  const page = ref(1)
+  const lastPage = ref<number | null>(null)
+
   const likeId = ref<number | null>(null)
   const quotesByMovie = ref<Quote[]>([])
   const quotesCount = ref()
 
-  const fetchQuotes = async (searchQuery = '') => {
+  const fetchQuotes = async (searchQuery = '', pageNum = 1) => {
     try {
-      const res = await getQuotes(searchQuery)
-      quotes.value = res.data
+      const res = await getQuotes(searchQuery, pageNum)
+      if (pageNum === 1) {
+        quotes.value = res.data.data
+      } else {
+        quotes.value.push(...res.data.data)
+      }
+      page.value = res.data.current_page
+      lastPage.value = res.data.last_page
     } catch (error) {
-      //
+      console.error('Failed to fetch quotes:', error)
+    }
+  }
+
+  const loadMoreQuotes = async () => {
+    if (lastPage.value !== null && page.value < lastPage.value) {
+      console.log('beforeIncrement', page.value, lastPage.value)
+      page.value++
+      console.log('afterIncrement', page.value)
+      await fetchQuotes(search.value, page.value)
     }
   }
 
@@ -29,6 +47,7 @@ export const useQuoteStore = defineStore('quoteStore', () => {
     const res = await getQuotesByMovie(id)
     quotesByMovie.value = res.data
     quotesCount.value = quotesByMovie.value.length
+    console.log(res.data)
   }
 
   const remove = async (quoteId: number) => {
@@ -121,6 +140,7 @@ export const useQuoteStore = defineStore('quoteStore', () => {
     fetchQuotesByMovie,
     quotesByMovie,
     quotesCount,
-    remove
+    remove,
+    loadMoreQuotes
   }
 })

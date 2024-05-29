@@ -1,0 +1,16 @@
+{
+  "justNow": "just now",
+  "secondsAgo": "seconds ago",
+  "minuteAgo": "a minute ago",
+  "minutesAgo": "minutes ago",
+  "hourAgo": "an hour ago",
+  "hoursAgo": "hours ago",
+  "dayAgo": "a day ago",
+  "daysAgo": "days ago",
+  "weekAgo": "a week ago",
+  "weeksAgo": "weeks ago",
+  "monthAgo": "a month ago",
+  "monthsAgo": "months ago",
+  "yearAgo": "a year ago",
+  "yearsAgo": "years ago"
+}

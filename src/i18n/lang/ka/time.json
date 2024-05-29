@@ -1,0 +1,16 @@
+{
+  "justNow": "ახლა",
+  "secondsAgo": "წამის წინ",
+  "minuteAgo": "ერთი წუთის წინ",
+  "minutesAgo": "წუთის წინ",
+  "hourAgo": "ერთი საათის წინ",
+  "hoursAgo": "საათის წინ",
+  "dayAgo": "ერთი დღის წინ",
+  "daysAgo": "დღის წინ",
+  "weekAgo": "ერთი კვირის წინ",
+  "weeksAgo": "კვირის წინ",
+  "monthAgo": "ერთი თვის წინ",
+  "monthsAgo": "თვის წინ",
+  "yearAgo": "ერთი წლის წინ",
+  "yearsAgo": "წლის წინ"
+}

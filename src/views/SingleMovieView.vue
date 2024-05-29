@@ -216,7 +216,7 @@ function toggleMenu(quoteId: number) {
   isVisible.value = isVisible.value === quoteId ? null : quoteId
 }
 const fetchQuotes = async () => {
-  quoteStore.fetchQuotesByMovie(id)
+  await quoteStore.fetchQuotesByMovie(id)
 }
 
 const fetchMovies = async () => {
@@ -229,7 +229,8 @@ onMounted(async () => {
   const id = Array.isArray(route.params.id) ? route.params.id[0] : route.params.id
   const res = await getSingleMovie(id)
   movie.value = res.data.data
-  fetchQuotes()
+  const foo = await fetchQuotes()
+  console.log(foo)
 })
 
 const removeQuote = async (id: number) => {

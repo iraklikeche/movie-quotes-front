@@ -2,23 +2,11 @@ import { defineStore } from 'pinia'
 import { ref } from 'vue'
 import { getNotifications } from '@/service/movieService'
 import { getUser } from '@/service/authService'
+import type { Notification } from '@/types'
 
 export const useNotificationStore = defineStore('notificationStore', () => {
-  type Notification = {
-    id: number
-    data: {
-      user: {
-        username: string
-        profile_image_url: string
-      }
-      message: string
-      reacted?: boolean
-      commented?: boolean
-    }
-    read_at: string | null
-    time: string
-  }
   const notifications = ref<Notification[]>([])
+
   const fetchedNotifications = ref(false)
 
   const fetchNotifications = async () => {
@@ -32,19 +20,19 @@ export const useNotificationStore = defineStore('notificationStore', () => {
         console.log(event)
         notifications.value.unshift({
           id: event.quote.id,
-
           data: {
             message: event.message,
             user: {
+              id: event.user.id,
               username: event.user.username,
               profile_image_url: event.user.profile_image_url
             },
             reacted: event.reacted
           },
+          created_at: event.created_at,
           read_at: event.read_at,
           time: event.time
         })
-        console.log(notifications.value)
       })
 
       window.Echo.channel('App.Models.User.' + id).listen('QuoteCommented', (event: any) => {
@@ -54,16 +42,18 @@ export const useNotificationStore = defineStore('notificationStore', () => {
           data: {
             message: event.message,
             user: {
+              id: event.user.id,
               username: event.user.username,
               profile_image_url: event.user.profile_image_url
             },
-            commented: event.commented
+            commented: event.commented,
+            quote_id: event.quote_id
           },
+          created_at: event.created_at,
           read_at: null,
           time: event.time
         })
       })
-      console.log(notifications.value)
       fetchedNotifications.value = true
     }
   }

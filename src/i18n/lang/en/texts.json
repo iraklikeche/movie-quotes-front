@@ -43,5 +43,7 @@
   "director": "Director",
   "edit_movie": "edit movie",
   "save_changes": "save changes",
-  "movie": "movie"
+  "movie": "movie",
+  "mark-all": "mark as all read",
+  "notifications": "notifications"
 }
