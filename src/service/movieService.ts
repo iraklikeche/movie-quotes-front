@@ -51,7 +51,6 @@ export async function createQuote(formData: FormData): Promise<AxiosResponse<any
   return response
 }
 
-
 export const getQuotes = (searchQuery = '', page = 1, perPage = 2) => {
   return apiClient.get('/api/quotes', {
     params: {

@@ -26,7 +26,6 @@
       @closeNotification="closeNotification"
       @openModal="openDetailedQuoteModal"
     />
-
     <DetailedQuoteModal
       v-if="isView && selectedQuote"
       :selectedQuote="selectedQuote"
@@ -165,7 +164,6 @@ const showSearch = ref(false)
 
 const isFocused = ref(false)
 
-// ****************************
 const isView = ref(false)
 const selectedQuote = ref(null)
 const isEditMode = ref(false)

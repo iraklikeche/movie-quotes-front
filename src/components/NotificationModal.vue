@@ -4,16 +4,14 @@
     @click.self="closeNotification"
   >
     <div
-      class="relative mt-2 bg-black text-white rounded-lg shadow-lg sm:w-80 p-8 w-full sm:min-w-[60rem] top-20 -right-[22%] z-50 h-full sm:h-auto"
+      class="relative mt-2 bg-black text-white rounded-lg shadow-lg sm:w-80 p-8 w-full sm:min-w-[60rem] top-20 sm:-right-[22%] z-50 min-h-screen sm:min-h-0 sm:h-auto"
     >
-      <div
-        class="absolute -top-3 right-[23.5rem] sm:right-[7.8rem] w-8 h-12 bg-black rotate-45"
-      ></div>
+      <div class="absolute -top-3 right-4 sm:right-[7.8rem] w-8 h-12 bg-black rotate-45"></div>
       <div v-if="notifications.length > 0" class="max-h-[40rem] overflow-y-scroll">
         <div class="flex justify-between items-center mb-4">
-          <h3 class="text-lg font-bold">Notifications</h3>
+          <h3 class="text-lg font-bold">{{ $t('texts.notifications') }}</h3>
           <button class="text-sm text-gray-400 hover:underline" @click="markAllAsRead">
-            Mark all as read
+            {{ $t('texts.mark-all') }}
           </button>
         </div>
         <div
@@ -25,7 +23,7 @@
           <img
             :src="notification.data.user.profile_image_url"
             alt="avatar"
-            class="w-20 h-20 rounded-full mr-3"
+            class="w-20 h-14 rounded-full mr-3"
           />
           <div class="flex-grow text-white">
             <div class="font-semibold">{{ notification.data.user.username }}</div>

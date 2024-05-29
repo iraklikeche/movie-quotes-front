@@ -35,7 +35,7 @@ export const useQuoteStore = defineStore('quoteStore', () => {
   }
 
   const loadMoreQuotes = async () => {
-    if (page.value < lastPage.value) {
+    if (lastPage.value !== null && page.value < lastPage.value) {
       console.log('beforeIncrement', page.value, lastPage.value)
       page.value++
       console.log('afterIncrement', page.value)
@@ -47,6 +47,7 @@ export const useQuoteStore = defineStore('quoteStore', () => {
     const res = await getQuotesByMovie(id)
     quotesByMovie.value = res.data
     quotesCount.value = quotesByMovie.value.length
+    console.log(res.data)
   }
 
   const remove = async (quoteId: number) => {
