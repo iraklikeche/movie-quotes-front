@@ -1,10 +1,7 @@
 <template>
-  <div
-    class="absolute inset-0 flex items-start justify-center z-50"
-    @click.self="closeNotification"
-  >
+  <div class="fixed inset-0 flex items-start justify-center" @click.self="closeNotification">
     <div
-      class="relative mt-2 bg-black text-white rounded-lg shadow-lg sm:w-80 p-8 w-full sm:min-w-[60rem] top-20 sm:-right-[22%] z-50 min-h-screen sm:min-h-0 sm:h-auto"
+      class="relative mt-2 bg-black text-white rounded-lg shadow-lg sm:w-80 p-8 w-full sm:min-w-[60rem] z-50 min-h-screen sm:min-h-0 sm:h-auto top-20 sm:-right-[22%]"
     >
       <div class="absolute -top-3 right-4 sm:right-[7.8rem] w-8 h-12 bg-black rotate-45"></div>
       <div v-if="notifications.length > 0" class="max-h-[40rem] overflow-y-scroll">
@@ -20,11 +17,14 @@
           class="flex items-center mb-3 p-4 border border-border-gray gap-4 border-opacity-30 rounded-md cursor-pointer"
           @click="handleNotificationClick(notification)"
         >
-          <img
-            :src="notification.data.user.profile_image_url"
-            alt="avatar"
-            class="w-20 h-14 rounded-full mr-3"
-          />
+          <div class="flex flex-col items-center">
+            <img
+              :src="notification.data.user.profile_image_url"
+              alt="avatar"
+              class="w-20 h-14 rounded-full sm:mr-3"
+            />
+            <div class="text-[#198754] sm:hidden" v-if="!notification.read_at">New</div>
+          </div>
           <div class="flex-grow text-white">
             <div class="font-semibold">{{ notification.data.user.username }}</div>
             <div class="flex gap-2 mt-2">
@@ -37,8 +37,9 @@
 
               {{ notification.data.message }}
             </div>
+            <div class="sm:hidden">{{ formatTime(notification.created_at) }}</div>
           </div>
-          <div class="text-right text-gray-400 text-sm">
+          <div class="text-right text-gray-400 text-sm hidden sm:block">
             <div>{{ formatTime(notification.created_at) }}</div>
             <div class="text-[#198754]" v-if="!notification.read_at">New</div>
           </div>
@@ -52,10 +53,14 @@
 </template>
 
 <script setup lang="ts">
-import { onMounted } from 'vue'
+import { onMounted, ref } from 'vue'
 import ReactIcon from './icons/ReactIcon.vue'
 import QuotesIcon from './icons/QuotesIcon.vue'
-import { markAllNotificationsAsRead, markNotificationAsRead } from '@/service/movieService'
+import {
+  getSingleQuote,
+  markAllNotificationsAsRead,
+  markNotificationAsRead
+} from '@/service/movieService'
 import { useTimeFormat } from '@/composables/useTimeFormat'
 import type { Notification } from '@/types'
 
@@ -85,7 +90,11 @@ const markAsRead = async (id: number) => {
 }
 
 const handleNotificationClick = async (notification: any) => {
-  emit('openModal', notification.data.quote)
+  const res = await getSingleQuote(notification.data.quote.id)
+  console.log(res)
+  notification.value = res.data
+  emit('openModal', notification.value)
+
   await markAsRead(notification.id)
 }
 </script>

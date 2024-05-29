@@ -108,9 +108,7 @@ const props = defineProps<{
   isEditMode: boolean
 }>()
 
-console.log(props.selectedQuote)
 const emit = defineEmits(['close', 'remove', 'quote-updated'])
-
 const quoteData = ref({
   content: {
     en: props.selectedQuote.content.en,

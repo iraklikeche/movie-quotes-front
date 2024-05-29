@@ -17,7 +17,7 @@ export const useNotificationStore = defineStore('notificationStore', () => {
       notifications.value = res.data
 
       window.Echo.channel('App.Models.User.' + id).listen('QuoteLiked', (event: any) => {
-        console.log(event)
+        console.log('event', event)
         notifications.value.unshift({
           id: event.quote.id,
           data: {
@@ -36,7 +36,7 @@ export const useNotificationStore = defineStore('notificationStore', () => {
       })
 
       window.Echo.channel('App.Models.User.' + id).listen('QuoteCommented', (event: any) => {
-        console.log(event)
+        console.log('event', event)
         notifications.value.unshift({
           id: event.comment.id,
           data: {

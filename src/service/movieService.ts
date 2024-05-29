@@ -61,6 +61,10 @@ export const getQuotes = (searchQuery = '', page = 1, perPage = 2) => {
   })
 }
 
+export const getSingleQuote = (id: number) => {
+  return apiClient.get(`api/quotes/${id}`)
+}
+
 export async function toggleLike(quoteId: number) {
   return await apiClient.post(`/api/quotes/${quoteId}/likes`)
 }

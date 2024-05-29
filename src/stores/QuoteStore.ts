@@ -47,7 +47,6 @@ export const useQuoteStore = defineStore('quoteStore', () => {
     const res = await getQuotesByMovie(id)
     quotesByMovie.value = res.data
     quotesCount.value = quotesByMovie.value.length
-    console.log(res.data)
   }
 
   const remove = async (quoteId: number) => {
@@ -79,7 +78,6 @@ export const useQuoteStore = defineStore('quoteStore', () => {
       const quote =
         quotes.value.find((q) => q.id === quoteId) ||
         quotesByMovie.value.find((q) => q.id === quoteId)
-      console.log(quote)
       if (quote) {
         quote.liked_by_user = response.data.liked_by_user
         quote.likes_count = response.data.like_count
@@ -106,7 +104,6 @@ export const useQuoteStore = defineStore('quoteStore', () => {
   const addQuoteComment = async (quoteId: number, content: string) => {
     try {
       const response = await addComment(quoteId, content)
-
       const quote =
         quotes.value.find((q) => q.id === quoteId) ||
         quotesByMovie.value.find((q) => q.id === quoteId)

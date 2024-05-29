@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="sticky top-0 w-full">
     <Transition name="fade">
       <div class="bg-[#12101A] z-50 h-screen w-full fixed" v-if="showSearch">
         <div class="flex items-center p-8 border-b pb-2 border-border-gray border-opacity-60">
@@ -236,7 +236,9 @@ function isString(value: unknown): value is string {
 
 // Life-cycles
 onMounted(async () => {
-  await notificationStore.fetchNotifications()
+  if (route.name !== 'home') {
+    await notificationStore.fetchNotifications()
+  }
 
   const rawToken = route.query.token
   const rawEmail = route.query.email
