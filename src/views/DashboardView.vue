@@ -47,7 +47,6 @@ import SearchIcon from '@/components/icons/SearchIcon.vue'
 import type { Quote } from '@/types'
 import QuoteModal from '@/components/QuoteModal.vue'
 import { useRoute, useRouter } from 'vue-router'
-import { getSingleQuote } from '@/service/movieService'
 
 const quoteStore = useQuoteStore()
 

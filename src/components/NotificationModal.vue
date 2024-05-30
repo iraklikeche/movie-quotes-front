@@ -7,7 +7,7 @@
       <div v-if="notifications.length > 0" class="max-h-[40rem] overflow-y-scroll">
         <div class="flex justify-between items-center mb-4">
           <h3 class="text-lg font-bold">{{ $t('texts.notifications') }}</h3>
-          <button class="text-sm text-gray-400 hover:underline" @click="markAllAsRead">
+          <button class="text-sm text-gray-400 underline" @click="markAllAsRead">
             {{ $t('texts.mark-all') }}
           </button>
         </div>
@@ -41,7 +41,7 @@
           </div>
           <div class="text-right text-gray-400 text-sm hidden sm:block">
             <div>{{ formatTime(notification.created_at) }}</div>
-            <div class="text-[#198754]" v-if="!notification.read_at">New</div>
+            <div class="text-[#198754]" v-if="!notification.read_at">{{ $t('texts.new') }}</div>
           </div>
         </div>
       </div>

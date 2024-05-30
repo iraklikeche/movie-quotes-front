@@ -13,6 +13,7 @@
     @remove="removeQuote"
     :isEditMode="isEditMode"
     @quote-updated="fetchQuotes"
+    @edit-mode="isEditMode = true"
   />
   <TheLayout :customHeight="'min-h-screen'">
     <div>

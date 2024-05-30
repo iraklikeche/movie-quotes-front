@@ -79,6 +79,7 @@ export const useQuoteStore = defineStore('quoteStore', () => {
         quotes.value.find((q) => q.id === quoteId) ||
         quotesByMovie.value.find((q) => q.id === quoteId)
       if (quote) {
+        console.log(quote)
         quote.liked_by_user = response.data.liked_by_user
         quote.likes_count = response.data.like_count
       }

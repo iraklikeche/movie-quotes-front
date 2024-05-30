@@ -9,7 +9,8 @@
       >
         <div class="flex gap-4 items-center">
           <div v-if="!isEditMode" class="flex items-center gap-4">
-            <EditIcon /> <span class="text-custom-gray text-xl font-extralight">|</span>
+            <EditIcon @click="openEditMode" />
+            <span class="text-custom-gray text-xl font-extralight">|</span>
           </div>
           <button @click="$emit('remove', selectedQuote.id)">
             <DeleteIcon />
@@ -108,7 +109,7 @@ const props = defineProps<{
   isEditMode: boolean
 }>()
 
-const emit = defineEmits(['close', 'remove', 'quote-updated'])
+const emit = defineEmits(['close', 'remove', 'quote-updated', 'edit-mode'])
 const quoteData = ref({
   content: {
     en: props.selectedQuote.content.en,
@@ -123,7 +124,11 @@ const handleFileChange = (event: Event) => {
   quoteData.value.image = file
 
   if (file) {
-    localImageUrl.value = URL.createObjectURL(file)
+    const reader = new FileReader()
+    reader.onload = () => {
+      localImageUrl.value = reader.result as string
+    }
+    reader.readAsDataURL(file)
   } else {
     localImageUrl.value = null
   }
@@ -147,9 +152,14 @@ const onSubmit = handleSubmit(async () => {
     }
 
     await updateQuote(props.selectedQuote.id, formData)
+    emit('quote-updated')
     emit('close')
   } catch (error) {
     //
   }
 })
+
+const openEditMode = () => {
+  emit('edit-mode')
+}
 </script>

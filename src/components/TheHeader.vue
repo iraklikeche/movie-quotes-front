@@ -33,6 +33,7 @@
       @remove="removeQuote"
       :isEditMode="isEditMode"
       @quote-updated="fetchQuotes"
+      @edit-mode="isEditMode = true"
     />
 
     <div>

@@ -17,7 +17,7 @@
           </div>
         </div>
         <RouterLink :to="{ name: 'dashboard' }" class="flex gap-8 items-center text-white pl-2">
-          <NewsFeed v-if="route.name === 'movies-list'" />
+          <NewsFeed />
           <p>{{ $t('texts.news_feed') }}</p>
         </RouterLink>
         <RouterLink :to="{ name: 'movies' }" class="flex gap-8 items-center text-white pl-2">

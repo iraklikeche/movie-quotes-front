@@ -84,6 +84,7 @@ const filteredMovies = computed(() => {
 const fetchMovies = async () => {
   const res = await getMovies()
   movies.value = res.data.data
+  console.log(movies.value)
 }
 
 onMounted(() => {
