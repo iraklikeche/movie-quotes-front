@@ -37,7 +37,7 @@
 
               {{ notification.data.message }}
             </div>
-            <div class="sm:hidden">{{ formatTime(notification.created_at) }}</div>
+            <div class="sm:hidden">{{ formatTime(notification.time) }}</div>
           </div>
           <div class="text-right text-gray-400 text-sm hidden sm:block">
             <div>{{ formatTime(notification.created_at) }}</div>

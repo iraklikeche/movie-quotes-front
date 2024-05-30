@@ -238,7 +238,7 @@ function isString(value: unknown): value is string {
 // Life-cycles
 onMounted(async () => {
   if (route.name !== 'home') {
-    const res = await notificationStore.fetchNotifications()
+    await notificationStore.fetchNotifications()
   }
 
   const rawToken = route.query.token
