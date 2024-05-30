@@ -86,17 +86,7 @@ export type UserProfileUpdate = {
 }
 
 export type QuoteLikedEvent = {
-  quote: {
-    id: number
-    content: {
-      en: string
-      ka?: string
-    }
-
-    image_url: string
-    movie_id: number
-    user_id: number
-  }
+  quote: PartialQuote
   user: User
   message: string
   reacted: boolean
@@ -108,22 +98,12 @@ export type QuoteLikedEvent = {
 export type QuoteUnlikedEvent = QuoteLikedEvent
 
 export type QuoteCommentedEvent = {
-  quote: {
-    id: number
-    content: {
-      en: string
-      ka?: string
-    }
-    image_url: string
-    movie_id: number
-    user_id: number
-  }
+  quote: PartialQuote
   comment: {
     id: number
     content: string
     user_id: number
     quote_id: number
-
     user: User
   }
   user: User
@@ -148,4 +128,17 @@ export type Notification = {
   read_at: string | null
   created_at: string
   time: string
+}
+
+export type PartialQuote = {
+  id: number
+  content: {
+    en: string
+    ka?: string
+  }
+  image_url: string
+  movie_id: number
+  user_id: number
+  likes_count?: number
+  comments_count?: number
 }

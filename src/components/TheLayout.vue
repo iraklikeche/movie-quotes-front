@@ -45,11 +45,11 @@
         </div>
       </div>
       <RouterLink :to="{ name: 'dashboard' }" class="flex gap-8 items-center text-white pl-2">
-        <NewsFeed :class="$route.path === '/dashboard' ? 'text-red-600' : 'text-white'" />
+        <NewsFeed :class="$route.path === '/dashboard' ? 'text-custom-red' : 'text-white'" />
         <p>{{ $t('texts.news_feed') }}</p>
       </RouterLink>
       <RouterLink :to="{ name: 'movies' }" class="flex gap-8 items-center text-white pl-2">
-        <ListOfMovies :class="$route.path === '/movies' ? 'text-red-600' : 'text-white'" />
+        <ListOfMovies :class="$route.path === '/movies' ? 'text-custom-red' : 'text-white'" />
         <p>{{ $t('texts.movie_list') }}</p>
       </RouterLink>
     </div>
@@ -66,7 +66,7 @@ import { onMounted, ref } from 'vue'
 import NewsFeed from '@/components/icons/NewsFeed.vue'
 import TheHeader from '@/components/TheHeader.vue'
 import { useUserSessionStore } from '@/stores/UserSessionStore'
-import { RouterLink, useRouter } from 'vue-router'
+import { RouterLink, useRoute, useRouter } from 'vue-router'
 import { getCsrfCookie, logoutUser } from '@/service/authService'
 import useClickOutside from '@/composables/useClickOutside'
 import type { Ref } from 'vue'
@@ -77,6 +77,7 @@ const userSession = useUserSessionStore()
 const router = useRouter()
 const isVisible = ref(false)
 const layoutElement: Ref<Element | null> = ref(null)
+const route = useRoute()
 
 function toggleMenu() {
   isVisible.value = !isVisible.value

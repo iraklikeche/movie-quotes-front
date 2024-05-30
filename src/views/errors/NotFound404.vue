@@ -1,9 +1,5 @@
 <template>
-  <ErrorView
-    header="Whooops!"
-    text="We can't not see the page you are looking for!"
-    :component="NotFound"
-  />
+  <ErrorView :header="$t('texts.whoops')" :text="$t('texts.error_text')" :component="NotFound" />
 </template>
 
 <script setup>

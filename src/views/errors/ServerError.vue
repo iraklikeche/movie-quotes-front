@@ -1,7 +1,7 @@
 <template>
   <ErrorView
-    header="You shall not pass!"
-    text="Sorry, but  you don’t have permission to access this page"
+    :header="$t('texts.server_error')"
+    :text="$t('texts.server_error_text')"
     :component="ServerError"
   />
 </template>

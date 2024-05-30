@@ -13,6 +13,7 @@
     @remove="removeQuote"
     :isEditMode="isEditMode"
     @quote-updated="fetchQuotes"
+    @edit-mode="isEditMode = true"
   />
   <TheLayout :customHeight="'min-h-screen'">
     <div>
@@ -198,8 +199,8 @@ const openModal = () => {
 }
 
 const openView = (quote: Quote) => {
-  console.log(quote)
   selectedQuote.value = quote
+  console.log(selectedQuote.value)
   isEditMode.value = false
   isView.value = true
   isVisible.value = null
@@ -229,8 +230,7 @@ onMounted(async () => {
   const id = Array.isArray(route.params.id) ? route.params.id[0] : route.params.id
   const res = await getSingleMovie(id)
   movie.value = res.data.data
-  const foo = await fetchQuotes()
-  console.log(foo)
+  await fetchQuotes()
 })
 
 const removeQuote = async (id: number) => {
