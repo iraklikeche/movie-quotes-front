@@ -171,6 +171,7 @@ const isEditMode = ref(false)
 
 const openDetailedQuoteModal = (data: any) => {
   selectedQuote.value = data
+  console.log(selectedQuote.value)
   isView.value = true
 }
 

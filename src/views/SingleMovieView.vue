@@ -199,8 +199,8 @@ const openModal = () => {
 }
 
 const openView = (quote: Quote) => {
-  console.log(quote)
   selectedQuote.value = quote
+  console.log(selectedQuote.value)
   isEditMode.value = false
   isView.value = true
   isVisible.value = null

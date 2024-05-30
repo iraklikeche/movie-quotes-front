@@ -1,12 +1,6 @@
 import { defineStore } from 'pinia'
 import { ref } from 'vue'
-import {
-  addComment,
-  getQuotes,
-  toggleLike,
-  getQuotesByMovie,
-  deleteQuote
-} from '@/service/movieService'
+import { addComment, getQuotes, getQuotesByMovie, deleteQuote } from '@/service/movieService'
 import type { Quote, Comment } from '@/types'
 
 export const useQuoteStore = defineStore('quoteStore', () => {
@@ -36,9 +30,7 @@ export const useQuoteStore = defineStore('quoteStore', () => {
 
   const loadMoreQuotes = async () => {
     if (lastPage.value !== null && page.value < lastPage.value) {
-      console.log('beforeIncrement', page.value, lastPage.value)
       page.value++
-      console.log('afterIncrement', page.value)
       await fetchQuotes(search.value, page.value)
     }
   }
@@ -71,27 +63,12 @@ export const useQuoteStore = defineStore('quoteStore', () => {
     await fetchQuotes(newSearch)
   }, 300)
 
-  const toggleQuoteLike = async (quoteId: number) => {
-    likeId.value = quoteId
-    try {
-      const response = await toggleLike(quoteId)
-      const quote =
-        quotes.value.find((q) => q.id === quoteId) ||
-        quotesByMovie.value.find((q) => q.id === quoteId)
-      if (quote) {
-        console.log(quote)
-        quote.liked_by_user = response.data.liked_by_user
-        quote.likes_count = response.data.like_count
-      }
-    } catch (error) {
-      console.error('Failed to toggle like:', error)
-    }
-  }
-
   const updateLikeCount = (quoteId: number, likeCount: number) => {
     const quote = quotes.value.find((q) => q.id === quoteId)
     if (quote) {
+      console.log('updateLikeCount', quote)
       quote.likes_count = likeCount
+      console.log('updateLikeCount inside:', quote.likes_count, likeCount)
     }
   }
 
@@ -129,7 +106,6 @@ export const useQuoteStore = defineStore('quoteStore', () => {
     quotes,
     fetchQuotes,
     updateSearch,
-    toggleQuoteLike,
     addQuoteComment,
     likeId,
     updateLikeCount,
