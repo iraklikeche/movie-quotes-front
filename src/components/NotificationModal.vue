@@ -53,7 +53,6 @@
 </template>
 
 <script setup lang="ts">
-import { onMounted, ref } from 'vue'
 import ReactIcon from './icons/ReactIcon.vue'
 import QuotesIcon from './icons/QuotesIcon.vue'
 import {
@@ -69,10 +68,6 @@ const closeNotification = () => emit('closeNotification')
 const props = defineProps<{ showNotifications: boolean; notifications: Notification[] }>()
 
 const { formatTime } = useTimeFormat()
-
-onMounted(async () => {
-  console.log(props.notifications)
-})
 
 const markAllAsRead = async () => {
   await markAllNotificationsAsRead()
@@ -90,8 +85,9 @@ const markAsRead = async (id: number) => {
 }
 
 const handleNotificationClick = async (notification: any) => {
+  console.log(notification)
   const res = await getSingleQuote(notification.data.quote.id)
-  console.log(res)
+
   notification.value = res.data
   emit('openModal', notification.value)
 

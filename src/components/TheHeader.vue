@@ -171,7 +171,6 @@ const isEditMode = ref(false)
 
 const openDetailedQuoteModal = (data: any) => {
   selectedQuote.value = data
-  console.log(selectedQuote.value)
   isView.value = true
 }
 
@@ -239,7 +238,7 @@ function isString(value: unknown): value is string {
 // Life-cycles
 onMounted(async () => {
   if (route.name !== 'home') {
-    await notificationStore.fetchNotifications()
+    const res = await notificationStore.fetchNotifications()
   }
 
   const rawToken = route.query.token
