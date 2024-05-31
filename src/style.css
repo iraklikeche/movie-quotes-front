@@ -1,3 +1,21 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+@font-face {
+  font-family: 'Helvetica Neue Roman';
+  src: url('@/assets/fonts/en/HelveticaNeueRoman.otf') format('opentype');
+}
+
+@font-face {
+  font-family: 'Helvetica Neue LT GEO 65 Medium';
+  src: url('@/assets/fonts/en/Helvetica Neue LT GEO 65 Medium.ttf') format('opentype');
+}
+
+html[lang='en'] {
+  font-family: 'Helvetica Neue Roman';
+}
+
+html[lang='ka'] {
+  font-family: 'Helvetica Neue LT GEO 65 Medium';
+}

@@ -209,6 +209,7 @@ const openSearch = () => {
 const updateLocale = () => {
   Cookies.set('locale', locale.value, { expires: 7 })
   router.push({ path: router.currentRoute.value.fullPath })
+  document.documentElement.lang = locale.value
   window.location.reload()
 }
 
