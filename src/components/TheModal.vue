@@ -16,7 +16,7 @@
               <h2 class="text-white text-2xl font-semibold">{{ props.header }}</h2>
               <p class="text-sm mb-4 text-custom-light-gray text-center">{{ props.paragraph }}</p>
             </div>
-            <div class="sm:px-7">
+            <div class="sm:px-6">
               <slot />
             </div>
           </div>

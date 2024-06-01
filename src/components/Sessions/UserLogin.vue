@@ -18,6 +18,7 @@
         type="email"
         rules="required|email"
         :serverError="errors.email"
+        class="mb-2"
       />
 
       <CustomInput
@@ -27,6 +28,7 @@
         :placeholder="$t('sessions.login_password_placeholder')"
         isPasswordField
         :serverError="errors.password"
+        class="mb-3"
       />
 
       <div class="flex justify-between items-center gap-2">

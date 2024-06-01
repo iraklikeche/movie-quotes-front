@@ -8,7 +8,7 @@
   >
     <Form
       @submit="(values, setFieldError) => onSubmit(values as FormValues, setFieldError)"
-      class="flex flex-col gap-3"
+      class="flex flex-col gap-4"
       v-slot="{ errors }"
     >
       <CustomInput
