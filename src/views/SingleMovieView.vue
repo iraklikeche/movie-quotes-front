@@ -4,6 +4,7 @@
     @update:showModal="(value) => (showModal = value)"
     @quote-added="fetchQuotes"
     :movie="computedMovie"
+    v-if="showModal"
   />
 
   <DetailedQuoteModal
