@@ -51,13 +51,8 @@ onMounted(async () => {
     console.error('Failed to fetch comments:', error)
   }
 
-  window.Echo.channel('quote.' + props.quoteId).listen('QuoteCommented', (event: any) => {
-    const comment = {
-      ...event.comment,
-      user: event.user
-    }
-    comments.value.push(comment)
-    quoteStore.updateQuoteComments(event.quote.id, event.commentCount)
+  window.Echo.channel('quote.' + props.quoteId).listen('QuoteCommented', async () => {
+    comments.value = await getComments(props.quoteId).then((response) => response.data)
   })
 })
 
