@@ -1,5 +1,5 @@
 <template>
-  <div class="sticky top-0 w-full">
+  <div class="sticky top-0 w-full z-50">
     <Transition name="fade">
       <div class="bg-[#12101A] z-50 h-screen w-full fixed" v-if="showSearch">
         <div class="flex items-center p-8 border-b pb-2 border-border-gray border-opacity-60">
