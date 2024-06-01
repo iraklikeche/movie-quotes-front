@@ -18,12 +18,12 @@
     <div class="pt-12 px-8 fixed inset-0 z-10 bg-[#24222f] top-[10%]" v-if="finalCheck">
       <div class="bg-[#24222f] rounded-xl">
         <div class="py-12 flex items-center justify-center border-b border-custom-gray">
-          <p class="text-white">Are you sure to make changes?</p>
+          <p class="text-white">{{ $t('texts.sure') }}?</p>
         </div>
         <div class="flex justify-between py-4 px-5">
-          <button class="text-custom-gray" @click="closeEditForm">Cancel</button>
+          <button class="text-custom-gray" @click="closeEditForm">{{ $t('texts.cancel') }}</button>
           <button class="bg-custom-red text-white px-2 py-1.5 rounded-md" @click="onSubmit">
-            Confirm
+            {{ $t('texts.confirm') }}
           </button>
         </div>
       </div>
@@ -47,9 +47,9 @@
         />
       </form>
       <div class="px-8 flex justify-between mt-6">
-        <button class="text-custom-gray" @click="closeEditForm">Cancel</button>
+        <button class="text-custom-gray" @click="closeEditForm">{{ $t('texts.cancel') }}</button>
         <button class="bg-custom-red text-white px-5 py-1.5 rounded-md" @click="confirmReset">
-          Edit
+          {{ $t('texts.edit') }}
         </button>
       </div>
     </div>
@@ -78,9 +78,9 @@
       </div>
 
       <div class="px-8 flex justify-between mt-6">
-        <button class="text-custom-gray" @click="closeEditForm">Cancel</button>
+        <button class="text-custom-gray" @click="closeEditForm">{{ $t('texts.cancel') }}</button>
         <button class="bg-custom-red text-white px-5 py-1.5 rounded-md" @click="confirmReset">
-          Edit
+          {{ $t('texts.edit') }}
         </button>
       </div>
     </div>
@@ -164,9 +164,11 @@
               class="justify-end mt-6 gap-8 hidden sm:flex relative sm:max-w-[28.5rem]"
               v-if="updateUsername || updatePassword || updateImage"
             >
-              <button class="text-custom-gray" @click="cancelChanges">Cancel</button>
+              <button class="text-custom-gray" @click="cancelChanges">
+                {{ $t('texts.cancel') }}
+              </button>
               <button class="bg-custom-red text-white px-5 py-1.5 rounded-md" @click="onSubmit">
-                Save changes
+                {{ $t('texts.save_changes') }}
               </button>
             </div>
           </div>

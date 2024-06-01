@@ -9,7 +9,7 @@
 
 @font-face {
   font-family: 'Helvetica Neue LT GEO 65 Medium';
-  src: url('@/assets/fonts/en/Helvetica Neue LT GEO 65 Medium.ttf') format('opentype');
+  src: url('@/assets/fonts/ka/Helvetica Neue LT GEO 65 Medium.ttf') format('opentype');
 }
 
 html[lang='en'] {

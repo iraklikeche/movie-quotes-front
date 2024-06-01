@@ -11,12 +11,13 @@
       </h2>
       <button
         class="bg-custom-red text-white px-4 py-2 text-sm rounded-lg sm:text-xl"
-        @click="userSession.toggleRegister"
+        @click="userSession.toggleLogin"
       >
         {{ $t('buttons.get_started') }}
       </button>
     </div>
   </main>
+
   <section>
     <MovieCover :coverImage="cover1" :movieTitleKey="'interstellar_title'">
       {{ $t('movieQuotes.interstellar_quote') }}
@@ -51,6 +52,13 @@
       </p>
     </MovieCover>
   </section>
+  <footer class="bg-[#222030] px-12 py-5">
+    <div class="flex items-center">
+      <p class="uppercase font-semibold text-[#ddCCAA] text-sm">
+        &copy; {{ currentYear }} movie quotes. All rights reserved.
+      </p>
+    </div>
+  </footer>
 </template>
 
 <script lang="ts" setup>
@@ -58,6 +66,7 @@ import TheHeader from '@/components/TheHeader.vue'
 import cover1 from '@/assets/images/cover1.png'
 import cover2 from '@/assets/images/cover2.png'
 import cover3 from '@/assets/images/cover3.png'
+import image3 from '@/assets/images/image3.png'
 import { verifyEmail, getCsrfCookie, resendVerificationLink } from '@/service/authService'
 import { useUserSessionStore } from '@/stores/UserSessionStore'
 import { onMounted, ref } from 'vue'
@@ -69,6 +78,7 @@ const { t: $t } = useI18n()
 
 const userSession = useUserSessionStore()
 const route = useRoute()
+const currentYear = ref(new Date().getFullYear())
 
 const verificationMessage = ref('')
 

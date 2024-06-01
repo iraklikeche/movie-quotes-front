@@ -15,7 +15,7 @@
         :label="$t('sessions.username')"
         name="username"
         :placeholder="$t('sessions.username_placeholder')"
-        rules="required|min:3"
+        rules="required|min:3|lowercase"
         type="text"
         :serverError="errors.username"
       />
@@ -32,7 +32,7 @@
       <CustomInput
         :label="$t('sessions.password')"
         name="password"
-        rules="required|min:3"
+        rules="required|min:8|max:15|lowercase"
         :placeholder="$t('sessions.password_placeholder')"
         isPasswordField
         :serverError="errors.password"
