@@ -29,7 +29,9 @@
         {{ genre.name }}
       </span>
     </div>
-    <p class="text-white font-bold">Director: {{ movie.director[typedLocale] }}</p>
+    <p class="text-white font-bold">
+      {{ $t('texts.director') }}: {{ movie.director[typedLocale] }}
+    </p>
     <p class="text-white mt-4 sm:mt-1">{{ movie.description[typedLocale] }}</p>
   </div>
 </template>

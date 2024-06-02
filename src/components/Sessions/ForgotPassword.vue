@@ -16,6 +16,7 @@
         type="email"
         rules="required|email"
         :serverError="errors.email"
+        class="mb-2"
       />
 
       <button class="bg-custom-red py-2 rounded-md mb-2 text-white">

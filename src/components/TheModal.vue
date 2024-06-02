@@ -2,7 +2,7 @@
   <div
     id="popup-modal"
     tabindex="-1"
-    class="overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 justify-center items-center w-full md:inset-0 h-screen sm:h-[calc(100%-1rem)] max-h-full flex backdrop-blur-sm"
+    class="overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 justify-center items-center w-full md:inset-0 h-full sm:h-[calc(100%-1rem)] max-h-full flex backdrop-blur-sm"
     @click.self="closeModal"
   >
     <div class="relative w-full max-w-xl h-full sm:h-auto sm:max-h-full bg-[#222030] sm:rounded-lg">
@@ -16,7 +16,7 @@
               <h2 class="text-white text-2xl font-semibold">{{ props.header }}</h2>
               <p class="text-sm mb-4 text-custom-light-gray text-center">{{ props.paragraph }}</p>
             </div>
-            <div class="sm:px-7">
+            <div class="sm:px-6">
               <slot />
             </div>
           </div>

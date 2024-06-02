@@ -18,15 +18,17 @@
         type="email"
         rules="required|email"
         :serverError="errors.email"
+        class="mb-2"
       />
 
       <CustomInput
         :label="$t('sessions.password')"
         name="password"
-        rules="required|min:3"
-        :placeholder="$t('sessions.password_placeholder')"
+        rules="required|min:8|max:15"
+        :placeholder="$t('sessions.login_password_placeholder')"
         isPasswordField
         :serverError="errors.password"
+        class="mb-3"
       />
 
       <div class="flex justify-between items-center gap-2">

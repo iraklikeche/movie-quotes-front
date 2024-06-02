@@ -40,7 +40,7 @@
             >{{ movie.movie_name }} ({{ movie.year }})</span
           >
           <span class="flex items-center gap-2 text-xl text-white font-medium"
-            >10 <QuotesIcon
+            >{{ movie.quotes.length }} <QuotesIcon
           /></span>
         </RouterLink>
       </div>
@@ -56,12 +56,14 @@ import { ref, onMounted, computed } from 'vue'
 import MovieModal from '@/components/MovieModal.vue'
 import { getMovies } from '@/service/movieService'
 import { RouterLink } from 'vue-router'
+import type { Quote } from '@/types'
 
 type Movie = {
   id: number
   image_url: string
   movie_name: string
   year: number
+  quotes: Quote[]
 }
 
 const showModal = ref(false)

@@ -66,7 +66,6 @@ onMounted(() => {
       commentCount.value = event.quote.comments_count
     }
     quoteStore.updateCommentCount(event.quote.id, event.commentCount)
-    quoteStore.updateQuoteComments(event.quote.id, event.comment)
   })
 })
 </script>

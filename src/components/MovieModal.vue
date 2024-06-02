@@ -149,6 +149,13 @@ const clearError = (field: string) => {
   }
 }
 
+const clearAllErrors = () => {
+  clearError('genres')
+  clearError('description.en')
+  clearError('description.ka')
+  clearError('image')
+}
+
 const updateGenres = (newGenres: Category[]) => {
   genres.value = newGenres
 }
@@ -175,6 +182,7 @@ const onFileChange = (newFile: File) => {
 const updateShowModal = (value: boolean) => {
   emit('update:showModal', value)
   internalShowModal.value = value
+  clearAllErrors()
 }
 
 const onSubmit = handleSubmit(async (values) => {
@@ -214,7 +222,6 @@ const onSubmit = handleSubmit(async (values) => {
       for (const key in serverErrors) {
         setFieldError(key as any, serverErrors[key][0])
         errors[key] = serverErrors[key][0]
-        console.log(errors)
       }
     }
   }

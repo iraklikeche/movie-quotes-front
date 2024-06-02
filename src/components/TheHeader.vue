@@ -1,5 +1,5 @@
 <template>
-  <div class="sticky top-0 w-full">
+  <div class="sticky top-0 w-full z-50">
     <Transition name="fade">
       <div class="bg-[#12101A] z-50 h-screen w-full fixed" v-if="showSearch">
         <div class="flex items-center p-8 border-b pb-2 border-border-gray border-opacity-60">
@@ -74,7 +74,7 @@
             <LanguageArrow />
           </div>
         </div>
-        <div v-if="!isLogged">
+        <div v-if="!isLogged" class="flex flex-row-reverse gap-4">
           <button
             @click="userSession.toggleLogin"
             class="border border-white bg-transparent text-sm px-3 sm:px-5 py-2 rounded-lg text-white mr-1 sm:mr-4"

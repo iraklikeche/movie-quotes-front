@@ -94,13 +94,6 @@ export const useQuoteStore = defineStore('quoteStore', () => {
     }
   }
 
-  const updateQuoteComments = (quoteId: number, comment: Comment) => {
-    const quote = quotes.value.find((q) => q.id === quoteId)
-    if (quote) {
-      quote.comments.push(comment)
-    }
-  }
-
   return {
     search,
     quotes,
@@ -110,7 +103,6 @@ export const useQuoteStore = defineStore('quoteStore', () => {
     likeId,
     updateLikeCount,
     updateCommentCount,
-    updateQuoteComments,
     fetchQuotesByMovie,
     quotesByMovie,
     quotesCount,

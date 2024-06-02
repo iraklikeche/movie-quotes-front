@@ -50,5 +50,9 @@
   "whoops": "Whooops!",
   "error_text": "We can't not find the page you are looking for!",
   "server_error": "You shall not pass!",
-  "server_error_text": "Sorry, but  you don’t have permission to access this page"
+  "server_error_text": "Sorry, but  you don’t have permission to access this page",
+  "cancel": "Cancel",
+  "sure": "Are you sure to make changes",
+  "confirm": "Confirm",
+  "lowercase": "The field must contain only lowercase letters"
 }

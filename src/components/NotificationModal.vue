@@ -23,7 +23,9 @@
               alt="avatar"
               class="w-20 h-14 rounded-full sm:mr-3"
             />
-            <div class="text-[#198754] sm:hidden" v-if="!notification.read_at">New</div>
+            <div class="text-[#198754] sm:hidden" v-if="!notification.read_at">
+              {{ $t('texts.new') }}
+            </div>
           </div>
           <div class="flex-grow text-white">
             <div class="font-semibold">{{ notification.data.user.username }}</div>
@@ -34,8 +36,7 @@
               <div v-if="notification.data.commented">
                 <QuotesIcon />
               </div>
-
-              {{ notification.data.message }}
+              {{ notification.data.message[typedLocale as any] }}
             </div>
             <div class="sm:hidden">{{ formatTime(notification.time) }}</div>
           </div>
@@ -62,6 +63,11 @@ import {
 } from '@/service/movieService'
 import { useTimeFormat } from '@/composables/useTimeFormat'
 import type { Notification } from '@/types'
+import { useI18n } from 'vue-i18n'
+type Locale = 'en' | 'ka'
+
+const { locale } = useI18n()
+const typedLocale = locale.value as Locale
 
 const emit = defineEmits(['closeNotification', 'openModal', 'updateCount'])
 const closeNotification = () => emit('closeNotification')
