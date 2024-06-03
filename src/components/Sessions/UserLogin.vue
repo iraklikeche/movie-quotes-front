@@ -18,7 +18,7 @@
         type="email"
         rules="required|email"
         :serverError="errors.email"
-        class="mb-2"
+        class="mb-8"
       />
 
       <CustomInput

@@ -13,15 +13,22 @@
       :validateOnBlur="false"
       :rules="rules"
     />
-    <div v-if="serverError" class="absolute right-2 top-[38%] translate-y-1/2 -translate-x-1/2">
+    <div v-if="serverError" class="absolute right-10 top-[35%] translate-y-1/2 -translate-x-1/2">
       <ErrorIcon />
     </div>
 
     <div class="h-4">
       <ErrorMessage :name="name" class="text-[#F04438] text-sm mt-1 mb-2 leading-3" />
 
+      <HidePassword
+        v-if="isPasswordField && isPasswordVisible"
+        class="absolute top-[45%] right-[4%] cursor-pointer"
+        @toggle="togglePasswordVisibility"
+        @click="isPasswordVisible = false"
+      />
+
       <ShowPassword
-        v-if="isPasswordField && !serverError"
+        v-if="isPasswordField && !isPasswordVisible"
         :customClass="'absolute top-[45%] right-[4%] cursor-pointer'"
         @toggle="togglePasswordVisibility"
       />
@@ -34,6 +41,7 @@ import { ref, computed } from 'vue'
 import { Field, ErrorMessage } from 'vee-validate'
 import ShowPassword from '@/components/icons/ShowPassword.vue'
 import ErrorIcon from '../icons/ErrorIcon.vue'
+import HidePassword from '@/components/icons/HidePassword.vue'
 
 const props = defineProps({
   label: String,
@@ -53,6 +61,7 @@ const inputType = computed(() => {
 })
 
 const togglePasswordVisibility = () => {
+  console.log(1)
   isPasswordVisible.value = !isPasswordVisible.value
 }
 </script>

@@ -54,5 +54,6 @@
   "cancel": "Cancel",
   "sure": "Are you sure to make changes",
   "confirm": "Confirm",
-  "lowercase": "The field must contain only lowercase letters"
+  "lowercase": "The field must contain only lowercase letters",
+  "password_match": "Passwords do not match"
 }
