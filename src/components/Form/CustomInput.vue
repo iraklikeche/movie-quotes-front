@@ -61,7 +61,6 @@ const inputType = computed(() => {
 })
 
 const togglePasswordVisibility = () => {
-  console.log(1)
   isPasswordVisible.value = !isPasswordVisible.value
 }
 </script>

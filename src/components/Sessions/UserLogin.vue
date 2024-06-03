@@ -113,7 +113,6 @@ const onSubmit: SubmissionHandler<LoginValues> = async (values: LoginValues, { s
 
 const registerWithGoogle = async () => {
   const res = await signUpWithGoogle()
-  console.log(res)
   window.location.href = res.data
 }
 </script>

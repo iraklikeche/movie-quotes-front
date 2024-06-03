@@ -141,7 +141,6 @@ const foo = () => {
 }
 
 const onSubmit = handleSubmit(async () => {
-  console.log(quoteData.value)
   try {
     const formData = new FormData()
     formData.append('content[en]', quoteData.value.content.en)

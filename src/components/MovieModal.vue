@@ -207,7 +207,6 @@ const onSubmit = handleSubmit(async (values) => {
 
   try {
     const response = await createMovie(formData)
-    console.log('Success:', response)
     emit('update:showModal', false)
     emit('movie-added')
     resetForm()
