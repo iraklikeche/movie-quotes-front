@@ -26,7 +26,7 @@
             @blur="isFocused = false"
             class="outline-none text-white pl-4 py-2 bg-transparent w-16 transition-all duration-300 focus:w-[21rem] sm:focus:w-[42rem]"
             :class="isFocused ? 'border-b border-border-gray border-opacity-30' : ''"
-            :placeholder="isFocused ? $t('texts.search_by') : $t('texts.search')"
+            :placeholder="isFocused ? formattedSearchPlaceholder : $t('texts.search')"
           />
         </div>
       </div>
@@ -47,7 +47,9 @@ import SearchIcon from '@/components/icons/SearchIcon.vue'
 import type { Quote } from '@/types'
 import QuoteModal from '@/components/QuoteModal.vue'
 import { useRoute, useRouter } from 'vue-router'
+import { useI18n } from 'vue-i18n'
 
+const { t } = useI18n()
 const quoteStore = useQuoteStore()
 
 const route = useRoute()
@@ -60,6 +62,10 @@ const search = ref<string>(
 const quotes = computed<Quote[]>(() => quoteStore.quotes)
 const isFocused = ref(false)
 const showModal = ref(false)
+
+const formattedSearchPlaceholder = computed(() => {
+  return t('texts.search_by').replace('at', '@')
+})
 
 const openModal = () => {
   showModal.value = true

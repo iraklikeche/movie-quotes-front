@@ -10,7 +10,7 @@
             @focus="handleFocused"
             @blur="isFocused = false"
             class="outline-none text-white pl-4 py-2 bg-transparent w-full"
-            :placeholder="$t('texts.search')"
+            :placeholder="formattedSearchPlaceholder"
           />
         </div>
         <div class="p-8 pl-16 text-custom-gray">
@@ -168,6 +168,9 @@ const isFocused = ref(false)
 const isView = ref(false)
 const selectedQuote = ref(null)
 const isEditMode = ref(false)
+const formattedSearchPlaceholder = computed(() => {
+  return $t('texts.search_by').replace('at', '@')
+})
 
 const openDetailedQuoteModal = (data: any) => {
   selectedQuote.value = data
