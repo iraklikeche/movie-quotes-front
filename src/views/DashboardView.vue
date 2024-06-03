@@ -72,7 +72,7 @@ const openModal = () => {
 }
 
 const fetchQuotes = async () => {
-  await quoteStore.fetchQuotes(search.value)
+  await quoteStore.fetchQuotes(search.value.toLowerCase())
 }
 
 const handleFocused = () => {
@@ -81,7 +81,7 @@ const handleFocused = () => {
 
 const updateSearch = (event: Event) => {
   const target = event.target as HTMLInputElement
-  quoteStore.updateSearch(target.value)
+  quoteStore.updateSearch(target.value.toLowerCase())
 }
 
 const loadMoreQuotes = async () => {
@@ -106,8 +106,8 @@ onUnmounted(() => {
 })
 
 watch(search, (newSearch) => {
-  router.push({ query: { ...route.query, search: newSearch } })
-  quoteStore.updateSearch(newSearch)
+  router.push({ query: { ...route.query, search: newSearch.toLowerCase() } })
+  quoteStore.updateSearch(newSearch.toLowerCase())
 })
 
 watch(route, (newRoute) => {
@@ -115,9 +115,25 @@ watch(route, (newRoute) => {
     ? newRoute.query.search[0] || ''
     : newRoute.query.search || ''
 
-  if (newSearch !== search.value) {
-    search.value = newSearch
-    quoteStore.updateSearch(newSearch)
+  if (newSearch.toLowerCase() !== search.value) {
+    search.value = newSearch.toLowerCase()
+    quoteStore.updateSearch(newSearch.toLowerCase())
   }
 })
+
+// watch(search, (newSearch) => {
+//   router.push({ query: { ...route.query, search: newSearch } })
+//   quoteStore.updateSearch(newSearch)
+// })
+
+// watch(route, (newRoute) => {
+//   const newSearch = Array.isArray(newRoute.query.search)
+//     ? newRoute.query.search[0] || ''
+//     : newRoute.query.search || ''
+
+//   if (newSearch !== search.value) {
+//     search.value = newSearch
+//     quoteStore.updateSearch(newSearch)
+//   }
+// })
 </script>

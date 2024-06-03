@@ -14,7 +14,7 @@
           />
         </div>
         <div class="p-8 pl-16 text-custom-gray">
-          <p class="mb-4">{{ $t('texts.mobile_search_movies') }}</p>
+          <p class="mb-4">{{ mobileFormattedSearchPlaceholder }}</p>
           <p>{{ $t('texts.mobile_search_quotes') }}</p>
         </div>
       </div>
@@ -170,6 +170,10 @@ const selectedQuote = ref(null)
 const isEditMode = ref(false)
 const formattedSearchPlaceholder = computed(() => {
   return $t('texts.search_by').replace('at', '@')
+})
+
+const mobileFormattedSearchPlaceholder = computed(() => {
+  return $t('texts.mobile_search_movies').replace('at', '@')
 })
 
 const openDetailedQuoteModal = (data: any) => {
