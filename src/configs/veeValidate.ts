@@ -43,7 +43,7 @@ export function setupValidation(i18n: I18n): void {
     typeof i18n.global.locale === 'string' ? i18n.global.locale : i18n.global.locale.value
   setLocale(currentLocale)
 
-  defineRule('lowercase', (value: string) => {
+  defineRule('lowercase', (value: string, [target]: string[]) => {
     if (!value) {
       return true
     }
@@ -53,10 +53,17 @@ export function setupValidation(i18n: I18n): void {
   })
 
   defineRule('password_match', (value: string, [target]: string[]) => {
+    console.log('Value:', value)
+    console.log('Target:', target)
+    const passwordFieldValue = (document.getElementsByName(target)[0] as HTMLInputElement)?.value
+
     if (!value) {
       return true
     }
-    return value === target || (i18n.global.t as (key: string) => string)('texts.password_match')
+    return (
+      value === passwordFieldValue ||
+      (i18n.global.t as (key: string) => string)('texts.password_match')
+    )
   })
 }
 

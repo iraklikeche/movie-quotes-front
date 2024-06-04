@@ -7,13 +7,36 @@
       :type="inputType"
       :name="name"
       :placeholder="placeholder"
-      class="bg-[#ced4da] block w-full px-3 py-2 border-2 rounded-md"
-      :class="{ 'border-red-500': serverError }"
+      @input="typed = true"
+      class="bg-custom-gray block w-full px-3 py-2 border-2 border-custom-gray focus:ring-[3px] outline-none focus:border-custom-gray focus:border-transparent rounded-md"
+      :class="{
+        'border-green-500': !serverError && typed,
+        'border-red-500': serverError
+      }"
       :validateOnInput="true"
       :validateOnBlur="false"
       :rules="rules"
     />
-    <div v-if="serverError" class="absolute right-10 top-[35%] translate-y-1/2 -translate-x-1/2">
+
+    <div
+      class="absolute top-[35%] translate-y-1/2 -translate-x-1/2"
+      :class="{
+        'right-2': !isPasswordField,
+        'right-10': isPasswordField
+      }"
+      v-if="!serverError && typed"
+    >
+      <ValidInput />
+    </div>
+
+    <div
+      v-if="serverError"
+      class="absolute top-[35%] translate-y-1/2 -translate-x-1/2"
+      :class="{
+        'right-2': !isPasswordField,
+        'right-10': isPasswordField
+      }"
+    >
       <ErrorIcon />
     </div>
 
@@ -42,6 +65,7 @@ import { Field, ErrorMessage } from 'vee-validate'
 import ShowPassword from '@/components/icons/ShowPassword.vue'
 import ErrorIcon from '../icons/ErrorIcon.vue'
 import HidePassword from '@/components/icons/HidePassword.vue'
+import ValidInput from '@/components/icons/ValidInput.vue'
 
 const props = defineProps({
   label: String,
@@ -55,6 +79,7 @@ const props = defineProps({
 })
 
 const isPasswordVisible = ref(false)
+const typed = ref(false)
 
 const inputType = computed(() => {
   return props.isPasswordField ? (isPasswordVisible.value ? 'text' : 'password') : props.type
