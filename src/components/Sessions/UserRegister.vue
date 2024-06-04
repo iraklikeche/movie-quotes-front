@@ -15,7 +15,7 @@
         :label="$t('sessions.username')"
         name="username"
         :placeholder="$t('sessions.username_placeholder')"
-        rules="required|min:3|lowercase"
+        rules="required|min:3|max:15|lowercase"
         type="text"
         :serverError="errors.username"
       />
@@ -44,7 +44,7 @@
         name="password_confirmation"
         :placeholder="$t('sessions.conf_password_placeholder')"
         isPasswordField
-        rules="confirmed:@password"
+        rules="required|password_match:password"
         :serverError="errors.password_confirmation"
       />
 

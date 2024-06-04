@@ -96,7 +96,6 @@ const onSubmit: SubmissionHandler<ResetPasswordFormValues> = async (
     )
   } catch (error: any) {
     if (error.response.data.errors) {
-      console.log(error)
       for (const fieldName in error.response.data.errors) {
         setFieldError(
           fieldName as keyof ResetPasswordFormValues,

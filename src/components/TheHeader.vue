@@ -10,11 +10,11 @@
             @focus="handleFocused"
             @blur="isFocused = false"
             class="outline-none text-white pl-4 py-2 bg-transparent w-full"
-            :placeholder="$t('texts.search')"
+            :placeholder="formattedSearchPlaceholder"
           />
         </div>
         <div class="p-8 pl-16 text-custom-gray">
-          <p class="mb-4">{{ $t('texts.mobile_search_movies') }}</p>
+          <p class="mb-4">{{ mobileFormattedSearchPlaceholder }}</p>
           <p>{{ $t('texts.mobile_search_quotes') }}</p>
         </div>
       </div>
@@ -168,6 +168,13 @@ const isFocused = ref(false)
 const isView = ref(false)
 const selectedQuote = ref(null)
 const isEditMode = ref(false)
+const formattedSearchPlaceholder = computed(() => {
+  return $t('texts.search_by').replace('at', '@')
+})
+
+const mobileFormattedSearchPlaceholder = computed(() => {
+  return $t('texts.mobile_search_movies').replace('at', '@')
+})
 
 const openDetailedQuoteModal = (data: any) => {
   selectedQuote.value = data

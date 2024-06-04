@@ -110,7 +110,6 @@ onMounted(async () => {
         },
         () => userSession.backToLogIn()
       )
-      console.log(response)
     } catch (error: any) {
       if (error.response.status === 403) {
         userSession.setModalContent(

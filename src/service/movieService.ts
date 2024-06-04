@@ -15,7 +15,6 @@ export async function createMovie(formData: FormData): Promise<AxiosResponse<any
       'Content-Type': 'multipart/form-data'
     }
   })
-  console.log('Movie creation successful:', response)
   return response
 }
 
@@ -47,7 +46,6 @@ export async function createQuote(formData: FormData): Promise<AxiosResponse<any
       'Content-Type': 'multipart/form-data'
     }
   })
-  console.log('Quote creation successful:', response)
   return response
 }
 

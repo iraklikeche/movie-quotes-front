@@ -47,7 +47,16 @@ export function setupValidation(i18n: I18n): void {
     if (!value) {
       return true
     }
-    return /^[a-z]+$/.test(value) || (i18n.global.t as (key: string) => string)('texts.lowercase')
+    return (
+      /^[a-z0-9]+$/.test(value) || (i18n.global.t as (key: string) => string)('texts.lowercase')
+    )
+  })
+
+  defineRule('password_match', (value: string, [target]: string[]) => {
+    if (!value) {
+      return true
+    }
+    return value === target || (i18n.global.t as (key: string) => string)('texts.password_match')
   })
 }
 

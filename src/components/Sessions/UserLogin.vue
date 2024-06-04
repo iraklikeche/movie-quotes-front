@@ -18,7 +18,7 @@
         type="email"
         rules="required|email"
         :serverError="errors.email"
-        class="mb-2"
+        class="mb-8"
       />
 
       <CustomInput
@@ -113,7 +113,6 @@ const onSubmit: SubmissionHandler<LoginValues> = async (values: LoginValues, { s
 
 const registerWithGoogle = async () => {
   const res = await signUpWithGoogle()
-  console.log(res)
   window.location.href = res.data
 }
 </script>

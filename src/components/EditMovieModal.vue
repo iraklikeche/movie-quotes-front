@@ -147,7 +147,6 @@ const onSubmit = handleSubmit(async (values) => {
 
   try {
     const response = await updateMovie(props.movie.id, formData)
-    console.log('Success:', response)
     emit('update:showModal', false)
     emit('movie-updated')
     resetForm()
@@ -162,7 +161,6 @@ const onSubmit = handleSubmit(async (values) => {
       for (const key in serverErrors) {
         setFieldError(key as any, serverErrors[key][0])
         errors[key] = serverErrors[key][0]
-        console.log(errors)
       }
     }
   }

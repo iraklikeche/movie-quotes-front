@@ -91,7 +91,6 @@ const markAsRead = async (id: number) => {
 }
 
 const handleNotificationClick = async (notification: any) => {
-  console.log(notification)
   const res = await getSingleQuote(notification.data.quote.id)
 
   notification.value = res.data
