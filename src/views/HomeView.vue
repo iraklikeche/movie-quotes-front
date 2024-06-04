@@ -1,6 +1,6 @@
 <template>
   <ToastModal v-if="userSession.successModal" v-bind="userSession.modalContent as any" />
-  <main class="bg-gradient-to-b from-gray-900 to-black h-screen">
+  <main class="bg-gradient-to-b from-gray-900 to-black h-[50vh]">
     <TheHeader />
 
     <div class="flex items-center justify-center flex-col gap-10 pb-32 h-full">
@@ -97,16 +97,16 @@ onMounted(async () => {
       return
     }
     try {
-      const response = await verifyEmail(verifyUrl)
+      await verifyEmail(verifyUrl)
 
       verificationMessage.value = 'Your email has been successfully verified.'
 
       userSession.setModalContent(
         {
-          icon: 'Success',
+          icon: 'SuccessIcon',
           mainMessage: $t('texts.thanks'),
-          subMessage: $t('texts.subMessage'),
-          buttonText: $t('buttons.login')
+          subMessage: $t('texts.activate'),
+          buttonText: $t('texts.new_feed_btn')
         },
         () => userSession.backToLogIn()
       )

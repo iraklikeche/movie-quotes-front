@@ -71,7 +71,7 @@ export const useUserSessionStore = defineStore('UserSessionStore', () => {
         break
     }
 
-    window.location.href = url
+    window.open(url, '_blank')
   }
 
   function setModalContent(content: ModalContent, action: (() => void) | null = null) {

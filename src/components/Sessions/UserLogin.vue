@@ -42,12 +42,16 @@
           />
           <label class="text-white">{{ $t('sessions.remember') }}</label>
         </div>
-        <button class="text-[#0d6efd] underline" @click="userSession.toggleForgotPassword">
+        <button
+          class="text-[#0d6efd] underline"
+          @click="userSession.toggleForgotPassword"
+          type="button"
+        >
           {{ $t('sessions.forgot_password') }}
         </button>
       </div>
 
-      <button class="bg-custom-red py-2 rounded-md my-4 text-white">
+      <button type="submit" class="bg-custom-red py-2 rounded-md my-4 text-white">
         {{ $t('buttons.login') }}
       </button>
       <button
