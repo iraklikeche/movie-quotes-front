@@ -83,7 +83,7 @@
           </button>
           <button
             @click="userSession.toggleRegister"
-            class="bg-custom-red text-white px-4 py-2 text-sm rounded-lg"
+            class="bg-custom-red text-white px-4 py-2 text-sm rounded-lg hover:bg-red-500 transition-all"
           >
             {{ $t('buttons.signup') }}
           </button>

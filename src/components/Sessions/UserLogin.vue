@@ -13,11 +13,10 @@
     >
       <CustomInput
         :label="$t('sessions.email')"
-        name="email"
+        name="login"
         :placeholder="$t('sessions.email_placeholder')"
-        type="email"
-        rules="required|email"
-        :serverError="errors.email"
+        rules="required"
+        :serverError="errors.login"
         class="mb-8"
       />
 
@@ -32,16 +31,17 @@
       />
 
       <div class="flex justify-between items-center gap-2">
-        <div class="flex items-center gap-2">
+        <label for="remember" class="flex items-center gap-2 cursor-pointer">
           <Field
+            id="remember"
             name="remember"
             type="checkbox"
             v-model="remember"
             value="true"
             :serverError="errors.remember"
           />
-          <label class="text-white">{{ $t('sessions.remember') }}</label>
-        </div>
+          <span class="text-white">{{ $t('sessions.remember') }}</span>
+        </label>
         <button
           class="text-[#0d6efd] underline"
           @click="userSession.toggleForgotPassword"
@@ -51,7 +51,10 @@
         </button>
       </div>
 
-      <button type="submit" class="bg-custom-red py-2 rounded-md my-4 text-white">
+      <button
+        type="submit"
+        class="bg-custom-red py-2 rounded-md my-4 text-white hover:bg-red-500 transition-all"
+      >
         {{ $t('buttons.login') }}
       </button>
       <button
@@ -59,7 +62,7 @@
         @click="registerWithGoogle"
         class="bg-transparent border border-white py-2 rounded-md flex items-center gap-2 justify-center text-white"
       >
-        <GoogleIcon /> {{ $t('buttons.google') }}
+        <GoogleIcon /> {{ $t('buttons.login_google') }}
       </button>
     </Form>
 
@@ -86,7 +89,7 @@ import { useRouter } from 'vue-router'
 import type { SubmissionHandler } from 'vee-validate'
 
 type LoginValues = {
-  email: string
+  login: string
   password: string
   remember?: boolean
 }
@@ -101,7 +104,7 @@ const onSubmit: SubmissionHandler<LoginValues> = async (values: LoginValues, { s
   values.remember = remember.value
   try {
     await loginUser({
-      email: values.email,
+      login: values.login,
       password: values.password,
       remember: values.remember
     })
@@ -110,7 +113,7 @@ const onSubmit: SubmissionHandler<LoginValues> = async (values: LoginValues, { s
     router.push('/dashboard')
   } catch (error: any) {
     if (error.response?.data?.message) {
-      setFieldError('email', error.response.data.message)
+      setFieldError('login', error.response.data.message)
     }
   }
 }

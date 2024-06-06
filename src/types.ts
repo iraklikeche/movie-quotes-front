@@ -61,7 +61,7 @@ export type UserRegistration = {
 }
 
 export type UserCredentials = {
-  email: string
+  login: string
   password: string
   remember?: boolean
 }
