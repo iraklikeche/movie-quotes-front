@@ -12,7 +12,8 @@
         <h2 class="text-white flex flex-col sm:flex-row gap-2">
           {{ $t('texts.my_list') }} <span> ({{ $t('texts.total') }} {{ movies.length }}) </span>
         </h2>
-        <div class="flex gap-4 items-center">
+        <div class="flex gap-2 items-center">
+          <SearchIcon />
           <input
             class="outline-none w-24 text-white pl-4 py-2 bg-transparent transition-all duration-300 focus:w-[18rem] hidden sm:block"
             :placeholder="$t('texts.search_my_movies')"
@@ -57,6 +58,7 @@ import MovieModal from '@/components/MovieModal.vue'
 import { getMovies } from '@/service/movieService'
 import { RouterLink } from 'vue-router'
 import type { Quote } from '@/types'
+import SearchIcon from '@/components/icons/SearchIcon.vue'
 
 type Movie = {
   id: number

@@ -66,7 +66,7 @@
                 :value="locale"
                 class="bg-gray-800 text-white hover:bg-blue-500"
               >
-                {{ locale }}
+                {{ localeNames[locale] }}
               </option>
             </select>
           </div>
@@ -145,6 +145,10 @@ import { useNotificationStore } from '@/stores/NotificationStore'
 const { t: $t } = useI18n()
 
 const { locale, availableLocales } = useI18n()
+const localeNames: Record<string, string> = {
+  en: 'Eng',
+  ka: 'Geo'
+}
 const userSession = useUserSessionStore()
 const notificationStore = useNotificationStore()
 const { notifications } = storeToRefs(notificationStore)

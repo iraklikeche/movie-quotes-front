@@ -41,7 +41,7 @@
             :file="file"
             :imageUrl="imageUrl"
             @file-change="onFileChange"
-            v-if="route.params.id && movie"
+            v-if="!route.params.id && !movie"
           />
         </div>
         <div class="relative">
@@ -73,7 +73,7 @@
           :file="file"
           :imageUrl="imageUrl"
           @file-change="onFileChange"
-          v-if="!route.params.id && !movie"
+          v-if="route.params.id && movie"
         />
 
         <TheDropdown
@@ -88,7 +88,9 @@
         />
 
         <div class="bg-[#E31221] flex items-center justify-center mt-8 py-3 rounded-md">
-          <button type="submit" class="text-xl text-white w-full">{{ $t('texts.post') }}</button>
+          <button type="submit" class="text-xl text-white w-full">
+            {{ $t('texts.add_quote') }}
+          </button>
         </div>
       </form>
     </div>

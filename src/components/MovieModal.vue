@@ -1,7 +1,7 @@
 <template>
   <QuoteMovieWrapModal
     :showModal="showModal"
-    :title="$t('texts.new_quote')"
+    :title="$t('texts.add_movie')"
     @update:showModal="updateShowModal"
   >
     <div class="px-8 py-10 bg-[#222030] sm:bg-[#11101A]">
@@ -46,7 +46,7 @@
             class="bg-transparent border border-[#efefef] border-opacity-60 w-full py-2 px-4 placeholder:text-white italic text-white outline-none pr-5"
             cols="5"
             rows="3"
-            placeholder="Description"
+            placeholder="Movie description"
             @input="clearError('description.en')"
           />
           <span class="absolute right-0 -translate-x-1/2 translate-y-1/2 text-custom-light-gray"
@@ -71,7 +71,7 @@
         </div>
         <ImageUpload :file="file" :imageUrl="imageUrl" @file-change="onFileChange" />
 
-        <button class="bg-custom-red py-2 text-white">{{ $t('texts.post') }}</button>
+        <button class="bg-custom-red py-2 text-white">{{ $t('texts.add_movie') }}</button>
       </form>
     </div>
   </QuoteMovieWrapModal>

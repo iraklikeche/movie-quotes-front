@@ -12,12 +12,16 @@
             <EditIcon @click="openEditMode" />
             <span class="text-custom-gray text-xl font-extralight">|</span>
           </div>
-          <button @click="$emit('remove', selectedQuote.id)">
+          <button @click="$emit('remove', selectedQuote.id)" class="flex items-center gap-2">
             <DeleteIcon />
+            <span v-if="isEditMode" class="text-white sm:pt-1">
+              {{ $t('texts.delete') }}
+            </span>
           </button>
         </div>
-        <h4 class="hidden sm:block text-white">header</h4>
-        <button @click="$emit('close')">
+        <h4 class="hidden sm:block text-white" v-if="!isEditMode">{{ $t('texts.view_quote') }}</h4>
+        <h4 class="hidden sm:block text-white" v-else>{{ $t('texts.edit_quote') }}</h4>
+        <button @click="$emit('close')" class="cursor-pointer">
           <CloseBtn />
         </button>
       </div>
@@ -27,20 +31,29 @@
       </div>
       <div class="px-8 py-2">
         <form v-if="isEditMode" @submit.prevent="onSubmit">
-          <textarea
-            v-model="quoteData.content.en"
-            rows="3"
-            cols="5"
-            class="text-white bg-transparent w-full border border-border-gray border-opacity-10 placeholder:custom-gray italic pl-2 pt-2"
-          />
-          <textarea
-            v-model="quoteData.content.ka"
-            rows="3"
-            cols="5"
-            class="text-white bg-transparent w-full border border-border-gray border-opacity-10 mt-2 placeholder:custom-gray italic pl-2 pt-2"
-          />
-
-          <div v-if="isEditMode" class="relative">
+          <div class="relative">
+            <textarea
+              v-model="quoteData.content.en"
+              rows="3"
+              cols="5"
+              class="text-white bg-transparent w-full border border-border-gray border-opacity-10 placeholder:custom-gray italic pl-2 pt-2"
+            />
+            <span class="absolute right-0 -translate-x-1/2 translate-y-1/2 text-custom-light-gray"
+              >Eng</span
+            >
+          </div>
+          <div class="relative">
+            <textarea
+              v-model="quoteData.content.ka"
+              rows="3"
+              cols="5"
+              class="text-white bg-transparent w-full border border-border-gray border-opacity-10 mt-2 placeholder:custom-gray italic pl-2 pt-2"
+            />
+            <span class="absolute right-0 -translate-x-1/2 translate-y-1/2 text-custom-light-gray"
+              >ქარ</span
+            >
+          </div>
+          <div class="relative">
             <label for="file-upload" class="flex items-center flex-col">
               <img
                 :src="localImageUrl || selectedQuote.image_url"
@@ -54,9 +67,6 @@
                 <span class="text-white">{{ $t('texts.replace_photo') }}</span>
               </div>
             </label>
-          </div>
-          <div class="mt-2" v-else>
-            <img :src="selectedQuote.image_url" class="w-full h-72 rounded-xl" />
           </div>
 
           <div v-if="isEditMode" class="mt-4 flex justify-end w-full">
@@ -79,6 +89,9 @@
             :placeholder="selectedQuote.content.en"
             disabled
           />
+          <div class="my-4">
+            <img :src="selectedQuote.image_url" class="w-full h-72 rounded-xl" />
+          </div>
         </div>
 
         <div v-if="!isEditMode">

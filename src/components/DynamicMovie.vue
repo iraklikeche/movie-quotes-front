@@ -7,7 +7,7 @@
   />
   <div class="flex flex-col gap-6 sm:w-full" v-if="movie">
     <div class="flex justify-between items-center">
-      <h2 class="text-white">
+      <h2 class="text-[#DDCCAA]">
         {{ movie.movie_name[typedLocale] }} <span> ({{ movie.year }})</span>
       </h2>
       <div class="flex bg-[rgb(36,34,47)] gap-6 py-2 px-8 rounded-xl items-center">
@@ -24,7 +24,7 @@
       <span
         v-for="genre in movie.genres"
         :key="genre.id"
-        class="bg-custom-light-gray py-1 px-3 rounded-md text-white font-bold"
+        class="bg-[#6C757D] py-1 px-3 rounded-md text-white font-bold"
       >
         {{ genre.name }}
       </span>
