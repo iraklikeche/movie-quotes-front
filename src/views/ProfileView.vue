@@ -42,7 +42,7 @@
           :label="$t('sessions.username')"
           name="new_username"
           :placeholder="$t('sessions.username_placeholder')"
-          rules="required|min:3"
+          rules="required|min:3|max:15|lowercase"
           type="text"
         />
       </form>
@@ -61,7 +61,7 @@
           <CustomInput
             :label="$t('sessions.password')"
             name="new_password"
-            rules="required|min:3"
+            rules="required|min:8|max:15|lowercase"
             :placeholder="$t('sessions.password_placeholder')"
             isPasswordField
           />
@@ -137,13 +137,12 @@
               <div class="relative sm:flex sm:items-center gap-8 mt-8" v-if="updateUsername">
                 <div class="sm:w-full">
                   <label class="text-white mb-1">{{ $t('sessions.new_username') }}</label>
-
                   <Field
                     name="new_username"
                     type="text"
                     class="bg-transparent sm:bg-custom-gray pb-2 border-b placeholder:text-white sm:placeholder:text-[#212529] text-black outline-none sm:py-1 sm:px-3 w-full sm:rounded-[4px] sm:max-w-[28.5rem]"
                     :validateOnInput="true"
-                    rules="required|min:3"
+                    rules="required|min:3|max:15|lowercase"
                   />
                 </div>
               </div>

@@ -12,7 +12,7 @@
           @click="openModal"
           class="flex justify-between px-8 sm:px-0 bg-[#181624] py-6 sm:gap-4 w-full"
         >
-          <div class="flex gap-4 items-center sm:bg-[#24222F] sm:w-full sm:py-4 sm:px-4">
+          <div class="flex gap-4 items-center sm:bg-[#24222F] sm:w-full sm:py-4 sm:px-4 rounded-lg">
             <WriteQuote />
             <span class="text-white">{{ $t('texts.new_quote') }}</span>
           </div>
@@ -24,7 +24,7 @@
             @input="updateSearch"
             @focus="handleFocused"
             @blur="isFocused = false"
-            class="outline-none text-white pl-4 py-2 bg-transparent w-16 transition-all duration-300 focus:w-[21rem] sm:focus:w-[42rem]"
+            class="outline-none text-white pl-4 py-2 bg-transparent w-24 transition-all duration-300 focus:w-[21rem] sm:focus:w-[42rem]"
             :class="isFocused ? 'border-b border-border-gray border-opacity-30' : ''"
             :placeholder="isFocused ? formattedSearchPlaceholder : $t('texts.search')"
           />

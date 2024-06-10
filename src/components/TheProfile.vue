@@ -19,7 +19,7 @@ defineProps({
   },
   imageClass: {
     type: String,
-    default: 'w-14 h-14 rounded-full border-2'
+    default: 'w-16 h-16 rounded-full border-2'
   }
 })
 </script>

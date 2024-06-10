@@ -101,7 +101,7 @@
       <!-- ***********MOBILE********** -->
 
       <div class="sm:hidden">
-        <QuotesHeader :quotesCount="quotesCount" />
+        <QuotesHeader :quotesCount="quoteStore.quotesCount" />
 
         <div class="mt-6 sm:w-1/2">
           <div
@@ -183,7 +183,6 @@ const route = useRoute()
 const isVisible = ref<number | null>(null)
 const selectedQuote = ref<Quote | null>(null)
 
-const quotesCount = ref()
 const isView = ref(false)
 const movie = ref<Movie | null>(null)
 const computedMovie = computed(() => movie.value || undefined)

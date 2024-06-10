@@ -31,7 +31,7 @@
         <EditMovieInput name="director.ka" label="Director: " />
 
         <EditMovieTextarea name="description.en" label="Description: " />
-        <EditMovieTextarea name="description.ka" label="Description: " />
+        <EditMovieTextarea name="description.ka" label="ფილმის აღწერა: " />
         <EditImageUpload :imageUrl="imageUrl" @file-change="handleFileChange" />
 
         <button class="bg-custom-red py-2 text-white">{{ $t('texts.save_changes') }}</button>

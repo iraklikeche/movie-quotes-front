@@ -45,6 +45,7 @@ export const useQuoteStore = defineStore('quoteStore', () => {
     try {
       await deleteQuote(quoteId)
       quotesByMovie.value = quotesByMovie.value.filter((quote) => quote.id !== quoteId)
+      quotesCount.value = quotesByMovie.value.length
     } catch (error) {
       console.error('Failed to delete quote:', error)
     }

@@ -1,10 +1,16 @@
 <template>
   <div>
-    <div class="mt-4" v-if="!localFile">
+    <div
+      class="mt-4"
+      v-if="!localFile"
+      @dragover.prevent="onDragOver"
+      @dragleave="onDragLeave"
+      @drop.prevent="onDrop"
+    >
       <input type="file" id="file-upload" style="display: none" @change="handleFileChange" />
       <label
         for="file-upload"
-        class="flex justify-between sm:justify-normal sm:gap-2 items-center border border-border-gray border-opacity-60 px-4 py-5"
+        class="flex justify-between sm:justify-normal sm:gap-2 items-center border border-border-gray border-opacity-60 px-4 py-5 cursor-pointer"
       >
         <div class="flex items-center gap-4">
           <ImageIcon />
@@ -57,6 +63,24 @@ const props = defineProps<{
 const emit = defineEmits(['file-change'])
 const localFile = ref(props.file)
 const localImageUrl = ref<string | null>(props.imageUrl)
+const isDragging = ref(false)
+
+const onDragOver = (event: DragEvent) => {
+  event.preventDefault()
+  isDragging.value = true
+}
+
+const onDragLeave = () => {
+  isDragging.value = false
+}
+
+const onDrop = (event: DragEvent) => {
+  event.preventDefault()
+  isDragging.value = false
+  if (event.dataTransfer && event.dataTransfer.files.length > 0) {
+    handleFileChange({ target: { files: event.dataTransfer.files } })
+  }
+}
 
 watch(
   () => props.file,
