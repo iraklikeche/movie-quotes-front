@@ -65,6 +65,34 @@ const localFile = ref(props.file)
 const localImageUrl = ref<string | null>(props.imageUrl)
 const isDragging = ref(false)
 
+// Methods
+const handleFileChange = (input: Event | FileList) => {
+  let files: FileList | null = null
+
+  if (input instanceof Event) {
+    const target = input.target as HTMLInputElement
+    files = target.files
+  } else {
+    files = input
+  }
+
+  if (files && files.length > 0) {
+    const file = files[0]
+    const reader = new FileReader()
+
+    reader.onload = (e: ProgressEvent<FileReader>) => {
+      if (e.target && typeof e.target.result === 'string') {
+        localImageUrl.value = e.target.result
+      }
+    }
+
+    reader.readAsDataURL(file)
+
+    localFile.value = file
+    emit('file-change', file)
+  }
+}
+
 const onDragOver = (event: DragEvent) => {
   event.preventDefault()
   isDragging.value = true
@@ -78,7 +106,7 @@ const onDrop = (event: DragEvent) => {
   event.preventDefault()
   isDragging.value = false
   if (event.dataTransfer && event.dataTransfer.files.length > 0) {
-    handleFileChange({ target: { files: event.dataTransfer.files } })
+    handleFileChange(event.dataTransfer.files)
   }
 }
 
@@ -100,24 +128,4 @@ watch(
     localImageUrl.value = newUrl
   }
 )
-
-// Methods
-const handleFileChange = (event: Event) => {
-  const input = event.target as HTMLInputElement
-  if (input.files && input.files.length > 0) {
-    const file = input.files[0]
-    const reader = new FileReader()
-
-    reader.onload = (e: ProgressEvent<FileReader>) => {
-      if (e.target && typeof e.target.result === 'string') {
-        localImageUrl.value = e.target.result
-      }
-    }
-
-    reader.readAsDataURL(file)
-
-    localFile.value = file
-    emit('file-change', file)
-  }
-}
 </script>

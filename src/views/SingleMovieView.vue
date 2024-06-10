@@ -67,20 +67,26 @@
                   </div>
 
                   <div class="absolute top-0 right-0 -translate-x-1/2 translate-y-1/2">
-                    <MoreOptions @click="toggleMenu(quote.id)" />
+                    <MoreOptions @click="toggleMenu(quote.id)" class="cursor-pointer" />
                     <div
                       v-show="isVisible === quote.id"
                       class="bg-[#24222F] absolute min-w-64 rounded-xl p-8 right-0 bottom-0 sm:bottom-auto -translate-y-[15%] sm:-translate-y-0"
                     >
                       <ul class="flex flex-col gap-8">
-                        <li class="flex gap-6 items-center text-white" @click="openView(quote)">
+                        <li
+                          class="flex gap-6 items-center text-white cursor-pointer"
+                          @click="openView(quote)"
+                        >
                           <ViewIcon /> {{ $t('texts.view_quote') }}
                         </li>
-                        <li class="flex gap-6 items-center text-white" @click="openEdit(quote)">
+                        <li
+                          class="flex gap-6 items-center text-white cursor-pointer"
+                          @click="openEdit(quote)"
+                        >
                           <EditIcon /> {{ $t('texts.edit') }}
                         </li>
                         <li
-                          class="flex gap-6 items-center text-white"
+                          class="flex gap-6 items-center text-white cursor-pointer"
                           @click="removeQuote(quote.id)"
                         >
                           <DeleteIcon /> {{ $t('texts.delete') }}
