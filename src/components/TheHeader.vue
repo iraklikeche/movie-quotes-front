@@ -53,7 +53,7 @@
         <HamburgerMenu />
       </div>
       <div class="flex items-center sm:gap-5">
-        <div class="inline-flex items-center relative w-12">
+        <div class="inline-flex items-center relative w-12" v-if="$route.path === '/'">
           <div class="locale-changer w-full">
             <select
               v-model="locale"
@@ -99,6 +99,27 @@
                 class="font-bold text-white text-xs bg-orange-600 w-1 h-1 p-2.5 rounded-full flex items-center justify-center"
                 >{{ unreadCount }}</span
               >
+            </div>
+          </div>
+          <div class="inline-flex items-center relative w-12">
+            <div class="locale-changer w-full">
+              <select
+                v-model="locale"
+                @change="updateLocale"
+                class="bg-transparent text-white text-sm rounded-lg h-10 hover:border-gray-400 focus:outline-none appearance-none cursor-pointer w-full"
+              >
+                <option
+                  v-for="locale in availableLocales"
+                  :key="`locale-${locale}`"
+                  :value="locale"
+                  class="bg-gray-800 text-white hover:bg-blue-500"
+                >
+                  {{ localeNames[locale] }}
+                </option>
+              </select>
+            </div>
+            <div class="absolute top-[30%] right-2 sm:right-0 -translate-x-1/2 translate-y-1/2">
+              <LanguageArrow />
             </div>
           </div>
           <button
