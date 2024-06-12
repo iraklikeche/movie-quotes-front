@@ -38,7 +38,6 @@ export const useNotificationStore = defineStore('notificationStore', () => {
       read_at: event.read_at ?? null,
       time: event.time
     })
-    console.log(notifications.value)
   }
 
   const fetchNotifications = async () => {
@@ -51,7 +50,6 @@ export const useNotificationStore = defineStore('notificationStore', () => {
       window.Echo.channel('App.Models.User.' + id).listen(
         '.Illuminate\\Notifications\\Events\\BroadcastNotificationCreated',
         (event: any) => {
-          console.log('event', event)
           handleNotificationEvent(event)
         }
       )
