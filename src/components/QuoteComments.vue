@@ -3,7 +3,8 @@
     <div class="max-h-72 overflow-scroll">
       <div v-for="comment in comments" :key="comment.id" class="mb-4 sm:flex gap-4">
         <div class="flex items-center sm:items-start gap-4">
-          <img :src="comment.user.profile_image_url" class="w-10 h-10 rounded-full" />
+          <ProfileImage :imageClass="'w-10 h-10 rounded-full'" />
+
           <span class="text-white sm:hidden">{{ comment.user.username }}</span>
         </div>
         <div class="sm:flex flex-col border-b border-opacity-10 w-full">
@@ -13,7 +14,7 @@
       </div>
     </div>
     <div class="flex items-center gap-4 mt-4">
-      <img :src="userSession.userData.profile_image" class="w-10 rounded-full" />
+      <ProfileImage :imageClass="'w-10 rounded-full'" />
       <input
         v-model="newComment"
         type="text"
@@ -28,12 +29,9 @@
 <script setup lang="ts">
 import { ref, onMounted } from 'vue'
 import { getComments } from '@/service/movieService'
-import { useUserSessionStore } from '@/stores/UserSessionStore'
 import type { Comment } from '@/types'
 import { useQuoteStore } from '@/stores/QuoteStore'
-
-const userSession = useUserSessionStore()
-
+import ProfileImage from './ProfileImage.vue'
 const props = defineProps<{
   quoteId: number
 }>()
