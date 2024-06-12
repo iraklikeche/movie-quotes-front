@@ -3,8 +3,8 @@
 @tailwind utilities;
 
 @font-face {
-  font-family: 'Helvetica Neue Roman';
-  src: url('@/assets/fonts/en/HelveticaNeueRoman.otf') format('opentype');
+  font-family: 'Helvetica Neue Medium';
+  src: url('@/assets/fonts/en/HelveticaNeueMedium.otf') format('opentype');
 }
 
 @font-face {
@@ -13,7 +13,7 @@
 }
 
 html[lang='en'] {
-  font-family: 'Helvetica Neue Roman';
+  font-family: 'Helvetica Neue Medium';
 }
 
 html[lang='ka'] {
