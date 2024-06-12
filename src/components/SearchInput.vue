@@ -8,7 +8,7 @@
       @blur="isFocused = false"
       class="outline-none text-white pl-4 py-2 bg-transparent"
       :class="[customClass, isFocused ? applyBorder : '']"
-      :placeholder="isFocused ? placeholder_1 : placeholder_2"
+      :placeholder="isFocused ? placeholder_en : placeholder_ka"
       @keyup.enter="handleEnter"
     />
   </div>
@@ -19,8 +19,8 @@ import { ref } from 'vue'
 import { useQuoteStore } from '@/stores/QuoteStore'
 
 defineProps({
-  placeholder_1: String,
-  placeholder_2: String,
+  placeholder_en: String,
+  placeholder_ka: String,
   customClass: String,
   applyBorder: String,
   triggerMethod: {

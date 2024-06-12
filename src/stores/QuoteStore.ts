@@ -67,9 +67,7 @@ export const useQuoteStore = defineStore('quoteStore', () => {
   const updateLikeCount = (quoteId: number, likeCount: number) => {
     const quote = quotes.value.find((q) => q.id === quoteId)
     if (quote) {
-      console.log('updateLikeCount', quote)
       quote.likes_count = likeCount
-      console.log('updateLikeCount inside:', quote.likes_count, likeCount)
     }
   }
 
