@@ -6,11 +6,13 @@
     @click.self="closeModal"
   >
     <div class="relative w-full max-w-xl h-full sm:h-auto sm:max-h-full bg-[#222030] sm:rounded-lg">
-      <div class="relative bg-[#222030] sm:rounded-lg pt-12">
+      <div class="relative bg-[#222030] sm:rounded-lg sm:pt-2">
         <div class="sm:p-4 md:p-5 flex flex-col items-center gap-8 justify-center">
-          <button @click="userSession.closeModal" class="text-center">
-            <CloseBtn />
-          </button>
+          <div class="w-full flex justify-end">
+            <button @click="userSession.closeModal" class="text-center">
+              <CloseBtn />
+            </button>
+          </div>
           <div class="w-full px-12">
             <div class="flex flex-col gap-2 items-center">
               <h2 class="text-white text-2xl font-semibold">{{ props.header }}</h2>
