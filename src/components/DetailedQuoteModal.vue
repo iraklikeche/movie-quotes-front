@@ -26,8 +26,7 @@
         </button>
       </div>
       <div class="p-8 flex items-center gap-2">
-        <!-- <img :src="selectedQuote.user.profile_image_url" class="w-12 h-12 rounded-full" /> -->
-        <ProfileImage />
+        <img :src="selectedQuote.user.profile_image_url" class="w-12 h-12 rounded-full" />
         <span class="text-white text-xl">{{ selectedQuote.user.username }}</span>
       </div>
       <div class="px-8 py-2">
@@ -117,7 +116,6 @@ import { ref } from 'vue'
 import { updateQuote } from '@/service/movieService'
 import { useForm } from 'vee-validate'
 import type { Quote } from '@/types'
-import ProfileImage from './ProfileImage.vue'
 
 const props = defineProps<{
   selectedQuote: Quote
