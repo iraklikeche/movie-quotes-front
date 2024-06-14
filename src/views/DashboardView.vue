@@ -6,7 +6,7 @@
       @quote-added="fetchQuotes"
     />
 
-    <div class="sm:min-w-[60rem]" ref="scrollEL">
+    <div class="sm:min-w-[59rem] sm:max-w-[60rem]" ref="scrollEL">
       <div class="flex items-center gap-6">
         <button
           @click="openModal"
