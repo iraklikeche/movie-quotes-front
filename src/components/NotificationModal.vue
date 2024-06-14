@@ -19,10 +19,13 @@
         >
           <div class="flex flex-col items-center">
             <img
+              v-if="notification.data.user.profile_image_url"
               :src="notification.data.user.profile_image_url"
               alt="avatar"
               class="w-20 h-14 rounded-full sm:mr-3"
             />
+            <img v-else src="https://picsum.photos/200" class="w-10 h-10 rounded-full" />
+
             <div class="text-[#198754] sm:hidden" v-if="!notification.read_at">
               {{ $t('texts.new') }}
             </div>

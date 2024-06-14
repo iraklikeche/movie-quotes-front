@@ -3,7 +3,12 @@
     <div class="max-h-72 overflow-scroll">
       <div v-for="comment in comments" :key="comment.id" class="mb-4 sm:flex gap-4">
         <div class="flex items-center sm:items-start gap-4">
-          <ProfileImage :imageClass="'w-10 h-10 rounded-full'" />
+          <img
+            v-if="comment.user.profile_image_url"
+            :src="comment.user.profile_image_url"
+            class="w-10 h-10 rounded-full"
+          />
+          <img v-else src="https://picsum.photos/200" class="w-10 h-10 rounded-full" />
 
           <span class="text-white sm:hidden">{{ comment.user.username }}</span>
         </div>
@@ -14,7 +19,13 @@
       </div>
     </div>
     <div class="flex items-center gap-4 mt-4">
-      <ProfileImage :imageClass="'w-10 rounded-full'" />
+      <img
+        v-if="userSession.userData.profile_image"
+        :src="userSession.userData.profile_image"
+        class="w-10 rounded-full"
+      />
+      <img v-else src="https://picsum.photos/200" class="w-10 h-10 rounded-full" />
+
       <input
         v-model="newComment"
         type="text"
@@ -29,14 +40,16 @@
 <script setup lang="ts">
 import { ref, onMounted } from 'vue'
 import { getComments } from '@/service/movieService'
+import { useUserSessionStore } from '@/stores/UserSessionStore'
+
 import type { Comment } from '@/types'
 import { useQuoteStore } from '@/stores/QuoteStore'
-import ProfileImage from './ProfileImage.vue'
 const props = defineProps<{
   quoteId: number
 }>()
 
 const quoteStore = useQuoteStore()
+const userSession = useUserSessionStore()
 
 const comments = ref<Comment[]>([])
 const newComment = ref('')
